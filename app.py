@@ -14,11 +14,11 @@ TAAL_CONFIG = {
     "🇫🇷 Français": {"code": "French", "bastian": "Vous & Monsieur / Mr", "vale": "Vous & Madame / Miss", "stop": "ROUGE", "sub": "Guidance, Discipline, Sécurité & Soumission Consciente"},
     "🇪🇸 Español": {"code": "Spanish", "bastian": "Usted & Señor / Mr", "vale": "Usted & Señora / Miss", "stop": "ROJO", "sub": "Guía, Disciplina, Seguridad y Sumisión Consciente"}
 }
-cfg = TAAL_CONFIG[taal]
+cfg = TAAL_CONFIG.get(taal)
 is_nl = taal == "🇳🇱 Nederlands"
 
 st.title("🏛️ The Sovereign Academy")
-st.caption(cfg["sub"])
+st.caption(cfg.get("sub"))
 
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 USER_AVATAR = "👤"
@@ -30,7 +30,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 is_vale = "Vale" in st.session_state.mentor_naam
-titel_txt = cfg["vale"] if is_vale else cfg["bastian"]
+titel_txt = cfg.get("vale") if is_vale else cfg.get("bastian")
 
 with st.sidebar:
     try:
@@ -44,7 +44,7 @@ with st.sidebar:
     st.write(f"**Module:** {st.session_state.module_nr} / 6")
     st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
-    st.info(f"🚨 **Safeword:** **{cfg['stop']}**")
+    st.info(f"🚨 **Safeword:** **{cfg.get('stop')}**")
 
 def vraag_mentor(prompt_tekst):
     client = genai.Client(api_key=api_key)
@@ -77,12 +77,12 @@ if st.session_state.fase == "Intake":
 elif st.session_state.fase == "Les":
     mod = MODULES.get(st.session_state.module_nr)
     if not is_nl and api_key:
-        with st.spinner(f"Loading Module {st.session_state.module_nr} in {cfg['code']}..."):
-            tekst_vert = vraag_mentor(f"Translate this BDSM Academy module and quiz into natural, authoritative {cfg['code']}. Keep the exact structure:\nTitle: {mod.get('titel')}\nTheory: {mod.get('theorie')}\nQ1: {mod.get('v1')} Options: {mod.get('o1')}\nQ2: {mod.get('v2')} Options: {mod.get('o2')}")
+        with st.spinner(f"Loading Module {st.session_state.module_nr} in {cfg.get('code')}..."):
+            tekst_vert = vraag_mentor(f"Translate this BDSM Academy module and quiz into natural, authoritative {cfg.get('code')}. Keep the exact structure:\nTitle: {mod.get('titel')}\nTheory: {mod.get('theorie')}\nQ1: {mod.get('v1')} Options: {mod.get('o1')}\nQ2: {mod.get('v2')} Options: {mod.get('o2')}")
             st.markdown(tekst_vert)
             if st.button("Enter Practice Room ➡️"):
                 st.session_state.fase = "Praktijkkamer"
-                intro = vraag_mentor(f"You are {st.session_state.mentor_naam}. Write a short 3-sentence welcome in {cfg['code']} to your new student ({st.session_state.sub_type}). Tell them they must address you strictly as '{titel_txt}' and earn the title Master/Mistress after graduation. Ask what brings them here.")
+                intro = vraag_mentor(f"You are {st.session_state.mentor_naam}. Write a short 3-sentence welcome in {cfg.get('code')} to your new student ({st.session_state.sub_type}). Tell them they must address you strictly as '{titel_txt}' and earn the title Master/Mistress after graduation. Ask what brings them here.")
                 st.session_state.chat_history.append(("assistant", intro))
                 st.rerun()
     else:
@@ -118,17 +118,19 @@ elif st.session_state.fase == "Praktijkkamer":
         with st.chat_message("user", avatar=USER_AVATAR):
             st.write(user_input)
         if any(w in user_input.upper() for w in ("ROOD", "RED", "ROT", "ROUGE", "ROJO")):
-            nood = vraag_mentor(f"You are {mentor}. The student just used the safeword. Immediately drop all dominance, be warm, gentle and reassuring in {cfg['code']} in 2 short sentences.")
+            nood = vraag_mentor(f"You are {mentor}. The student just used the safeword. Immediately drop all dominance, be warm, gentle and reassuring in {cfg.get('code')} in 2 short sentences.")
             st.session_state.chat_history.append(("assistant", nood))
             st.rerun()
         else:
             with st.chat_message("assistant", avatar=mentor_img):
+                taal_code = cfg.get("code")
                 taal_regels = (
-                    f"CRITICAL INSTRUCTION: Write your ENTIRE response (including actions between asterisks) strictly in {cfg['code']}, ignoring the language of earlier messages! "
-                    f"Enforce strict etiquette in {cfg['code']}: the student MUST address you formally as '{titel_txt}'. "
-                    "If they use informal pronouns, your first name, or call you 'Master'/'Mistress'/'Meester'/'Meesteres', correct them calmly and strictly, reminding them those titles must be earned after graduating."
+                    f"WICHTIG / IMPORTANT: Antworte AUSSCHLIESSLICH auf {taal_code}! / Réponds UNIQUEMENT en {taal_code}! / Responde ÚNICAMENTE en {taal_code}! / Respond ONLY in {taal_code}! "
+                    f"You are {mentor} of The Sovereign Academy. Student profile: {st.session_state.sub_type}. "
+                    f"Enforce strict etiquette in {taal_code}: the student MUST address you formally as '{titel_txt}'. "
+                    "Correct them calmly and strictly if they use informal pronouns, your first name, or call you Master/Mistress/Meester/Meesteres."
                 )
                 gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
-                antwoord = vraag_mentor(f"You are {mentor} of The Sovereign Academy. Student profile: {st.session_state.sub_type}. {taal_regels}\n\nHistory:\n{gesprek}\n\nResponse:")
+                antwoord = vraag_mentor(f"{taal_regels}\n\nMemory of earlier chat (for context only, ignore its language):\n{gesprek}\n\nStudent's latest message: {user_input}\n\nWrite {mentor}'s response completely in {taal_code}:")
                 st.write(antwoord)
                 st.session_state.chat_history.append(("assistant", antwoord))
