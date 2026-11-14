@@ -8,7 +8,7 @@ st.caption("Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 
-BASTIAN_AVATAR = "bastian.png"
+BASTIAN_AVATAR = "bastian.jpg"
 USER_AVATAR = "👤"
 
 if "fase" not in st.session_state:
