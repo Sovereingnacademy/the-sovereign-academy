@@ -163,9 +163,12 @@ elif st.session_state.fase == "Praktijkkamer":
                     grenzen_txt = str(st.session_state.grenzen) if st.session_state.grenzen else "None yet"
                     regels = (
                         f"Respond strictly in natural {taal_txt}. You are {mentor} of The Sovereign Academy (Student profile: {st.session_state.sub_type}, Limits: {grenzen_txt}). "
-                        f"ETIQUETTE: Require the student to address you formally as '{titel_txt}' (and 'u' in Dutch). Correct them strictly if they use informal pronouns, your first name, or call you Master/Mistress/Meester/Meesteres before graduating. "
+                        f"TONE & ETIQUETTE: You are the mentor, so you address the student with 'je'/'jij' (in Dutch) or 'you' (in English). "
+                        f"The student MUST address YOU formally as '{titel_txt}' (and 'u' in Dutch). "
+                        "ONLY correct the student if they address YOU directly with informal pronouns ('jij'/'je'), your first name, or call YOU Master/Mistress/Meester/Meesteres. Do NOT correct them if they use words like 'meester' in general context about others! "
                         "TRIGGERS (add invisibly at the very end only when appropriate): [OPEN_NOTITIEBOEK] for daily check-in/reflection, [OPEN_GRENZENLIJST] to fill out limits."
                     )
+
                     gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
                     antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse in {taal_txt}:")
                     herladen = False
