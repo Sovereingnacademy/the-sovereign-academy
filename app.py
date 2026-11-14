@@ -9,7 +9,7 @@ st.caption("Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 
 # Jouw eigen afbeelding uit GitHub (pas aan naar .jpg als dat je bestandstype is)
-BASTIAN_AVATAR = "bastian.jpg"
+BASTIAN_AVATAR = "bastian.png"
 USER_AVATAR = "👤"
 
 if "fase" not in st.session_state:
@@ -44,7 +44,7 @@ def vraag_bastian(prompt_tekst):
         and "2.0" not in m.name 
         and "2.5" not in m.name
     ]
-    gekozen_model = alle_modellen if alle_modellen else "gemini-3.8-flash"
+    gekozen_model = alle_modellen[0] if alle_modellen else "gemini-3.8-flash"
     response = client.models.generate_content(
         model=gekozen_model,
         contents=prompt_tekst,
@@ -58,7 +58,7 @@ def vraag_bastian(prompt_tekst):
 if st.session_state.fase == "Fase 1: Intake":
     st.subheader("🚪 Fase 1: Welkom & Nulmeting")
     
-    col1, col2 = st.columns()
+    col1, col2 = st.columns([1, 4])
     with col1:
         try:
             st.image(BASTIAN_AVATAR, width=110)
