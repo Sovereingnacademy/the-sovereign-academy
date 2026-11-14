@@ -43,7 +43,7 @@ with st.sidebar:
     st.write(f"**Module:** {st.session_state.module_nr} / 6")
     st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
-    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Noodrem:** **ROOD**")
+    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safeword:** **ROOD**")
     if st.button("🔄 Reset / Opnieuw beginnen"):
         for k in list(st.session_state.keys()):
             del st.session_state[k]
