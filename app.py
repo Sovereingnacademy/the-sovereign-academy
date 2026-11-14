@@ -1,17 +1,12 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
-# 1. Pagina-instellingen
 st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
 st.title("🏛️ The Sovereign Academy")
 st.caption("Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 
-# 2. Gratis Google Gemini API Koppeling
 api_key = st.secrets.get("GEMINI_API_KEY", "")
-if api_key:
-    genai.configure(api_key=api_key)
 
-# 3. Initialiseer het geheugen van de app
 if "fase" not in st.session_state:
     st.session_state.fase = "Fase 1: Intake"
 if "sub_type" not in st.session_state:
@@ -19,7 +14,6 @@ if "sub_type" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Zijbalk voor overzicht
 with st.sidebar:
     st.header("📊 Academy Dossier")
     st.write(f"**Huidige Fase:** {st.session_state.fase}")
@@ -27,9 +21,6 @@ with st.sidebar:
     st.markdown("---")
     st.info("🚨 **Noodrem:** Typ op elk gewenst moment **ROOD** in de chat om een sessie direct te stoppen.")
 
-# ==========================================
-# FASE 1: DE INTAKE & TYPE-BEPALING
-# ==========================================
 if st.session_state.fase == "Fase 1: Intake":
     st.subheader("🚪 Fase 1: Welkom & Nulmeting")
     st.write("""
@@ -62,9 +53,6 @@ if st.session_state.fase == "Fase 1: Intake":
         st.session_state.fase = "Module 1: Theorie & Toets"
         st.rerun()
 
-# ==========================================
-# FASE 2: MODULE 1 (THEORIE & VERPLICHTE TOETS)
-# ==========================================
 elif st.session_state.fase == "Module 1: Theorie & Toets":
     st.subheader("📚 Module 1: Veiligheid & Het Fundament")
     st.success(f"Jouw dossier is bijgewerkt. Profiel: **{st.session_state.sub_type}**.")
@@ -97,9 +85,6 @@ elif st.session_state.fase == "Module 1: Theorie & Toets":
         else:
             st.error("❌ **Headmaster Bastian schudt zijn hoofd:** *\"Nog niet helemaal. Ik laat je pas toe in de praktijkkamer als ik zeker weet dat je de veiligheidsregels snapt. Lees de tekst nog eens rustig door.\"*")
 
-# ==========================================
-# FASE 3: DE VRIJE CHAT MET HEADMASTER BASTIAN
-# ==========================================
 elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
     st.subheader("💬 Praktijkkamer: Headmaster Bastian")
     
@@ -123,20 +108,22 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                     st.warning("⚠️ Voeg eerst je gratis Google API-sleutel toe in de Secrets.")
                 else:
                     try:
-                        # Gecorrigeerd naar het nieuwste gemini-3.0-flash model
-                        model = genai.GenerativeModel('gemini-3.8-flash')
+                        client = genai.Client(api_key=api_key)
                         systeem_instructie = f"""
                         Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. 
                         De gebruiker is geclassificeerd als: {st.session_state.sub_type}.
                         
                         BELANGRIJKE SCHRIJFSTIJL:
-                        - Schrijf natuurlijk, vloeiend en menselijk Nederlands. Vermijd stijve AI-zinnen of overdreven formeel taalgebruik.
+                        - Schrijf natuurlijk, vloeiend en menselijk Nederlands. Vermijd stijve AI-zinnen.
                         - Je bent kalm, ervaren, observant en hebt natuurlijk gezag. Je bent beschermend en respectvol, nooit sadistisch of vernederend.
                         - Je leert de sub dat bewuste overgave juist een teken van kracht is.
-                        - Omschrijf kleine, realistische handelingen tussen asterisken (bijv. *knikt langzaam* of *leunt iets naar voren*), maar overdrijf dit niet.
+                        - Omschrijf kleine, realistische handelingen tussen asterisken (bijv. *knikt langzaam*).
                         - Reageer direct en invoelend op het bericht van de gebruiker: "{user_input}"
                         """
-                        response = model.generate_content(systeem_instructie)
+                        response = client.models.generate_content(
+                            model='gemini-2.5-flash',
+                            contents=systeem_instructie
+                        )
                         st.write(response.text)
                         st.session_state.chat_history.append(("assistant", response.text))
                     except Exception as e:
