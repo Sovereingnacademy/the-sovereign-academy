@@ -77,7 +77,7 @@ if st.session_state.fase == "Intake":
                 "**How does it work?**\n"
                 "1. **Assessment & Guidance:** Choose your Academy guide (*Headmaster Bastian* or *Headmistress Vale*) and complete a brief intake.\n"
                 "2. **The 6 Modules:** Learn safety, consent, subspace, poses, and etiquette.\n"
-                "3. **Phase 3 (The Bond):** Graduate and be matched with your dedicated Master or Mistress for daily structure.\n\n"
+                "3. **Phase 3 (The Bond):** Graduate and choose between two matched Masters or Mistresses for daily structure.\n\n"
                 "*Use the safeword **RED** at any moment to immediately pause everything.*"
             )
         st.subheader("🚪 Phase 1: Your Assessment")
@@ -90,7 +90,7 @@ if st.session_state.fase == "Intake":
                 "**Hoe werkt het?**\n"
                 "1. **Nulmeting & Begeleider:** Kies jouw begeleider (*Headmaster Bastian* of *Headmistress Vale*) en beantwoord de nulmeting.\n"
                 "2. **De 6 Modules:** Doorloop de lessen over veiligheid, mentale processen, houdingen, etiquette en zelfbescherming.\n"
-                "3. **Fase 3 (Het Verbond):** Studeer af en word gekoppeld aan een vaste Meester of Meesteres voor dagelijkse structuur.\n\n"
+                "3. **Fase 3 (Het Verbond):** Studeer af en kies uit twee geselecteerde Meesters of Meesteressen voor dagelijkse structuur.\n\n"
                 "*Met het safewoord **ROOD** kun je op elk gewenst moment direct alles stopzetten.*"
             )
         st.subheader("🚪 Fase 1: Jouw Nulmeting")
@@ -136,18 +136,36 @@ elif st.session_state.fase == "Les":
 
 elif st.session_state.fase == "Afstuderen":
     st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond" if not is_en else "🎓 Phase 3: Graduation & The Bond")
-    st.success(f"Gefeliciteerd! Je hebt alle 6 modules van The Sovereign Academy succesvol afgerond als **{st.session_state.sub_type}**." if not is_en else f"Congratulations! You have completed all 6 modules as a **{st.session_state.sub_type}**.")
-    st.write("Het is nu tijd om gekoppeld te worden aan jouw vaste Meester of Meesteres. Vanaf dat moment mag en moet je hen aanspreken met **Meester / Master** of **Meesteres / Mistress**." if not is_en else "It is now time to be matched with your dedicated Master or Mistress, whom you will address as **Master** or **Mistress**.")
-    voorkeur = st.radio("Ik wens gekoppeld te worden aan een:" if not is_en else "I wish to be matched with a:", ("Mannelijk (Meester / Master)", "Vrouwelijk (Meesteres / Mistress)"))
-    if st.button("👑 Sluit Het Verbond & Ontmoet mijn Meester(es)"):
-        geslacht = "Mannelijk" if "Mannelijk" in voorkeur else "Vrouwelijk"
-        match = MEESTERS.get((geslacht, st.session_state.sub_type))
-        st.session_state.mentor_naam = match.get("naam")
-        st.session_state.meester_stijl = match.get("stijl")
-        st.session_state.mentor_foto = "👑"
-        st.session_state.verbond_actief = True
-        st.session_state.notitieboek_actief = True
-        st.session_state.grenzenlijst_actief = True
-        st.session_state.chat_history = [("assistant", match.get("intro_en" if is_en else "intro_nl"))]
-        st.session_state.fase = "Praktijkkamer"
-        st.rerun()
+    st.success(f"Gefeliciteerd! Je hebt alle 6 modules succesvol afgerond. Jouw profiel: **{st.session_state.sub_type}**." if not is_en else f"Congratulations! You completed all 6 modules. Your profile: **{st.session_state.sub_type}**.")
+    st.write("Op basis van jouw traject heeft de Academie **twee geschikte kandidaten** geselecteerd. Lees hun kennismaking en maak jouw definitieve keuze:" if not is_en else "Based on your journey, the Academy has selected **two suitable candidates**. Read their introductions and make your final choice:")
+    
+    voorkeur = st.radio("Ik wens begeleid te worden door een:" if not is_en else "I wish to be guided by a:", ("Mannelijk (Meester)", "Vrouwelijk (Meesteres)"), horizontal=True)
+    geslacht = "Mannelijk" if "Mannelijk" in voorkeur else "Vrouwelijk"
+    
+    if geslacht == "Mannelijk":
+        kandidaten = ("Meester Julian", "Meester Marcus") if st.session_state.sub_type == "Brat" else (("Meester Marcus", "Meester Viktor") if "Slav" in st.session_state.sub_type else ("Meester Viktor", "Meester Julian"))
+    else:
+        kandidaten = ("Meesteres Elena", "Meesteres Sophia") if st.session_state.sub_type == "Brat" else (("Meesteres Sophia", "Meesteres Clara") if "Slav" in st.session_state.sub_type else ("Meesteres Clara", "Meesteres Elena"))
+        
+    for naam in kandidaten:
+        info = MEESTERS.get(naam)
+        with st.container(border=True):
+            c1, c2 = st.columns((1, 3))
+            with c1:
+                try:
+                    st.image(info.get("foto"), width=120)
+                except Exception:
+                    st.write("👑")
+            with c2:
+                st.markdown(f"### {naam} — *{info.get('specialisatie')}*")
+                st.write(info.get("bio_en" if is_en else "bio_nl"))
+                if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
+                    st.session_state.mentor_naam = naam
+                    st.session_state.meester_stijl = info.get("stijl")
+                    st.session_state.mentor_foto = info.get("foto")
+                    st.session_state.verbond_actief = True
+                    st.session_state.notitieboek_actief = True
+                    st.session_state.grenzenlijst_actief = True
+                    st.session_state.chat_history = [("assistant", info.get("intro_en" if is_en else "intro_nl"))]
+                    st.session_state.fase = "Praktijkkamer"
+                    st.rerun()
