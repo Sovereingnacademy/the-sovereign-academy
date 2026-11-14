@@ -123,11 +123,13 @@ elif st.session_state.fase == "Praktijkkamer":
             st.rerun()
         else:
             with st.chat_message("assistant", avatar=mentor_img):
-                taal_regels = (
-                    f"Respond strictly in natural {cfg['code']}. "
-                    f"Enforce strict etiquette: the student MUST address you formally as '{titel_txt}'. "
+                                taal_regels = (
+                    f"CRITICAL INSTRUCTION: You MUST write your ENTIRE response (including actions between asterisks) strictly in {cfg['code']}, completely ignoring the language of earlier messages in the history! "
+                    f"Enforce strict etiquette in {cfg['code']}: the student MUST address you formally as '{titel_txt}'. "
                     "If they use informal pronouns, your first name, or call you 'Master'/'Mistress'/'Meester'/'Meesteres', correct them calmly and strictly, reminding them those titles must be earned after graduating."
                 )
+                   
+                
                 gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
                 antwoord = vraag_mentor(f"You are {mentor} of The Sovereign Academy. Student profile: {st.session_state.sub_type}. {taal_regels}\n\nHistory:\n{gesprek}\n\nResponse:")
                 st.write(antwoord)
