@@ -36,8 +36,8 @@ with st.sidebar:
     st.header("📊 Academy Dossier")
     st.write("**Mentor:** Headmaster Bastian")
     st.write(f"**Profiel:** {st.session_state.sub_type}")
-    st.write(f"**Module Voortgang:** {st.session_state.module_nr - 1} / 6 voltooid")
-    st.progress(min((st.session_state.module_nr - 1) / 6, 1.0))
+    st.write(f"**Module Voortgang:** {st.session_state.module_nr} / 6 voltooid")
+    st.progress(min((st.session_state.module_nr) / 6, 1.0))
     st.markdown("---")
     st.info("🚨 **Noodrem:** Typ op elk gewenst moment **ROOD** in de chat om direct te stoppen.")
 
