@@ -107,7 +107,7 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                 if not api_key:
                     st.warning("⚠️ Voeg eerst je gratis Google API-sleutel toe in de Secrets.")
                 else:
-                                       try:
+                    try:
                         client = genai.Client(api_key=api_key)
                         systeem_instructie = f"""
                         Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. 
@@ -126,13 +126,11 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                                 contents=systeem_instructie
                             )
                         except Exception:
-                            # Automatisch vangnet als 3.8-flash druk is
                             response = client.models.generate_content(
                                 model='gemini-3.8-flash-lite',
                                 contents=systeem_instructie
                             )
                         st.write(response.text)
                         st.session_state.chat_history.append(("assistant", response.text))
-                    except Exception as e:
+                    except Exception:
                         st.error("Het is op dit moment erg druk in de Academie. Probeer het over een minuutje nog eens.")
-
