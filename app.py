@@ -121,7 +121,7 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                         - Reageer direct en invoelend op het bericht van de gebruiker: "{user_input}"
                         """
                         response = client.models.generate_content(
-                            model='gemini-2.5-flash',
+                            model='gemini-3.8-flash',
                             contents=systeem_instructie
                         )
                         st.write(response.text)
