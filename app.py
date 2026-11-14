@@ -128,7 +128,7 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                             and "2.0" not in m.name 
                             and "2.5" not in m.name
                         ]
-                        gekozen_model = alle_modellen if alle_modellen else "gemini-3.8-flash"
+                        gekozen_model = alle_modellen[0] if alle_modellen else "gemini-3.8-flash"
                         
                         response = client.models.generate_content(
                             model=gekozen_model,
