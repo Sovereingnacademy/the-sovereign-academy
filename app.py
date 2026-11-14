@@ -3,6 +3,7 @@ from google import genai
 from google.genai import types
 from curriculum import MODULES
 from checklist import CHECKLIST_CATEGORIEEN
+from meesters import MEESTERS
 
 st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
 
@@ -17,7 +18,8 @@ USER_AVATAR = "👤"
 
 for key, val in [
     ("fase", "Intake"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"),
-    ("module_nr", 0), ("sub_type", "Onbekend"), ("notitieboek_actief", False), ("grenzenlijst_actief", False)
+    ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False),
+    ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", "")
 ]:
     if key not in st.session_state:
         st.session_state[key] = val
@@ -29,19 +31,25 @@ if "grenzen" not in st.session_state:
     st.session_state.grenzen = {}
 
 is_vale = "Vale" in st.session_state.mentor_naam
-titel_txt = ("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr")
+if st.session_state.verbond_actief:
+    titel_txt = "Master / Mistress" if is_en else "Meester / Meesteres"
+else:
+    titel_txt = ("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr")
 
 with st.sidebar:
     try:
         st.image(st.session_state.mentor_foto, width=120)
     except Exception:
-        st.write("🏛️")
+        st.write("👑" if st.session_state.verbond_actief else "🏛️")
     st.header("📊 Academy Dossier")
-    st.write(f"**Mentor:** {st.session_state.mentor_naam}")
-    st.write(f"**Address / Titel:** {'Formal & ' + titel_txt if is_en else 'U & ' + titel_txt}")
+    st.write(f"**{'Dominant' if st.session_state.verbond_actief else 'Mentor'}:** {st.session_state.mentor_naam}")
+    st.write(f"**Address / Titel:** {titel_txt}")
     st.write(f"**Profile:** {st.session_state.sub_type}")
-    st.write(f"**Module:** {st.session_state.module_nr} / 6")
-    st.progress(min(st.session_state.module_nr / 6, 1.0))
+    if st.session_state.verbond_actief:
+        st.success("👑 **Fase 3: Het Verbond Actief**")
+    else:
+        st.write(f"**Module:** {st.session_state.module_nr} / 6")
+        st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
     st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
     if st.button("🔄 Reset / Opnieuw beginnen"):
@@ -67,10 +75,10 @@ if st.session_state.fase == "Intake":
                 "**What is The Sovereign Academy?**\n"
                 "The Sovereign Academy is a safe, judgment-free learning environment dedicated to conscious submission, personal growth, and healthy D/s dynamics. Here, we do not break you down; we build you up. Surrendering control is not a sign of weakness, but an act of deep trust and inner strength.\n\n"
                 "**How does it work?**\n"
-                "1. **Assessment & Guidance:** Choose your Academy guide (*Headmaster Bastian* or *Headmistress Vale*) and complete a brief intake to determine your dynamic.\n"
-                "2. **The 6 Modules:** Learn the essential foundations of safety, consent, subspace, poses, and etiquette, each concluded with a short knowledge check.\n"
-                "3. **The Practice Room:** Engage in personal mentoring, unlock tools like your daily check-in journal or limits checklist when needed, and grow at your own pace.\n\n"
-                "*Your boundaries are sacred. Use the safeword **RED** at any moment to immediately pause everything.*"
+                "1. **Assessment & Guidance:** Choose your Academy guide (*Headmaster Bastian* or *Headmistress Vale*) and complete a brief intake.\n"
+                "2. **The 6 Modules:** Learn safety, consent, subspace, poses, and etiquette.\n"
+                "3. **Phase 3 (The Bond):** Graduate and be matched with your dedicated Master or Mistress for daily structure.\n\n"
+                "*Use the safeword **RED** at any moment to immediately pause everything.*"
             )
         st.subheader("🚪 Phase 1: Your Assessment")
     else:
@@ -80,10 +88,10 @@ if st.session_state.fase == "Intake":
                 "**Wat is The Sovereign Academy?**\n"
                 "The Sovereign Academy is een veilige, oordeelvrije leeromgeving voor wie zich wil verdiepen in bewuste overgave, persoonlijke groei en gezonde D/s-dynamieken. Hier breken we niemand af; we bouwen op. De controle uit handen geven is geen zwakte, maar een bewuste keuze die vraagt om vertrouwen en innerlijke kracht.\n\n"
                 "**Hoe werkt het?**\n"
-                "1. **Nulmeting & Begeleider:** Kies jouw begeleider (*Headmaster Bastian* of *Headmistress Vale*) en beantwoord een paar korte vragen over wie jij bent.\n"
-                "2. **De 6 Modules:** Je doorloopt zes overzichtelijke lessen over veiligheid, mentale processen, houdingen, etiquette en zelfbescherming, telkens afgesloten met een korte kennistest.\n"
-                "3. **De Praktijkkamer:** Je gaat in gesprek met jouw begeleider, krijgt persoonlijke reflectie-opdrachten en groeit stap voor stap in jouw eigen tempo.\n\n"
-                "*Jouw grenzen zijn altijd leidend. Met het safewoord **ROOD** kun je op elk gewenst moment direct alles stopzetten.*"
+                "1. **Nulmeting & Begeleider:** Kies jouw begeleider (*Headmaster Bastian* of *Headmistress Vale*) en beantwoord de nulmeting.\n"
+                "2. **De 6 Modules:** Doorloop de lessen over veiligheid, mentale processen, houdingen, etiquette en zelfbescherming.\n"
+                "3. **Fase 3 (Het Verbond):** Studeer af en word gekoppeld aan een vaste Meester of Meesteres voor dagelijkse structuur.\n\n"
+                "*Met het safewoord **ROOD** kun je op elk gewenst moment direct alles stopzetten.*"
             )
         st.subheader("🚪 Fase 1: Jouw Nulmeting")
 
@@ -125,3 +133,21 @@ elif st.session_state.fase == "Les":
                 st.rerun()
             else:
                 st.error("❌ Nog niet helemaal juist. Lees de theorie nog eens door.")
+
+elif st.session_state.fase == "Afstuderen":
+    st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond" if not is_en else "🎓 Phase 3: Graduation & The Bond")
+    st.success(f"Gefeliciteerd! Je hebt alle 6 modules van The Sovereign Academy succesvol afgerond als **{st.session_state.sub_type}**." if not is_en else f"Congratulations! You have completed all 6 modules as a **{st.session_state.sub_type}**.")
+    st.write("Het is nu tijd om gekoppeld te worden aan jouw vaste Meester of Meesteres. Vanaf dat moment mag en moet je hen aanspreken met **Meester / Master** of **Meesteres / Mistress**." if not is_en else "It is now time to be matched with your dedicated Master or Mistress, whom you will address as **Master** or **Mistress**.")
+    voorkeur = st.radio("Ik wens gekoppeld te worden aan een:" if not is_en else "I wish to be matched with a:", ("Mannelijk (Meester / Master)", "Vrouwelijk (Meesteres / Mistress)"))
+    if st.button("👑 Sluit Het Verbond & Ontmoet mijn Meester(es)"):
+        geslacht = "Mannelijk" if "Mannelijk" in voorkeur else "Vrouwelijk"
+        match = MEESTERS.get((geslacht, st.session_state.sub_type))
+        st.session_state.mentor_naam = match.get("naam")
+        st.session_state.meester_stijl = match.get("stijl")
+        st.session_state.mentor_foto = "👑"
+        st.session_state.verbond_actief = True
+        st.session_state.notitieboek_actief = True
+        st.session_state.grenzenlijst_actief = True
+        st.session_state.chat_history = [("assistant", match.get("intro_en" if is_en else "intro_nl"))]
+        st.session_state.fase = "Praktijkkamer"
+        st.rerun()
