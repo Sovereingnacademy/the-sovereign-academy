@@ -21,6 +21,9 @@ with st.sidebar:
     st.markdown("---")
     st.info("🚨 **Noodrem:** Typ op elk gewenst moment **ROOD** in de chat om een sessie direct te stoppen.")
 
+# ==========================================
+# FASE 1: DE INTAKE & TYPE-BEPALING
+# ==========================================
 if st.session_state.fase == "Fase 1: Intake":
     st.subheader("🚪 Fase 1: Welkom & Nulmeting")
     st.write("""
@@ -53,6 +56,9 @@ if st.session_state.fase == "Fase 1: Intake":
         st.session_state.fase = "Module 1: Theorie & Toets"
         st.rerun()
 
+# ==========================================
+# FASE 2: MODULE 1 (THEORIE & VERPLICHTE TOETS)
+# ==========================================
 elif st.session_state.fase == "Module 1: Theorie & Toets":
     st.subheader("📚 Module 1: Veiligheid & Het Fundament")
     st.success(f"Jouw dossier is bijgewerkt. Profiel: **{st.session_state.sub_type}**.")
@@ -85,6 +91,9 @@ elif st.session_state.fase == "Module 1: Theorie & Toets":
         else:
             st.error("❌ **Headmaster Bastian schudt zijn hoofd:** *\"Nog niet helemaal. Ik laat je pas toe in de praktijkkamer als ik zeker weet dat je de veiligheidsregels snapt. Lees de tekst nog eens rustig door.\"*")
 
+# ==========================================
+# FASE 3: DE VRIJE CHAT MET GEHEUGEN
+# ==========================================
 elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
     st.subheader("💬 Praktijkkamer: Headmaster Bastian")
     
@@ -109,18 +118,29 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                 else:
                     try:
                         client = genai.Client(api_key=api_key)
+                        
+                        # Bouw het volledige geheugen op uit alle eerdere berichten
+                        gespreksverloop = ""
+                        for rol, bericht in st.session_state.chat_history:
+                            naam = "Leerling (Sub)" if rol == "user" else "Headmaster Bastian"
+                            gespreksverloop += f"{naam}: {bericht}\n\n"
+                        
                         systeem_instructie = f"""
                         Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. 
-                        De gebruiker is geclassificeerd als: {st.session_state.sub_type}.
+                        De leerling is geclassificeerd als: {st.session_state.sub_type}.
                         
-                        BELANGRIJKE SCHRIJFSTIJL:
+                        BELANGRIJKE SCHRIJFSTIJL & GEHEUGEN:
                         - Schrijf natuurlijk, vloeiend en menselijk Nederlands. Vermijd stijve AI-zinnen.
                         - Je bent kalm, ervaren, observant en hebt natuurlijk gezag. Je bent beschermend en respectvol, nooit sadistisch of vernederend.
                         - Je leert de sub dat bewuste overgave juist een teken van kracht is.
                         - Omschrijf kleine, realistische handelingen tussen asterisken (bijv. *knikt langzaam*).
-                        - Reageer direct en invoelend op het bericht van de gebruiker: "{user_input}"
+                        - GEBRUIK HET GEHEUGEN: Lees het volledige eerdere gesprek hieronder aandachtig terug. Onthoud alle details, gevoelens en grenzen die de leerling eerder heeft genoemd en verwijs daar natuurlijk naar terug, zodat ze nooit iets hoeft te herhalen.
+                        
+                        VOLLEDIG GESPREK TOT NU TOE:
+                        {gespreksverloop}
+                        
+                        Geef nu het volgende, passende antwoord van Headmaster Bastian op het laatste bericht van de leerling:
                         """
-                        # Filtert alle oude 1.5, 2.0 en 2.5 modellen eruit en pakt alleen 3.x
                         alle_modellen = [
                             m.name for m in client.models.list() 
                             if "flash" in m.name.lower() 
