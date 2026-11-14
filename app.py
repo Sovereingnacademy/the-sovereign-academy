@@ -199,8 +199,7 @@ elif st.session_state.fase == "Praktijkkamer":
                 with st.container(border=True):
                     st.write(item.get("tekst"))
                     st.markdown(f"**{mentor}:** {item.get('reactie')}")
-
-            if st.session_state.grenzenlijst_actief:
+   if st.session_state.grenzenlijst_actief:
         idx = tab_namen.index("🔒 Limits" if is_en else "🔒 Grenzenlijst")
         with tabs[idx]:
             st.subheader("🔒 Uitgebreide Sub-Checklist" if not is_en else "🔒 Complete Sub-Checklist")
