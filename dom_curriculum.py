@@ -107,8 +107,7 @@ DOM_MODULES = {
             {"v": "9. Wanneer is een grensverleggende ervaring echt geslaagd?", "o": ("Wanneer de sub zich achteraf trots, veilig en gehoord voelt — ongeacht hoe ver jullie uiteindelijk zijn gegaan.", "Alleen wanneer de hoogste pijnprikkel is bereikt."), "a": "Wanneer de sub zich achteraf trots, veilig en gehoord voelt — ongeacht hoe ver jullie uiteindelijk zijn gegaan."},
             {"v": "10. Wat doe je als een sub zegt: 'Ik weet niet zeker of ik dit durf'?", "o": ("Je haalt de prestatiedruk weg, splitst de stap op in een nog kleiner stukje of stelt het uit naar een ander moment.", "Je zegt dat een echte sub nooit twijfelt."), "a": "Je haalt de prestatiedruk weg, splitst de stap op in een nog kleiner stukje of stelt het uit naar een ander moment."}
         ]
-    }
-}
+    },
 
     5: {
         "titel": "Dom Module 5: Etiquette, Structuur & De Psychologie van Discipline",
