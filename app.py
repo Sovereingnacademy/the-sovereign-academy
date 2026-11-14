@@ -43,7 +43,7 @@ with st.sidebar:
     st.write(f"**Module:** {st.session_state.module_nr} / 6")
     st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
-    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safeword:** **ROOD**")
+    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
     if st.button("🔄 Reset / Opnieuw beginnen"):
         for k in list(st.session_state.keys()):
             del st.session_state[k]
@@ -83,7 +83,7 @@ if st.session_state.fase == "Intake":
                 "1. **Nulmeting & Begeleider:** Kies jouw begeleider (*Headmaster Bastian* of *Headmistress Vale*) en beantwoord een paar korte vragen over wie jij bent.\n"
                 "2. **De 6 Modules:** Je doorloopt zes overzichtelijke lessen over veiligheid, mentale processen, houdingen, etiquette en zelfbescherming, telkens afgesloten met een korte kennistest.\n"
                 "3. **De Praktijkkamer:** Je gaat in gesprek met jouw begeleider, krijgt persoonlijke reflectie-opdrachten en groeit stap voor stap in jouw eigen tempo.\n\n"
-                "*Jouw grenzen zijn altijd leidend. Met het noodwoord **ROOD** kun je op elk gewenst moment direct alles stopzetten.*"
+                "*Jouw grenzen zijn altijd leidend. Met het safewoord **ROOD** kun je op elk gewenst moment direct alles stopzetten.*"
             )
         st.subheader("🚪 Fase 1: Jouw Nulmeting")
 
@@ -97,11 +97,12 @@ if st.session_state.fase == "Intake":
         st.session_state.mentor_naam = mentor_keuze
         st.session_state.mentor_foto = "vale.jpg" if "Vale" in mentor_keuze else "bastian.jpg"
         st.session_state.sub_type = "Brat" if ("tegengas" in v1 or "push back" in v1) else ("Slave / Slavin" if ("loslaten" in v1 or "completely" in v1) else "Classic Submissive")
+        st.session_state.module_nr = 1
         st.session_state.fase = "Les"
         st.rerun()
 
 elif st.session_state.fase == "Les":
-    mod = MODULES.get(st.session_state.module_nr)
+    mod = MODULES.get(max(1, st.session_state.module_nr))
     if is_en and api_key:
         with st.spinner(f"Loading Module {st.session_state.module_nr}..."):
             tekst_vert = vraag_mentor(f"Translate this BDSM Academy module and quiz into natural, authoritative English:\nTitle: {mod.get('titel')}\nTheory: {mod.get('theorie')}\nQ1: {mod.get('v1')} Options: {mod.get('o1')}\nQ2: {mod.get('v2')} Options: {mod.get('o2')}")
@@ -124,102 +125,3 @@ elif st.session_state.fase == "Les":
                 st.rerun()
             else:
                 st.error("❌ Nog niet helemaal juist. Lees de theorie nog eens door.")
-elif st.session_state.fase == "Praktijkkamer":
-    mentor = st.session_state.mentor_naam
-    mentor_img = st.session_state.mentor_foto
-    if st.session_state.module_nr < 6:
-        if st.button(f"Start Module {st.session_state.module_nr + 1} ➡️"):
-            st.session_state.module_nr += 1
-            st.session_state.fase = "Les"
-            st.rerun()
-
-    tab_namen = ["💬 Practice Room" if is_en else "💬 Praktijkkamer"]
-    if st.session_state.notitieboek_actief:
-        tab_namen.append("📓 Journal" if is_en else "📓 Notitieboekje")
-    if st.session_state.grenzenlijst_actief:
-        tab_namen.append("🔒 Limits" if is_en else "🔒 Grenzenlijst")
-
-    if len(tab_namen) > 1:
-        tabs = st.tabs(tab_namen)
-        tab_chat = next(iter(tabs))
-    else:
-        tab_chat = st.container()
-
-    with tab_chat:
-        for role, text in st.session_state.chat_history:
-            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else USER_AVATAR)):
-                st.write(text)
-                
-        if user_input := st.chat_input(f"... ({titel_txt})"):
-            st.session_state.chat_history.append(("user", user_input))
-            with st.chat_message("user", avatar=USER_AVATAR):
-                st.write(user_input)
-            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
-                nood = f"*{mentor} stops immediately.* Breathe. You are completely safe." if is_en else f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."
-                st.session_state.chat_history.append(("assistant", nood))
-                st.rerun()
-            else:
-                with st.chat_message("assistant", avatar=mentor_img):
-                    taal_txt = "English" if is_en else "Dutch"
-                    grenzen_txt = str(st.session_state.grenzen) if st.session_state.grenzen else "None yet"
-                    regels = (
-                        f"Respond strictly in natural {taal_txt}. You are {mentor} of The Sovereign Academy (Student profile: {st.session_state.sub_type}, Limits: {grenzen_txt}). "
-                        f"TONE & ETIQUETTE: You are the mentor, so you address the student with 'je'/'jij' (in Dutch) or 'you' (in English). "
-                        f"The student MUST address YOU formally as '{titel_txt}' (and 'u' in Dutch). "
-                        "ONLY correct the student if they address YOU directly with informal pronouns ('jij'/'je'), your first name, or call YOU Master/Mistress/Meester/Meesteres. Do NOT correct them if they use words like 'meester' in general context about others! "
-                        "TRIGGERS (add invisibly at the very end only when appropriate): [OPEN_NOTITIEBOEK] for daily check-in/reflection, [OPEN_GRENZENLIJST] to fill out limits."
-                    )
-
-                    gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
-                    antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse in {taal_txt}:")
-                    herladen = False
-                    if "[OPEN_NOTITIEBOEK]" in antwoord:
-                        antwoord = antwoord.replace("[OPEN_NOTITIEBOEK]", "").strip()
-                        st.session_state.notitieboek_actief = True
-                        herladen = True
-                    if "[OPEN_GRENZENLIJST]" in antwoord:
-                        antwoord = antwoord.replace("[OPEN_GRENZENLIJST]", "").strip()
-                        st.session_state.grenzenlijst_actief = True
-                        herladen = True
-                    st.write(antwoord)
-                    st.session_state.chat_history.append(("assistant", antwoord))
-                    if herladen:
-                        st.rerun()
-
-    if st.session_state.notitieboek_actief:
-        idx = tab_namen.index("📓 Journal" if is_en else "📓 Notitieboekje")
-        with tabs[idx]:
-            notitie_tekst = st.text_area("Journal / Check-in:", height=120)
-            if st.button("Submit / Indienen"):
-                if notitie_tekst.strip() and api_key:
-                    reactie = vraag_mentor(f"You are {mentor}. Respond calmly and supportively in {'English' if is_en else 'Dutch'} to this student journal entry: \"{notitie_tekst}\"")
-                    st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
-                    st.rerun()
-            for item in reversed(st.session_state.notities):
-                with st.container(border=True):
-                    st.write(item.get("tekst"))
-                    st.markdown(f"**{mentor}:** {item.get('reactie')}")
-   
-if st.session_state.grenzenlijst_actief:
-        idx = tab_namen.index("🔒 Limits" if is_en else "🔒 Grenzenlijst")
-        with tabs[idx]:
-            st.subheader("🔒 Uitgebreide Sub-Checklist" if not is_en else "🔒 Complete Sub-Checklist")
-            st.write("*Vul per categorie jouw wensen en grenzen in. Alles wat op 'Absolute No-Go' staat, wordt onvoorwaardelijk gerespecteerd.*" if not is_en else "*Fill out your desires and limits per category. Every 'Hard Limit' is strictly respected.*")
-            opties = (
-                "⚪ Nog niet ingevuld",
-                "🟢 Ja / Heerlijk",
-                "🟡 Nieuwsgierig / Voorzichtig",
-                "🟠 Soft Limit (Alleen bij diep vertrouwen)",
-                "🔴 Absolute No-Go (Hard Limit)"
-            )
-            nieuwe_grenzen = {}
-            for categorie, items in CHECKLIST_CATEGORIEEN.items():
-                with st.expander(categorie):
-                    for item in items:
-                        huidige_waarde = st.session_state.grenzen.get(item, "⚪ Nog niet ingevuld")
-                        keuze = st.selectbox(item, opties, index=opties.index(huidige_waarde), key=f"chk_{item}")
-                        if keuze != "⚪ Nog niet ingevuld":
-                            nieuwe_grenzen[item] = keuze
-            if st.button("💾 Sla volledige checklist op / Save Checklist"):
-                st.session_state.grenzen = nieuwe_grenzen
-                st.success("✅ Opgeslagen in jouw dossier! Bastian / Vale neemt al jouw keuzes en No-Go's direct mee.")
