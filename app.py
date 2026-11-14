@@ -200,13 +200,26 @@ elif st.session_state.fase == "Praktijkkamer":
                     st.write(item.get("tekst"))
                     st.markdown(f"**{mentor}:** {item.get('reactie')}")
 
-    if st.session_state.grenzenlijst_actief:
+        if st.session_state.grenzenlijst_actief:
         idx = tab_namen.index("🔒 Limits" if is_en else "🔒 Grenzenlijst")
         with tabs[idx]:
-            opties = ("🟢 Yes / Ja", "🟡 Curious / Nieuwsgierig", "🔴 Hard Limit / Absolute No-Go")
-            g1 = st.selectbox("Impact play / Fysieke discipline", opties)
-            g2 = st.selectbox("Bondage", opties)
-            g3 = st.selectbox("Daily rules / Dagelijkse regels", opties)
-            if st.button("Save / Opslaan"):
-                st.session_state.grenzen = {"Impact": g1, "Bondage": g2, "Rules": g3}
-                st.success("✅ Saved / Opgeslagen!")
+            st.subheader("🔒 Uitgebreide Sub-Checklist" if not is_en else "🔒 Complete Sub-Checklist")
+            st.write("*Vul per categorie jouw wensen en grenzen in. Alles wat op 'Absolute No-Go' staat, wordt onvoorwaardelijk gerespecteerd.*" if not is_en else "*Fill out your desires and limits per category. Every 'Hard Limit' is strictly respected.*")
+            opties = (
+                "⚪ Nog niet ingevuld",
+                "🟢 Ja / Heerlijk",
+                "🟡 Nieuwsgierig / Voorzichtig",
+                "🟠 Soft Limit (Alleen bij diep vertrouwen)",
+                "🔴 Absolute No-Go (Hard Limit)"
+            )
+            nieuwe_grenzen = {}
+            for categorie, items in CHECKLIST_CATEGORIEEN.items():
+                with st.expander(categorie):
+                    for item in items:
+                        huidige_waarde = st.session_state.grenzen.get(item, "⚪ Nog niet ingevuld")
+                        keuze = st.selectbox(item, opties, index=opties.index(huidige_waarde), key=f"chk_{item}")
+                        if keuze != "⚪ Nog niet ingevuld":
+                            nieuwe_grenzen[item] = keuze
+            if st.button("💾 Sla volledige checklist op / Save Checklist"):
+                st.session_state.grenzen = nieuwe_grenzen
+                st.success("✅ Opgeslagen in jouw dossier! Bastian / Vale neemt al jouw keuzes en No-Go's direct mee.")
