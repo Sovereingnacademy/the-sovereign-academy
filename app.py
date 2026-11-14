@@ -123,3 +123,86 @@ elif st.session_state.fase == "Les":
                 st.rerun()
             else:
                 st.error("❌ Nog niet helemaal juist. Lees de theorie nog eens door.")
+elif st.session_state.fase == "Praktijkkamer":
+    mentor = st.session_state.mentor_naam
+    mentor_img = st.session_state.mentor_foto
+    if st.session_state.module_nr < 6:
+        if st.button(f"Start Module {st.session_state.module_nr + 1} ➡️"):
+            st.session_state.module_nr += 1
+            st.session_state.fase = "Les"
+            st.rerun()
+
+    tab_namen = ["💬 Practice Room" if is_en else "💬 Praktijkkamer"]
+    if st.session_state.notitieboek_actief:
+        tab_namen.append("📓 Journal" if is_en else "📓 Notitieboekje")
+    if st.session_state.grenzenlijst_actief:
+        tab_namen.append("🔒 Limits" if is_en else "🔒 Grenzenlijst")
+
+    if len(tab_namen) > 1:
+        tabs = st.tabs(tab_namen)
+        tab_chat = next(iter(tabs))
+    else:
+        tab_chat = st.container()
+
+    with tab_chat:
+        for role, text in st.session_state.chat_history:
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else USER_AVATAR)):
+                st.write(text)
+                
+        if user_input := st.chat_input(f"... ({titel_txt})"):
+            st.session_state.chat_history.append(("user", user_input))
+            with st.chat_message("user", avatar=USER_AVATAR):
+                st.write(user_input)
+            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
+                nood = f"*{mentor} stops immediately.* Breathe. You are completely safe." if is_en else f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."
+                st.session_state.chat_history.append(("assistant", nood))
+                st.rerun()
+            else:
+                with st.chat_message("assistant", avatar=mentor_img):
+                    taal_txt = "English" if is_en else "Dutch"
+                    grenzen_txt = str(st.session_state.grenzen) if st.session_state.grenzen else "None yet"
+                    regels = (
+                        f"Respond strictly in natural {taal_txt}. You are {mentor} of The Sovereign Academy (Student profile: {st.session_state.sub_type}, Limits: {grenzen_txt}). "
+                        f"ETIQUETTE: Require the student to address you formally as '{titel_txt}' (and 'u' in Dutch). Correct them strictly if they use informal pronouns, your first name, or call you Master/Mistress/Meester/Meesteres before graduating. "
+                        "TRIGGERS (add invisibly at the very end only when appropriate): [OPEN_NOTITIEBOEK] for daily check-in/reflection, [OPEN_GRENZENLIJST] to fill out limits."
+                    )
+                    gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
+                    antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse in {taal_txt}:")
+                    herladen = False
+                    if "[OPEN_NOTITIEBOEK]" in antwoord:
+                        antwoord = antwoord.replace("[OPEN_NOTITIEBOEK]", "").strip()
+                        st.session_state.notitieboek_actief = True
+                        herladen = True
+                    if "[OPEN_GRENZENLIJST]" in antwoord:
+                        antwoord = antwoord.replace("[OPEN_GRENZENLIJST]", "").strip()
+                        st.session_state.grenzenlijst_actief = True
+                        herladen = True
+                    st.write(antwoord)
+                    st.session_state.chat_history.append(("assistant", antwoord))
+                    if herladen:
+                        st.rerun()
+
+    if st.session_state.notitieboek_actief:
+        idx = tab_namen.index("📓 Journal" if is_en else "📓 Notitieboekje")
+        with tabs[idx]:
+            notitie_tekst = st.text_area("Journal / Check-in:", height=120)
+            if st.button("Submit / Indienen"):
+                if notitie_tekst.strip() and api_key:
+                    reactie = vraag_mentor(f"You are {mentor}. Respond calmly and supportively in {'English' if is_en else 'Dutch'} to this student journal entry: \"{notitie_tekst}\"")
+                    st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
+                    st.rerun()
+            for item in reversed(st.session_state.notities):
+                with st.container(border=True):
+                    st.write(item.get("tekst"))
+                    st.markdown(f"**{mentor}:** {item.get('reactie')}")
+
+    if st.session_state.grenzenlijst_actief:
+        idx = tab_namen.index("🔒 Limits" if is_en else "🔒 Grenzenlijst")
+        with tabs[idx]:
+            opties = ("🟢 Yes / Ja", "🟡 Curious / Nieuwsgierig", "🔴 Hard Limit / Absolute No-Go")
+            g1 = st.selectbox("Impact play / Fysieke discipline", opties)
+            g2 = st.selectbox("Bondage", opties)
+            g3 = st.selectbox("Daily rules / Dagelijkse regels", opties)
+            if st.button("Save / Opslaan"):
+                st.session_state.grenzen = {"Impact": g1, "Bondage": g2, "Rules": g3}
+                st.success("✅ Saved / Opgeslagen!")
