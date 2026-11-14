@@ -111,3 +111,54 @@ DOM_MODULES = {
     }
 }
 
+    5: {
+        "titel": "Dom Module 5: Etiquette, Structuur & De Psychologie van Discipline",
+        "theorie": (
+            "### 1. Waarom Etiquette en Rituelen Rust Geven\n"
+            "Vaste vormen van etiquette — zoals aanspreekvormen (*Meester/Meesteres*), vaste houdingen (*Nadu*, *Inspection*) en dagelijkse meldrituelen — zijn nooit bedoeld om een sub klein te houden. Ze creëren een duidelijke **drempel**: zodra zij de houding aanneemt of het ritueel uitvoert, weet haar brein dat ze de dagelijkse beslommeringen mag loslaten.\n\n"
+            "### 2. Houdingen Veilig en Verantwoord Inzetten\n"
+            "* **Nadu & Nadu Wide:** Een prachtige houding van openheid en overgave, maar fysiek belastend voor knieën en enkels. Zorg altijd voor een zachte ondergrond (kussen of kleed) en beperk de duur tot maximaal 10-15 minuten zonder pauze.\n"
+            "* **De Strafpose:** Gezicht naar de muur, handen op de rug. Gebruik dit kortstondig om prikkels te verlagen en rust in het hoofd te brengen, nooit als emotionele verbanning.\n\n"
+            "### 3. Dagelijkse Structuur & Real-Life Opdrachten\n"
+            "Goede RL-opdrachten (zoals een vaste bedtijd, water drinken of een avond-check-in in het notitieboekje) bouwen discipline op vanuit zorg. Geef alleen regels die haalbaar zijn in haar echte leven en controleer ze consequent maar liefdevol."
+        ),
+        "vragen": [
+            {"v": "1. Wat is het belangrijkste psychologische nut van vaste rituelen en etiquette (zoals een specifieke houding of aanspreekvorm)?", "o": ("Het helpt het brein van de sub om te schakelen van dagelijkse stress naar een veilige staat van overgave.", "Het dient om aan anderen te laten zien hoe machtig de Dom is."), "a": "Het helpt het brein van de sub om te schakelen van dagelijkse stress naar een veilige staat van overgave."},
+            {"v": "2. Waar moet je als Dominant fysiek op letten wanneer je een sub in de 'Nadu'-houding laat plaatsnemen?", "o": ("Dat ze op een zachte ondergrond knielt (zoals een kussen of kleed) en niet te lang in dezelfde houding blijft zitten.", "Dat ze altijd op een harde stenen vloer zit om discipline te kweken."), "a": "Dat ze op een zachte ondergrond knielt (zoals een kussen of kleed) en niet te lang in dezelfde houding blijft zitten."},
+            {"v": "3. De sub zit in 'Nadu' zonder spreekrecht en draait haar handpalmen rustig omhoog op haar dijen. Wat betekent dit?", "o": ("Een beleefd, non-verbaal verzoek om toestemming te vragen om iets te mogen zeggen.", "Dat ze de sessie per direct wil stoppen."), "a": "Een beleefd, non-verbaal verzoek om toestemming te vragen om iets te mogen zeggen."},
+            {"v": "4. Wat is het juiste doel van de 'Strafpose' (met het gezicht naar de muur)?", "o": ("Prikkelverlaging en zelfreflectie zodat onrustige gedachten tot bedaren komen.", "De sub het gevoel geven dat ze verstoten en waardeloos is."), "a": "Prikkelverlaging en zelfreflectie zodat onrustige gedachten tot bedaren komen."},
+            {"v": "5. Waar moet een goede Real-Life (RL) opdracht aan voldoen?", "o": ("De opdracht moet haalbaar zijn binnen haar dagelijks leven, bijdragen aan haar welzijn/rust en consequent worden opgevolgd.", "De opdracht moet haar werk of privéleven zo moeilijk mogelijk maken."), "a": "De opdracht moet haalbaar zijn binnen haar dagelijks leven, bijdragen aan haar welzijn/rust en consequent worden opgevolgd."},
+            {"v": "6. Wat gebeurt er met het vertrouwen als jij als Dom(me) een dagelijkse regel oplegt, maar er vervolgens nooit meer naar vraagt?", "o": ("Het gezag brokkelt af en de sub voelt zich niet echt gezien of gedragen.", "Dat is juist goed, want dan heeft ze meer vrijheid."), "a": "Het gezag brokkelt af en de sub voelt zich niet echt gezien of gedragen."},
+            {"v": "7. Hoe corrigeer je een sub als ze een keer een etiquette-regel (zoals een aanspreekvorm) vergeet?", "o": ("Kalm, kort en zonder verwijt ('Let op je aanspreekvorm'), zodat ze het direct kan herstellen.", "Door haar de rest van de avond boos te negeren."), "a": "Kalm, kort en zonder verwijt ('Let op je aanspreekvorm'), zodat ze het direct kan herstellen."},
+            {"v": "8. Wanneer is de 'Inspection'-pose (rechtop staan, handen achter de rug, blik vooruit) bijzonder waardevol?", "o": ("Aan het begin of einde van een sessie om een trotse, open en waardige houding te verankeren.", "Alleen wanneer de sub iets fout heeft gedaan."), "a": "Aan het begin of einde van een sessie om een trotse, open en waardige houding te verankeren."},
+            {"v": "9. Waarom is het gevaarlijk om bij FinDom (Financial Domination) geen vast budget af te spreken?", "o": ("Omdat financiële schade het echte leven en de veiligheid van de sub verwoest, wat haaks staat op zorgzaam leiderschap.", "Omdat een Dom nooit geld mag aannemen."), "a": "Omdat financiële schade het echte leven en de veiligheid van de sub verwoest, wat haaks staat op zorgzaam leiderschap."},
+            {"v": "10. Wat staat altijd boven elke vorm van etiquette en protocol?", "o": ("De fysieke en mentale veiligheid van de sub en het gebruik van het safewoord.", "Het afmaken van de geplande straf."), "a": "De fysieke en mentale veiligheid van de sub en het gebruik van het safewoord."}
+        ]
+    },
+
+    6: {
+        "titel": "Dom Module 6: Valkuilen, Zelfreflectie & Meesterschap",
+        "theorie": (
+            "### 1. Rode Vlaggen Herkennen bij Jezelf\n"
+            "Een goede Dominant blijft scherp op zijn eigen valkuilen. Vraag jezelf regelmatig eerlijk af:\n"
+            "* **Ego-check:** Geef ik deze opdracht omdat zij er rust of groei door ervaart, of omdat ik mijn eigen frustratie kwijt moet?\n"
+            "* **Isolatie voorkomen:** Stimuleer haar om haar gewone sociale contacten, werk en hobby's te onderhouden. Een gezonde D/s-dynamiek verrijkt haar leven, maar sluit haar nooit op.\n\n"
+            "### 2. Omgaan met Domdrop & Eigen Grenzen\n"
+            "Leidinggeven vraagt veel concentratie, empathie en zelfbeheersing. Ook een Dom(me) kan na een intense sessie last krijgen van vermoeidheid, twijfel of een lege batterij (*Domdrop*). Wees eerlijk over je eigen energie en plan alleen sessies als je mentaal stabiel en uitgerust bent.\n\n"
+            "### 3. Het Praktijkexamen (Live Simulatie)\n"
+            "Na het behalen van deze laatste toets stap je de Praktijkkamer binnen voor je **eindexamen**. Headmaster Bastian of Headmistress Vale laat je daar oefenen met een simulatie-submissive. Laat zien dat je kalm blijft, veiligheid biedt, haar grenzen respecteert en haar onrust in goede banen leidt."
+        ),
+        "vragen": [
+            {"v": "1. Wat is een duidelijke 'rode vlag' in het gedrag van een Dominant?", "o": ("De sub isoleren van vrienden en familie of haar wijsmaken dat ze geen safewoord nodig heeft.", "Duidelijke regels opstellen en achteraf uitgebreide aftercare geven."), "a": "De sub isoleren van vrienden en familie of haar wijsmaken dat ze geen safewoord nodig heeft."},
+            {"v": "2. Je hebt een zware, stressvolle dag op je werk gehad en bent prikkelbaar. Is dit een goed moment voor een strenge sessie?", "o": ("Nee, je moet nooit leidinggeven of straffen vanuit eigen stress of prikkelbaarheid; stel de sessie uit of kies voor rustige nabijheid.", "Ja, een sessie is de beste manier om je eigen werkstress af te reageren."), "a": "Nee, je moet nooit leidinggeven of straffen vanuit eigen stress of prikkelbaarheid; stel de sessie uit of kies voor rustige nabijheid."},
+            {"v": "3. Wat is 'Domdrop'?", "o": ("Een mentale en fysieke energiedip bij de Dominant na het dragen van intense focus en verantwoordelijkheid tijdens een sessie.", "Wanneer een Dom besluit te stoppen met BDSM."), "a": "Een mentale en fysieke energiedip bij de Dominant na het dragen van intense focus en verantwoordelijkheid tijdens een sessie."},
+            {"v": "4. De sub wil 'Out of Character' (even buiten de rol) iets bespreken wat haar dwarszit. Hoe reageer je?", "o": ("Je stapt direct uit je rol, luistert zonder oordeel en neemt haar zorgen serieus.", "Je straft haar omdat ze zonder toestemming uit haar rol stapt."), "a": "Je stapt direct uit je rol, luistert zonder oordeel en neemt haar zorgen serieus."},
+            {"v": "5. Hoe ga je om met een onderwerp dat de sub op haar checklist heeft gemarkeerd als 'Nieuwsgierig / Voorzichtig'?", "o": ("Je bespreekt het rustig vooraf, legt uit hoe het werkt en bouwt het in kleine, vrijwillige stapjes op.", "Je beschouwt het als een volmondig 'Ja' en voert het direct op volle sterkte uit."), "a": "Je bespreekt het rustig vooraf, legt uit hoe het werkt en bouwt het in kleine, vrijwillige stapjes op."},
+            {"v": "6. Waarom is zelfreflectie zo belangrijk voor een Dominant?", "o": ("Omdat macht zonder zelfkritiek blind maakt voor de subtiele signalen en behoeften van de sub.", "Alleen om indruk te maken tijdens het voorgesprek."), "a": "Omdat macht zonder zelfkritiek blind maakt voor de subtiele signalen en behoeften van de sub."},
+            {"v": "7. Je maakt als Dom(me) een inschattingsfout (bijv. een opdracht was toch te zwaar). Wat doet een sterke leider?", "o": ("Je erkent je fout eerlijk, biedt oprechte zorg en past je aanpak direct aan; kwetsbaarheid vergroot juist het vertrouwen.", "Je geeft de sub de schuld dat ze niet sterk genoeg was."), "a": "Je erkent je fout eerlijk, biedt oprechte zorg en past je aanpak direct aan; kwetsbaarheid vergroot juist het vertrouwen."},
+            {"v": "8. Wat is het ultieme teken dat jij een goede Dominant bent voor jouw sub?", "o": ("Dat zij zich bij jou veilig voelt, tot rust komt en groeit in zelfvertrouwen en eigenwaarde.", "Dat zij bang voor je is en niets meer durft te zeggen."), "a": "Dat zij zich bij jou veilig voelt, tot rust komt en groeit in zelfvertrouwen en eigenwaarde."},
+            {"v": "9. Hoe bereid je een intensieve sessie goed voor?", "o": ("Je controleert je materiaal (bijv. veiligheidsschaar bij touwen), bespreekt de grenzen en zorgt dat water, dekens en tijd voor aftercare klaarliggen.", "Je improviseert alles ter plekke zonder voorbereiding."), "a": "Je controleert je materiaal (bijv. veiligheidsschaar bij touwen), bespreekt de grenzen en zorgt dat water, dekens en tijd voor aftercare klaarliggen."},
+            {"v": "10. Wat staat centraal in de filosofie van The Sovereign Academy?", "o": ("Veiligheid, respect, bewuste overgave als kracht en dienstbaar leiderschap dat opbouwt in plaats van afbreekt.", "Totale onderwerping zonder enige regels of grenzen."), "a": "Veiligheid, respect, bewuste overgave als kracht en dienstbaar leiderschap dat opbouwt in plaats van afbreekt."}
+        ]
+    }
+}
