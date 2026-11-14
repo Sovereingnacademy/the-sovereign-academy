@@ -120,17 +120,15 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                         - Omschrijf kleine, realistische handelingen tussen asterisken (bijv. *knikt langzaam*).
                         - Reageer direct en invoelend op het bericht van de gebruiker: "{user_input}"
                         """
-                        try:
-                            response = client.models.generate_content(
-                                model='gemini-3.8-flash',
-                                contents=systeem_instructie
-                            )
-                        except Exception:
-                            response = client.models.generate_content(
-                                model='gemini-3.8-flash-lite',
-                                contents=systeem_instructie
-                            )
+                        # Zoekt automatisch een beschikbaar Flash-model op jouw sleutel
+                        beschikbare_modellen = [m.name for m in client.models.list() if "flash" in m.name.lower()]
+                        gekozen_model = beschikbare_modellen[0] if beschikbare_modellen else "gemini-3.8-flash"
+                        
+                        response = client.models.generate_content(
+                            model=gekozen_model,
+                            contents=systeem_instructie
+                        )
                         st.write(response.text)
                         st.session_state.chat_history.append(("assistant", response.text))
-                                     except Exception as e:
-                     st.error(f"Technische reden: {e}")
+                    except Exception as e:
+                        st.error(f"Technische reden: {e}")
