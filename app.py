@@ -5,32 +5,30 @@ from curriculum import MODULES
 
 st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
 
-taal = st.selectbox("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English", "🇩🇪 Deutsch", "🇫🇷 Français", "🇪🇸 Español"))
-
-TAAL_CONFIG = {
-    "🇳🇱 Nederlands": {"code": "Dutch", "bastian": "U & Meneer / Mr", "vale": "U & Mevrouw / Miss", "stop": "ROOD", "sub": "Begeleiding, Discipline, Veiligheid & Bewuste Overgave"},
-    "🇬🇧 English": {"code": "English", "bastian": "Sir or Mr", "vale": "Ma'am or Miss", "stop": "RED", "sub": "Guidance, Discipline, Safety & Conscious Submission"},
-    "🇩🇪 Deutsch": {"code": "German", "bastian": "Sie & Herr / Mr", "vale": "Sie & Frau / Miss", "stop": "ROT", "sub": "Führung, Disziplin, Sicherheit & Bewusste Hingabe"},
-    "🇫🇷 Français": {"code": "French", "bastian": "Vous & Monsieur / Mr", "vale": "Vous & Madame / Miss", "stop": "ROUGE", "sub": "Guidance, Discipline, Sécurité & Soumission Consciente"},
-    "🇪🇸 Español": {"code": "Spanish", "bastian": "Usted & Señor / Mr", "vale": "Usted & Señora / Miss", "stop": "ROJO", "sub": "Guía, Disciplina, Seguridad y Sumisión Consciente"}
-}
-cfg = TAAL_CONFIG.get(taal)
-is_nl = taal == "🇳🇱 Nederlands"
+taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
+is_en = "English" in taal
 
 st.title("🏛️ The Sovereign Academy")
-st.caption(cfg.get("sub"))
+st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 USER_AVATAR = "👤"
 
-for key, val in [("fase", "Intake"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 1), ("sub_type", "Onbekend")]:
+for key, val in [
+    ("fase", "Intake"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"),
+    ("module_nr", 1), ("sub_type", "Onbekend"), ("notitieboek_actief", False), ("grenzenlijst_actief", False)
+]:
     if key not in st.session_state:
         st.session_state[key] = val
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "notities" not in st.session_state:
+    st.session_state.notities = []
+if "grenzen" not in st.session_state:
+    st.session_state.grenzen = {}
 
 is_vale = "Vale" in st.session_state.mentor_naam
-titel_txt = cfg.get("vale") if is_vale else cfg.get("bastian")
+titel_txt = ("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr")
 
 with st.sidebar:
     try:
@@ -39,12 +37,12 @@ with st.sidebar:
         st.write("🏛️")
     st.header("📊 Academy Dossier")
     st.write(f"**Mentor:** {st.session_state.mentor_naam}")
-    st.write(f"**Address / Titel:** {titel_txt}")
+    st.write(f"**Address / Titel:** {'Formal & ' + titel_txt if is_en else 'U & ' + titel_txt}")
     st.write(f"**Profile:** {st.session_state.sub_type}")
     st.write(f"**Module:** {st.session_state.module_nr} / 6")
     st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
-    st.info(f"🚨 **Safeword:** **{cfg.get('stop')}**")
+    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Noodrem:** **ROOD**")
 
 def vraag_mentor(prompt_tekst):
     client = genai.Client(api_key=api_key)
@@ -57,15 +55,15 @@ def vraag_mentor(prompt_tekst):
     return response.text
 
 if st.session_state.fase == "Intake":
-    st.subheader("🚪 Fase 1: Welkom & Nulmeting" if is_nl else "🚪 Phase 1: Welcome & Assessment")
-    mentor_keuze = st.radio("Kies jouw begeleider:" if is_nl else "Choose your Academy guide:", (
+    st.subheader("🚪 Phase 1: Welcome & Assessment" if is_en else "🚪 Fase 1: Welkom & Nulmeting")
+    mentor_keuze = st.radio("Choose your Academy guide:" if is_en else "Kies jouw begeleider:", (
         "Headmaster Bastian",
         "Headmistress Vale"
     ))
-    v1 = st.radio("1. Hoe reageer jij op een duidelijke regel?" if is_nl else "1. How do you react to a clear rule from authority?", (
-        "Ik voel rust en wil de opdracht goed uitvoeren." if is_nl else "I feel calm and want to follow it precisely.",
-        "Ik geef graag tegengas en test de grenzen." if is_nl else "I tend to push back and test boundaries.",
-        "Ik wil de controle helemaal loslaten." if is_nl else "I want to surrender control completely."
+    v1 = st.radio("1. How do you react to a clear rule from authority?" if is_en else "1. Hoe reageer jij op een duidelijke regel?", (
+        "I feel calm and want to follow it precisely." if is_en else "Ik voel rust en wil de opdracht goed uitvoeren.",
+        "I tend to push back and test boundaries." if is_en else "Ik geef graag tegengas en test de grenzen.",
+        "I want to surrender control completely." if is_en else "Ik wil de controle helemaal loslaten."
     ))
     if st.button("Start Module 1 ➡️"):
         st.session_state.mentor_naam = mentor_keuze
@@ -76,14 +74,13 @@ if st.session_state.fase == "Intake":
 
 elif st.session_state.fase == "Les":
     mod = MODULES.get(st.session_state.module_nr)
-    if not is_nl and api_key:
-        with st.spinner(f"Loading Module {st.session_state.module_nr} in {cfg.get('code')}..."):
-            tekst_vert = vraag_mentor(f"Translate this BDSM Academy module and quiz into natural, authoritative {cfg.get('code')}. Keep the exact structure:\nTitle: {mod.get('titel')}\nTheory: {mod.get('theorie')}\nQ1: {mod.get('v1')} Options: {mod.get('o1')}\nQ2: {mod.get('v2')} Options: {mod.get('o2')}")
+    if is_en and api_key:
+        with st.spinner(f"Loading Module {st.session_state.module_nr}..."):
+            tekst_vert = vraag_mentor(f"Translate this BDSM Academy module and quiz into natural, authoritative English:\nTitle: {mod.get('titel')}\nTheory: {mod.get('theorie')}\nQ1: {mod.get('v1')} Options: {mod.get('o1')}\nQ2: {mod.get('v2')} Options: {mod.get('o2')}")
             st.markdown(tekst_vert)
             if st.button("Enter Practice Room ➡️"):
                 st.session_state.fase = "Praktijkkamer"
-                intro = vraag_mentor(f"You are {st.session_state.mentor_naam}. Write a short 3-sentence welcome in {cfg.get('code')} to your new student ({st.session_state.sub_type}). Tell them they must address you strictly as '{titel_txt}' and earn the title Master/Mistress after graduation. Ask what brings them here.")
-                st.session_state.chat_history.append(("assistant", intro))
+                st.session_state.chat_history.append(("assistant", f"*{st.session_state.mentor_naam} closes your dossier.* Good. Address me strictly as '{titel_txt}'. Titles like Master or Mistress must be earned after graduation. Tell me: what brings you here?"))
                 st.rerun()
     else:
         st.subheader(f"📚 {mod.get('titel')}")
@@ -95,7 +92,7 @@ elif st.session_state.fase == "Les":
             if t1 == mod.get("a1") and t2 == mod.get("a2"):
                 st.session_state.fase = "Praktijkkamer"
                 if not st.session_state.chat_history:
-                    st.session_state.chat_history.append(("assistant", f"*{st.session_state.mentor_naam} slaat je dossier dicht.* Goed. Spreek mij aan met '{titel_txt}'. De titel Meester of Meesteres verdien je pas na je opleiding. Vertel mij: waar liep je tegenaan en wat zoek je hier?"))
+                    st.session_state.chat_history.append(("assistant", f"*{st.session_state.mentor_naam} slaat je dossier dicht.* Goed. Spreek mij aan met 'u' en '{titel_txt}'. De titel Meester of Meesteres verdien je pas na je opleiding. Vertel mij: waar liep je tegenaan en wat zoek je hier?"))
                 st.rerun()
             else:
                 st.error("❌ Nog niet helemaal juist. Lees de theorie nog eens door.")
@@ -109,28 +106,77 @@ elif st.session_state.fase == "Praktijkkamer":
             st.session_state.fase = "Les"
             st.rerun()
 
-    for role, text in st.session_state.chat_history:
-        with st.chat_message(role, avatar=(mentor_img if role == "assistant" else USER_AVATAR)):
-            st.write(text)
-            
-    if user_input := st.chat_input(f"... ({titel_txt})"):
-        st.session_state.chat_history.append(("user", user_input))
-        with st.chat_message("user", avatar=USER_AVATAR):
-            st.write(user_input)
-        if any(w in user_input.upper() for w in ("ROOD", "RED", "ROT", "ROUGE", "ROJO")):
-            nood = vraag_mentor(f"You are {mentor}. The student just used the safeword. Immediately drop all dominance, be warm, gentle and reassuring in {cfg.get('code')} in 2 short sentences.")
-            st.session_state.chat_history.append(("assistant", nood))
-            st.rerun()
-        else:
-            with st.chat_message("assistant", avatar=mentor_img):
-                taal_code = cfg.get("code")
-                taal_regels = (
-                    f"WICHTIG / IMPORTANT: Antworte AUSSCHLIESSLICH auf {taal_code}! / Réponds UNIQUEMENT en {taal_code}! / Responde ÚNICAMENTE en {taal_code}! / Respond ONLY in {taal_code}! "
-                    f"You are {mentor} of The Sovereign Academy. Student profile: {st.session_state.sub_type}. "
-                    f"Enforce strict etiquette in {taal_code}: the student MUST address you formally as '{titel_txt}'. "
-                    "Correct them calmly and strictly if they use informal pronouns, your first name, or call you Master/Mistress/Meester/Meesteres."
-                )
-                gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
-                antwoord = vraag_mentor(f"{taal_regels}\n\nMemory of earlier chat (for context only, ignore its language):\n{gesprek}\n\nStudent's latest message: {user_input}\n\nWrite {mentor}'s response completely in {taal_code}:")
-                st.write(antwoord)
-                st.session_state.chat_history.append(("assistant", antwoord))
+    tab_namen = ["💬 Practice Room" if is_en else "💬 Praktijkkamer"]
+    if st.session_state.notitieboek_actief:
+        tab_namen.append("📓 Journal" if is_en else "📓 Notitieboekje")
+    if st.session_state.grenzenlijst_actief:
+        tab_namen.append("🔒 Limits" if is_en else "🔒 Grenzenlijst")
+
+    if len(tab_namen) > 1:
+        tabs = st.tabs(tab_namen)
+        tab_chat = tabs
+    else:
+        tab_chat = st.container()
+
+    with tab_chat:
+        for role, text in st.session_state.chat_history:
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else USER_AVATAR)):
+                st.write(text)
+                
+        if user_input := st.chat_input(f"... ({titel_txt})"):
+            st.session_state.chat_history.append(("user", user_input))
+            with st.chat_message("user", avatar=USER_AVATAR):
+                st.write(user_input)
+            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
+                nood = f"*{mentor} stops immediately.* Breathe. You are completely safe." if is_en else f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."
+                st.session_state.chat_history.append(("assistant", nood))
+                st.rerun()
+            else:
+                with st.chat_message("assistant", avatar=mentor_img):
+                    taal_txt = "English" if is_en else "Dutch"
+                    grenzen_txt = str(st.session_state.grenzen) if st.session_state.grenzen else "None yet"
+                    regels = (
+                        f"Respond strictly in natural {taal_txt}. You are {mentor} of The Sovereign Academy (Student profile: {st.session_state.sub_type}, Limits: {grenzen_txt}). "
+                        f"ETIQUETTE: Require the student to address you formally as '{titel_txt}' (and 'u' in Dutch). Correct them strictly if they use informal pronouns, your first name, or call you Master/Mistress/Meester/Meesteres before graduating. "
+                        "TRIGGERS (add invisibly at the very end only when appropriate): [OPEN_NOTITIEBOEK] for daily check-in/reflection, [OPEN_GRENZENLIJST] to fill out limits."
+                    )
+                    gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
+                    antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse in {taal_txt}:")
+                    herladen = False
+                    if "[OPEN_NOTITIEBOEK]" in antwoord:
+                        antwoord = antwoord.replace("[OPEN_NOTITIEBOEK]", "").strip()
+                        st.session_state.notitieboek_actief = True
+                        herladen = True
+                    if "[OPEN_GRENZENLIJST]" in antwoord:
+                        antwoord = antwoord.replace("[OPEN_GRENZENLIJST]", "").strip()
+                        st.session_state.grenzenlijst_actief = True
+                        herladen = True
+                    st.write(antwoord)
+                    st.session_state.chat_history.append(("assistant", antwoord))
+                    if herladen:
+                        st.rerun()
+
+    if st.session_state.notitieboek_actief:
+        idx = tab_namen.index("📓 Journal" if is_en else "📓 Notitieboekje")
+        with tabs[idx]:
+            notitie_tekst = st.text_area("Journal / Check-in:", height=120)
+            if st.button("Submit / Indienen"):
+                if notitie_tekst.strip() and api_key:
+                    reactie = vraag_mentor(f"You are {mentor}. Respond calmly and supportively in {'English' if is_en else 'Dutch'} to this student journal entry: \"{notitie_tekst}\"")
+                    st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
+                    st.rerun()
+            for item in reversed(st.session_state.notities):
+                with st.container(border=True):
+                    st.write(item.get("tekst"))
+                    st.markdown(f"**{mentor}:** {item.get('reactie')}")
+
+    if st.session_state.grenzenlijst_actief:
+        idx = tab_namen.index("🔒 Limits" if is_en else "🔒 Grenzenlijst")
+        with tabs[idx]:
+            opties = ("🟢 Yes / Ja", "🟡 Curious / Nieuwsgierig", "🔴 Hard Limit / Absolute No-Go")
+            g1 = st.selectbox("Impact play / Fysieke discipline", opties)
+            g2 = st.selectbox("Bondage", opties)
+            g3 = st.selectbox("Daily rules / Dagelijkse regels", opties)
+            if st.button("Save / Opslaan"):
+                st.session_state.grenzen = {"Impact": g1, "Bondage": g2, "Rules": g3}
+                st.success("✅ Saved / Opgeslagen!")
