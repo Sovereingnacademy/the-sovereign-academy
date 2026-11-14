@@ -35,14 +35,14 @@ with st.sidebar:
 
 def vraag_bastian(prompt_tekst):
     client = genai.Client(api_key=api_key)
-    alle_modellen = [
+    alle_modellen = (
         m.name for m in client.models.list() 
         if "flash" in m.name.lower() 
         and "1.5" not in m.name 
         and "2.0" not in m.name 
         and "2.5" not in m.name
-    ]
-    gekozen_model = alle_modellen[0] if alle_modellen else "gemini-3.8-flash"
+    )
+    gekozen_model = next(alle_modellen, "gemini-3.8-flash")
     response = client.models.generate_content(
         model=gekozen_model,
         contents=prompt_tekst,
@@ -53,10 +53,10 @@ def vraag_bastian(prompt_tekst):
 if st.session_state.fase == "Fase 1: Intake":
     st.subheader("🚪 Fase 1: Welkom & Nulmeting")
     
-    col1, col2 = st.columns([1, 4])
+    col1, col2 = st.columns(2)
     with col1:
         try:
-            st.image(BASTIAN_AVATAR, width=110)
+            st.image(BASTIAN_AVATAR, width=140)
         except Exception:
             st.write("🏛️")
     with col2:
@@ -64,17 +64,17 @@ if st.session_state.fase == "Fase 1: Intake":
     
     st.write("**Headmaster Bastian:**\n\n*\"Welkom bij The Sovereign Academy. Veel mensen stappen hier binnen met verkeerde verwachtingen, gevormd door verhalen van buitenaf of slechte ervaringen. Hier werken we anders. We breken niemand af; we bouwen op. Voordat we beginnen, wil ik weten wie ik voor me heb. Vul deze vragenlijst in. Wees gewoon eerlijk.\"*")
     
-    v1 = st.radio("1. Hoe reageer jij van nature als iemand met gezag jou een duidelijke regel geeft?", [
+    v1 = st.radio("1. Hoe reageer jij van nature als iemand met gezag jou een duidelijke regel geeft?", (
         "Ik voel rust en wil de opdracht zo goed mogelijk uitvoeren.",
         "Ik krijg meteen de neiging om tegengas te geven en te kijken hoever ik kan gaan.",
         "Ik wil de controle het liefst helemaal loslaten en mij volledig voegen naar de ander."
-    ])
+    ))
     
-    v2 = st.radio("2. Wat zoek jij op dit moment het meeste?", [
+    v2 = st.radio("2. Wat zoek jij op dit moment het meeste?", (
         "Duidelijke kaders, veiligheid en een mentor die mij helpt groeien.",
         "Spanning, uitdaging en iemand die onverstoorbaar blijft als ik de grenzen opzoek.",
         "Totale overgave, diepe discipline en vaste regels in het dagelijks leven."
-    ])
+    ))
     
     if st.button("Sla gegevens op & Ga verder"):
         if "tegengas" in v1 or "grenzen opzoek" in v2:
@@ -86,7 +86,8 @@ if st.session_state.fase == "Fase 1: Intake":
             
         st.session_state.fase = "Module 1: Theorie & Toets"
         st.rerun()
-        elif st.session_state.fase == "Module 1: Theorie & Toets":
+
+elif st.session_state.fase == "Module 1: Theorie & Toets":
     st.subheader("📚 Module 1: Veiligheid & Het Fundament")
     st.success(f"Jouw dossier is bijgewerkt. Profiel: **{st.session_state.sub_type}**.")
     
@@ -96,15 +97,15 @@ if st.session_state.fase == "Fase 1: Intake":
     st.markdown("---")
     st.write("📝 **Korte Kennistest** (Beantwoord de vragen goed om naar de praktijkkamer te gaan)")
     
-    t1 = st.radio("Vraag 1: Wat betekent het safe word 'GEEL'?", [
+    t1 = st.radio("Vraag 1: Wat betekent het safe word 'GEEL'?", (
         "We moeten onmiddellijk stoppen.",
         "Ik nader een grens; we doen het rustiger aan, maar de sessie loopt door.",
         "Ik wil mijn mentor bewust uitdagen."
-    ])
-    t2 = st.radio("Vraag 2: Wie bewaakt op de achtergrond altijd de harde grenzen?", [
+    ))
+    t2 = st.radio("Vraag 2: Wie bewaakt op de achtergrond altijd de harde grenzen?", (
         "De Dominant, want die bepaalt de regels.",
         "De submissive, door eerlijk te zijn en haar grenzen aan te geven."
-    ])
+    ))
     
     if st.button("Lever antwoorden in"):
         if "rustiger aan" in t1 and "De submissive" in t2:
@@ -115,7 +116,7 @@ if st.session_state.fase == "Fase 1: Intake":
             st.error("❌ **Headmaster Bastian schudt zijn hoofd:** *\"Nog niet helemaal. Ik laat je pas toe in de praktijkkamer als ik zeker weet dat je de veiligheidsregels snapt. Lees de tekst nog eens rustig door.\"*")
 
 elif st.session_state.fase == "Praktijkkamer":
-    tab_chat, tab_notitie = st.tabs(["💬 Praktijkkamer (Gesprek)", "📓 Mijn Notitieboekje (RL Check-in)"])
+    tab_chat, tab_notitie = st.tabs(("💬 Praktijkkamer (Gesprek)", "📓 Mijn Notitieboekje (RL Check-in)"))
     
     with tab_chat:
         for role, text in st.session_state.chat_history:
@@ -166,11 +167,11 @@ elif st.session_state.fase == "Praktijkkamer":
         st.subheader("📓 Dagelijkse Check-in & Real-Life Rapportage")
         st.write("*Gebruik dit notitieboekje op rustige momenten (zoals in de middag of avond) om je gedachten te ordenen of een opdracht te rapporteren aan Headmaster Bastian.*")
         
-        moment = st.selectbox("Welk moment van de dag is het?", [
+        moment = st.selectbox("Welk moment van de dag is het?", (
             "Middag Check-in (Moment van rust / alleen zijn)",
             "Avond Check-in (Afsluiting van de dag / bedtijd)",
             "Tussentijdse reflectie (Bij onrust of spanning)"
-        ])
+        ))
         
         notitie_tekst = st.text_area("Schrijf hier eerlijk op wat er in je omgaat of hoe je opdracht is gegaan:", height=150)
         
@@ -205,7 +206,6 @@ elif st.session_state.fase == "Praktijkkamer":
             st.write("### 🗂️ Eerdere Notities & Feedback")
             for item in reversed(st.session_state.notities):
                 with st.container(border=True):
-                    st.caption(f"📌 **{item['moment']}**")
-                    st.write(f"*Jouw notitie:* {item['tekst']}")
-                    st.markdown(f"**Headmaster Bastian:** {item['reactie']}")
-
+                    st.caption(f"📌 **{item.get('moment')}**")
+                    st.write(f"*Jouw notitie:* {item.get('tekst')}")
+                    st.markdown(f"**Headmaster Bastian:** {item.get('reactie')}")
