@@ -52,8 +52,7 @@ DOM_MODULES = {
             {"v": "9. Waarom is het belangrijk om een nieuwe sub vooraf al te vertellen wat Subdrop is?", "o": ("Zodat ze niet in paniek raakt of denkt dat de dynamiek verkeerd is als ze zich de volgende dag somber voelt.", "Zodat ze geen Subdrop krijgt."), "a": "Zodat ze niet in paniek raakt of denkt dat de dynamiek verkeerd is als ze zich de volgende dag somber voelt."},
             {"v": "10. Kan een Dominant zelf ook last krijgen van een vergelijkbare dip na een intense sessie ('Domdrop')?", "o": ("Nee, Dominanten hebben geen emoties.", "Ja, ook voor de Dom(me) vraagt leidinggeven veel mentale energie en adrenaline, dus zelfzorg is essentieel."), "a": "Ja, ook voor de Dom(me) vraagt leidinggeven veel mentale energie en adrenaline, dus zelfzorg is essentieel."}
         ]
-    }
-}
+    },
 
     3: {
         "titel": "Dom Module 3: Omgaan met Onrust ('Stuiteren'), Weerstand & Brats",
