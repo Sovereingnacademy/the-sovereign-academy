@@ -2,6 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 from curriculum import MODULES
+from checklist import CHECKLIST_CATEGORIEEN
 
 st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
 
