@@ -124,7 +124,7 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                 else:
                     try:
                         # Gecorrigeerd naar het nieuwste gemini-3.0-flash model
-                        model = genai.GenerativeModel('gemini-3.0-flash')
+                        model = genai.GenerativeModel('gemini-2.0-flash')
                         systeem_instructie = f"""
                         Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. 
                         De gebruiker is geclassificeerd als: {st.session_state.sub_type}.
