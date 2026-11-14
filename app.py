@@ -293,5 +293,5 @@ elif st.session_state.fase == "Praktijkkamer":
                         if keuze != "⚪ Nog niet ingevuld":
                             nieuwe_grenzen[item] = keuze
                             if st.button("💾 Sla volledige checklist op"):
-    st.session_state.grenzen = nieuwe_grenzen
-    st.success("✅ Opgeslagen in jouw dossier!")
+                                st.session_state.grenzen = nieuwe_grenzen
+                                st.success("✅ Opgeslagen in jouw dossier!")
