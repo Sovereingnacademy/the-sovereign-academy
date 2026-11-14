@@ -120,9 +120,15 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                         - Omschrijf kleine, realistische handelingen tussen asterisken (bijv. *knikt langzaam*).
                         - Reageer direct en invoelend op het bericht van de gebruiker: "{user_input}"
                         """
-                        # Zoekt automatisch een beschikbaar Flash-model op jouw sleutel
-                        beschikbare_modellen = [m.name for m in client.models.list() if "flash" in m.name.lower()]
-                        gekozen_model = beschikbare_modellen[0] if beschikbare_modellen else "gemini-3.8-flash"
+                        # Filtert alle oude 1.5, 2.0 en 2.5 modellen eruit en pakt alleen 3.x
+                        alle_modellen = [
+                            m.name for m in client.models.list() 
+                            if "flash" in m.name.lower() 
+                            and "1.5" not in m.name 
+                            and "2.0" not in m.name 
+                            and "2.5" not in m.name
+                        ]
+                        gekozen_model = alle_modellen if alle_modellen else "gemini-3.8-flash"
                         
                         response = client.models.generate_content(
                             model=gekozen_model,
