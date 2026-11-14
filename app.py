@@ -17,7 +17,7 @@ USER_AVATAR = "👤"
 
 for key, val in [
     ("fase", "Intake"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"),
-    ("module_nr", 1), ("sub_type", "Onbekend"), ("notitieboek_actief", False), ("grenzenlijst_actief", False)
+    ("module_nr", 0), ("sub_type", "Onbekend"), ("notitieboek_actief", False), ("grenzenlijst_actief", False)
 ]:
     if key not in st.session_state:
         st.session_state[key] = val
