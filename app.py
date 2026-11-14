@@ -19,6 +19,8 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "notities" not in st.session_state:
     st.session_state.notities = []
+if "notitieboek_actief" not in st.session_state:
+    st.session_state.notitieboek_actief = False
 
 with st.sidebar:
     try:
@@ -29,7 +31,8 @@ with st.sidebar:
     st.write("**Mentor:** Headmaster Bastian")
     st.write(f"**Huidige Fase:** {st.session_state.fase}")
     st.write(f"**Jouw Profiel:** {st.session_state.sub_type}")
-    st.write(f"**Ingediende Check-ins:** {len(st.session_state.notities)}")
+    if st.session_state.notitieboek_actief:
+        st.write(f"**Ingediende Check-ins:** {len(st.session_state.notities)}")
     st.markdown("---")
     st.info("🚨 **Noodrem:** Typ op elk gewenst moment **ROOD** in de chat om een sessie direct te stoppen.")
 
@@ -116,7 +119,11 @@ elif st.session_state.fase == "Module 1: Theorie & Toets":
             st.error("❌ **Headmaster Bastian schudt zijn hoofd:** *\"Nog niet helemaal. Ik laat je pas toe in de praktijkkamer als ik zeker weet dat je de veiligheidsregels snapt. Lees de tekst nog eens rustig door.\"*")
 
 elif st.session_state.fase == "Praktijkkamer":
-    tab_chat, tab_notitie = st.tabs(("💬 Praktijkkamer (Gesprek)", "📓 Mijn Notitieboekje (RL Check-in)"))
+    if st.session_state.notitieboek_actief:
+        tab_chat, tab_notitie = st.tabs(("💬 Praktijkkamer (Gesprek)", "📓 Mijn Notitieboekje (RL Check-in)"))
+    else:
+        tab_chat = st.container()
+        tab_notitie = None
     
     with tab_chat:
         for role, text in st.session_state.chat_history:
@@ -153,59 +160,69 @@ elif st.session_state.fase == "Praktijkkamer":
                                 "- Je bent kalm, ervaren, observant en hebt natuurlijk gezag. Beschermend en respectvol, nooit sadistisch. "
                                 "- Je leert de leerling dat bewuste overgave juist een teken van kracht is. "
                                 "- Omschrijf kleine handelingen tussen asterisken (bijv. *pakt zijn vulpen op*). "
-                                "- Gebruik het geheugen van het eerdere gesprek hieronder, zodat ze nooit iets hoeft te herhalen. Maak je zinnen volledig af.\n\n"
+                                "- Gebruik het geheugen van het eerdere gesprek hieronder, zodat ze nooit iets hoeft te herhalen. Maak je zinnen volledig af. "
+                                "- SPECIALE FUNCTIE: Als je tijdens het gesprek besluit dat de leerling baat heeft bij het opschrijven van haar gedachten, een reflectie-opdracht of een dagelijkse check-in (zoals 's middags of 's avonds), geef haar dan die opdracht in je tekst en zet helemaal aan het einde van je bericht exact de code: [OPEN_NOTITIEBOEK]\n\n"
                                 f"GESPREK TOT NU TOE:\n{gespreksverloop}\n\n"
                                 "Geef het volgende antwoord van Headmaster Bastian:"
                             )
                             antwoord = vraag_bastian(systeem_instructie)
-                            st.write(antwoord)
-                            st.session_state.chat_history.append(("assistant", antwoord))
+                            
+                            if "[OPEN_NOTITIEBOEK]" in antwoord:
+                                antwoord = antwoord.replace("[OPEN_NOTITIEBOEK]", "").strip()
+                                st.session_state.notitieboek_actief = True
+                                st.write(antwoord)
+                                st.session_state.chat_history.append(("assistant", antwoord))
+                                st.rerun()
+                            else:
+                                st.write(antwoord)
+                                st.session_state.chat_history.append(("assistant", antwoord))
                         except Exception as e:
                             st.error(f"Technische reden: {e}")
 
-    with tab_notitie:
-        st.subheader("📓 Dagelijkse Check-in & Real-Life Rapportage")
-        st.write("*Gebruik dit notitieboekje op rustige momenten (zoals in de middag of avond) om je gedachten te ordenen of een opdracht te rapporteren aan Headmaster Bastian.*")
-        
-        moment = st.selectbox("Welk moment van de dag is het?", (
-            "Middag Check-in (Moment van rust / alleen zijn)",
-            "Avond Check-in (Afsluiting van de dag / bedtijd)",
-            "Tussentijdse reflectie (Bij onrust of spanning)"
-        ))
-        
-        notitie_tekst = st.text_area("Schrijf hier eerlijk op wat er in je omgaat of hoe je opdracht is gegaan:", height=150)
-        
-        if st.button("Leg notitie op Bastians bureau"):
-            if not notitie_tekst.strip():
-                st.warning("Schrijf eerst iets op in je notitieboekje voordat je het indient.")
-            elif not api_key:
-                st.warning("⚠️ API-sleutel ontbreekt.")
-            else:
-                with st.spinner("Headmaster Bastian leest je notitie..."):
-                    try:
-                        notitie_prompt = (
-                            f"Je bent Headmaster Bastian van The Sovereign Academy. "
-                            f"De leerling heeft zojuist haar {moment} ingevuld in haar notitieboekje. "
-                            f"Haar notitie: \"{notitie_tekst}\"\n\n"
-                            "Reageer vanuit je kantoor op deze notitie. Wees kalm, ondersteunend en observant. "
-                            "Waardeer haar eerlijkheid, geef haar rust als ze onrustig is, en sluit af met een korte, bemoedigende gedachte of kleine vervolgopdracht. "
-                            "Schrijf natuurlijk Nederlands en omschrijf een kleine handeling tussen asterisken."
-                        )
-                        reactie_bastian = vraag_bastian(notitie_prompt)
-                        st.session_state.notities.append({
-                            "moment": moment,
-                            "tekst": notitie_tekst,
-                            "reactie": reactie_bastian
-                        })
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Technische reden: {e}")
-        
-        if st.session_state.notities:
-            st.markdown("---")
-            st.write("### 🗂️ Eerdere Notities & Feedback")
-            for item in reversed(st.session_state.notities):
-                with st.container(border=True):
-                    st.caption(f"📌 **{item.get('moment')}**")
-                    st.write(f"*Jouw notitie:* {item.get('tekst')}")
-                    st.markdown(f"**Headmaster Bastian:** {item.get('reactie')}")
+    if tab_notitie is not None:
+        with tab_notitie:
+            st.subheader("📓 Dagelijkse Check-in & Real-Life Rapportage")
+            st.write("*Headmaster Bastian heeft dit notitieboekje voor je geopend. Gebruik het op de afgesproken momenten om je gedachten of opdrachten te rapporteren.*")
+            
+            moment = st.selectbox("Welk moment van de dag is het?", (
+                "Middag Check-in (Moment van rust / alleen zijn)",
+                "Avond Check-in (Afsluiting van de dag / bedtijd)",
+                "Tussentijdse reflectie (Bij onrust of spanning)"
+            ))
+            
+            notitie_tekst = st.text_area("Schrijf hier eerlijk op wat er in je omgaat of hoe je opdracht is gegaan:", height=150)
+            
+            if st.button("Leg notitie op Bastians bureau"):
+                if not notitie_tekst.strip():
+                    st.warning("Schrijf eerst iets op in je notitieboekje voordat je het indient.")
+                elif not api_key:
+                    st.warning("⚠️ API-sleutel ontbreekt.")
+                else:
+                    with st.spinner("Headmaster Bastian leest je notitie..."):
+                        try:
+                            notitie_prompt = (
+                                f"Je bent Headmaster Bastian van The Sovereign Academy. "
+                                f"De leerling heeft zojuist haar {moment} ingevuld in haar notitieboekje. "
+                                f"Haar notitie: \"{notitie_tekst}\"\n\n"
+                                "Reageer vanuit je kantoor op deze notitie. Wees kalm, ondersteunend en observant. "
+                                "Waardeer haar eerlijkheid, geef haar rust als ze onrustig is, en sluit af met een korte, bemoedigende gedachte of kleine vervolgopdracht. "
+                                "Schrijf natuurlijk Nederlands en omschrijf een kleine handeling tussen asterisken."
+                            )
+                            reactie_bastian = vraag_bastian(notitie_prompt)
+                            st.session_state.notities.append({
+                                "moment": moment,
+                                "tekst": notitie_tekst,
+                                "reactie": reactie_bastian
+                            })
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Technische reden: {e}")
+            
+            if st.session_state.notities:
+                st.markdown("---")
+                st.write("### 🗂️ Eerdere Notities & Feedback")
+                for item in reversed(st.session_state.notities):
+                    with st.container(border=True):
+                        st.caption(f"📌 **{item.get('moment')}**")
+                        st.write(f"*Jouw notitie:* {item.get('tekst')}")
+                        st.markdown(f"**Headmaster Bastian:** {item.get('reactie')}")
