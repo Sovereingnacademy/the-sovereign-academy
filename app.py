@@ -8,7 +8,6 @@ st.caption("Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 
-# Jouw eigen afbeelding uit GitHub (pas aan naar .jpg als dat je bestandstype is)
 BASTIAN_AVATAR = "bastian.png"
 USER_AVATAR = "👤"
 
@@ -34,7 +33,6 @@ with st.sidebar:
     st.markdown("---")
     st.info("🚨 **Noodrem:** Typ op elk gewenst moment **ROOD** in de chat om een sessie direct te stoppen.")
 
-# Hulpfunctie om Google Gemini aan te roepen
 def vraag_bastian(prompt_tekst):
     client = genai.Client(api_key=api_key)
     alle_modellen = [
@@ -52,9 +50,6 @@ def vraag_bastian(prompt_tekst):
     )
     return response.text
 
-# ==========================================
-# FASE 1: DE INTAKE & TYPE-BEPALING
-# ==========================================
 if st.session_state.fase == "Fase 1: Intake":
     st.subheader("🚪 Fase 1: Welkom & Nulmeting")
     
@@ -65,14 +60,9 @@ if st.session_state.fase == "Fase 1: Intake":
         except Exception:
             st.write("🏛️")
     with col2:
-        st.write("""
-        *De zware houten deur valt achter je in het slot. In de ontvangsthal hangt een serene rust. Voor je zit Headmaster Bastian achter zijn bureau. Hij kijkt je kalm aan, zonder enig oordeel in zijn blik.*
-        """)
+        st.write("*De zware houten deur valt achter je in het slot. In de ontvangsthal hangt een serene rust. Voor je zit Headmaster Bastian achter zijn bureau. Hij kijkt je kalm aan, zonder enig oordeel in zijn blik.*")
     
-    st.write("""
-    **Headmaster Bastian:**  
-    *"Welkom bij The Sovereign Academy. Veel mensen stappen hier binnen met verkeerde verwachtingen, gevormd door verhalen van buitenaf of slechte ervaringen. Hier werken we anders. We breken niemand af; we bouwen op. Voordat we beginnen, wil ik weten wie ik voor me heb. Vul deze vragenlijst in. Wees gewoon eerlijk."*
-    """)
+    st.write("**Headmaster Bastian:**\n\n*\"Welkom bij The Sovereign Academy. Veel mensen stappen hier binnen met verkeerde verwachtingen, gevormd door verhalen van buitenaf of slechte ervaringen. Hier werken we anders. We breken niemand af; we bouwen op. Voordat we beginnen, wil ik weten wie ik voor me heb. Vul deze vragenlijst in. Wees gewoon eerlijk.\"*")
     
     v1 = st.radio("1. Hoe reageer jij van nature als iemand met gezag jou een duidelijke regel geeft?", [
         "Ik voel rust en wil de opdracht zo goed mogelijk uitvoeren.",
@@ -96,20 +86,12 @@ if st.session_state.fase == "Fase 1: Intake":
             
         st.session_state.fase = "Module 1: Theorie & Toets"
         st.rerun()
-
-# ==========================================
-# FASE 2: MODULE 1 (THEORIE & VERPLICHTE TOETS)
-# ==========================================
-elif st.session_state.fase == "Module 1: Theorie & Toets":
+        elif st.session_state.fase == "Module 1: Theorie & Toets":
     st.subheader("📚 Module 1: Veiligheid & Het Fundament")
     st.success(f"Jouw dossier is bijgewerkt. Profiel: **{st.session_state.sub_type}**.")
     
     with st.expander("📖 Lees eerst de basisregels door", expanded=True):
-        st.markdown("""
-        *   **Kracht & Keuze:** Onderwerping heeft niets met zwakte te maken. De controle bewust uit handen geven vraagt juist om enorme kracht en vertrouwen. Zonder jou is er geen dynamiek mogelijk; jij bepaalt op de achtergrond altijd de kaders.
-        *   **Het Verkeerslicht:** **ROOD** = Direct stoppen, zonder discussie. **GEEL** = Ik nader een grens, doe rustiger aan. **GROEN** = Alles voelt goed en veilig.
-        *   **Wederzijdse Plichten:** Een goede Dom(me) beschermt je en zorgt altijd voor nazorg (*aftercare*). Negeren als straf is uit den boze. Jouw enige harde plicht is volledige eerlijkheid over wat je voelt.
-        """)
+        st.markdown("* **Kracht & Keuze:** Onderwerping heeft niets met zwakte te maken. De controle bewust uit handen geven vraagt juist om enorme kracht en vertrouwen. Zonder jou is er geen dynamiek mogelijk; jij bepaalt op de achtergrond altijd de kaders.\n* **Het Verkeerslicht:** **ROOD** = Direct stoppen, zonder discussie. **GEEL** = Ik nader een grens, doe rustiger aan. **GROEN** = Alles voelt goed en veilig.\n* **Wederzijdse Plichten:** Een goede Dom(me) beschermt je en zorgt altijd voor nazorg (*aftercare*). Negeren als straf is uit den boze. Jouw enige harde plicht is volledige eerlijkheid over wat je voelt.")
         
     st.markdown("---")
     st.write("📝 **Korte Kennistest** (Beantwoord de vragen goed om naar de praktijkkamer te gaan)")
@@ -132,13 +114,9 @@ elif st.session_state.fase == "Module 1: Theorie & Toets":
         else:
             st.error("❌ **Headmaster Bastian schudt zijn hoofd:** *\"Nog niet helemaal. Ik laat je pas toe in de praktijkkamer als ik zeker weet dat je de veiligheidsregels snapt. Lees de tekst nog eens rustig door.\"*")
 
-# ==========================================
-# FASE 3: PRAKTIJKKAMER & NOTITIEBOEKJE (RL CHECK-IN)
-# ==========================================
 elif st.session_state.fase == "Praktijkkamer":
     tab_chat, tab_notitie = st.tabs(["💬 Praktijkkamer (Gesprek)", "📓 Mijn Notitieboekje (RL Check-in)"])
     
-    # --- TAB 1: VRIJE CHAT ---
     with tab_chat:
         for role, text in st.session_state.chat_history:
             avatar_img = BASTIAN_AVATAR if role == "assistant" else USER_AVATAR
@@ -166,26 +144,68 @@ elif st.session_state.fase == "Praktijkkamer":
                                 naam = "Leerling" if rol == "user" else "Headmaster Bastian"
                                 gespreksverloop += f"{naam}: {bericht}\n\n"
                             
-                            systeem_instructie = f"""
-                            Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. 
-                            De leerling heeft profiel: {st.session_state.sub_type}.
-                            
-                            SCHRIJFSTIJL & GEHEUGEN:
-                            - Schrijf natuurlijk, vloeiend en menselijk Nederlands.
-                            - Je bent kalm, ervaren, observant en hebt natuurlijk gezag. Beschermend en respectvol, nooit sadistisch.
-                            - Je leert de leerling dat bewuste overgave juist een teken van kracht is.
-                            - Omschrijf kleine handelingen tussen asterisken (bijv. *pakt zijn vulpen op*).
-                            - Gebruik het geheugen van het eerdere gesprek hieronder, zodat ze nooit iets hoeft te herhalen. Maak je zinnen volledig af.
-                            
-                            GESPREK TOT NU TOE:
-                            {gespreksverloop}
-                            
-                            Geef het volgende antwoord van Headmaster Bastian:
-                            """
+                            systeem_instructie = (
+                                f"Je bent Headmaster Bastian, het hoofd van The Sovereign Academy. "
+                                f"De leerling heeft profiel: {st.session_state.sub_type}. "
+                                "SCHRIJFSTIJL & GEHEUGEN: "
+                                "- Schrijf natuurlijk, vloeiend en menselijk Nederlands. "
+                                "- Je bent kalm, ervaren, observant en hebt natuurlijk gezag. Beschermend en respectvol, nooit sadistisch. "
+                                "- Je leert de leerling dat bewuste overgave juist een teken van kracht is. "
+                                "- Omschrijf kleine handelingen tussen asterisken (bijv. *pakt zijn vulpen op*). "
+                                "- Gebruik het geheugen van het eerdere gesprek hieronder, zodat ze nooit iets hoeft te herhalen. Maak je zinnen volledig af.\n\n"
+                                f"GESPREK TOT NU TOE:\n{gespreksverloop}\n\n"
+                                "Geef het volgende antwoord van Headmaster Bastian:"
+                            )
                             antwoord = vraag_bastian(systeem_instructie)
                             st.write(antwoord)
                             st.session_state.chat_history.append(("assistant", antwoord))
                         except Exception as e:
                             st.error(f"Technische reden: {e}")
 
-    # --- TAB 2: HET NOTITIEBOEKJE (RL CHECK-IN) ---
+    with tab_notitie:
+        st.subheader("📓 Dagelijkse Check-in & Real-Life Rapportage")
+        st.write("*Gebruik dit notitieboekje op rustige momenten (zoals in de middag of avond) om je gedachten te ordenen of een opdracht te rapporteren aan Headmaster Bastian.*")
+        
+        moment = st.selectbox("Welk moment van de dag is het?", [
+            "Middag Check-in (Moment van rust / alleen zijn)",
+            "Avond Check-in (Afsluiting van de dag / bedtijd)",
+            "Tussentijdse reflectie (Bij onrust of spanning)"
+        ])
+        
+        notitie_tekst = st.text_area("Schrijf hier eerlijk op wat er in je omgaat of hoe je opdracht is gegaan:", height=150)
+        
+        if st.button("Leg notitie op Bastians bureau"):
+            if not notitie_tekst.strip():
+                st.warning("Schrijf eerst iets op in je notitieboekje voordat je het indient.")
+            elif not api_key:
+                st.warning("⚠️ API-sleutel ontbreekt.")
+            else:
+                with st.spinner("Headmaster Bastian leest je notitie..."):
+                    try:
+                        notitie_prompt = (
+                            f"Je bent Headmaster Bastian van The Sovereign Academy. "
+                            f"De leerling heeft zojuist haar {moment} ingevuld in haar notitieboekje. "
+                            f"Haar notitie: \"{notitie_tekst}\"\n\n"
+                            "Reageer vanuit je kantoor op deze notitie. Wees kalm, ondersteunend en observant. "
+                            "Waardeer haar eerlijkheid, geef haar rust als ze onrustig is, en sluit af met een korte, bemoedigende gedachte of kleine vervolgopdracht. "
+                            "Schrijf natuurlijk Nederlands en omschrijf een kleine handeling tussen asterisken."
+                        )
+                        reactie_bastian = vraag_bastian(notitie_prompt)
+                        st.session_state.notities.append({
+                            "moment": moment,
+                            "tekst": notitie_tekst,
+                            "reactie": reactie_bastian
+                        })
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Technische reden: {e}")
+        
+        if st.session_state.notities:
+            st.markdown("---")
+            st.write("### 🗂️ Eerdere Notities & Feedback")
+            for item in reversed(st.session_state.notities):
+                with st.container(border=True):
+                    st.caption(f"📌 **{item['moment']}**")
+                    st.write(f"*Jouw notitie:* {item['tekst']}")
+                    st.markdown(f"**Headmaster Bastian:** {item['reactie']}")
+
