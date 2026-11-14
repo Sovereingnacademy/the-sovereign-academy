@@ -55,7 +55,19 @@ def vraag_mentor(prompt_tekst):
     return response.text
 
 if st.session_state.fase == "Intake":
-    st.subheader("🚪 Phase 1: Welcome & Assessment" if is_en else "🚪 Fase 1: Welkom & Nulmeting")
+    if is_en:
+        st.subheader("🏛️ Welcome to The Sovereign Academy")
+        with st.container(border=True):
+            st.markdown("Welkomstkader en uitleg in het Engels over The Sovereign Academy, de modules en de veiligheidsafspraken.")
+        st.markdown("---")
+        st.subheader("🚪 Phase 1: Your Assessment")
+    else:
+        st.subheader("🏛️ Welkom bij The Sovereign Academy")
+        with st.container(border=True):
+            st.markdown("Welkomstkader en uitleg in het Nederlands over The Sovereign Academy, de modules en de veiligheidsafspraken.")
+        st.markdown("---")
+        st.subheader("🚪 Fase 1: Jouw Nulmeting")
+
     mentor_keuze = st.radio("Choose your Academy guide:" if is_en else "Kies jouw begeleider:", (
         "Headmaster Bastian",
         "Headmistress Vale"
