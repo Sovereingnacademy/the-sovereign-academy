@@ -132,5 +132,5 @@ elif st.session_state.fase == "Praktijkkamer: Vrije Chat":
                             )
                         st.write(response.text)
                         st.session_state.chat_history.append(("assistant", response.text))
-                    except Exception:
-                        st.error("Het is op dit moment erg druk in de Academie. Probeer het over een minuutje nog eens.")
+                                     except Exception as e:
+                     st.error(f"Technische reden: {e}")
