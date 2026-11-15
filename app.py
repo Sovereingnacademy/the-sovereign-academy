@@ -177,17 +177,19 @@ elif st.session_state.fase == "Les":
         antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}") == q.get("a"))
 
     if st.button("Lever toets in"):
-        nodig = 8 if is_dom else 7
-        if sum(antw) >= nodig:
+        foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
+        if sum(antw) >= 8:
             st.session_state.laatste_les_tijd = datetime.now().isoformat()
             st.session_state.fase = "Praktijkkamer"
             if not st.session_state.chat_history:
-                intro = f"*{st.session_state.mentor_naam} knikt goedkeurend ({sum(antw)}/{len(vragen)}).* Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{st.session_state.mentor_naam} slaat je dossier dicht ({sum(antw)}/{len(vragen)}).* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
+                intro = f"*{st.session_state.mentor_naam} knikt goedkeurend ({sum(antw)}/10).* Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{st.session_state.mentor_naam} slaat je dossier dicht ({sum(antw)}/10).* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
                 st.session_state.chat_history.append(("assistant", intro))
             sla_op()
             st.rerun()
         else:
-            st.error(f"❌ Score: {sum(antw)}/{len(vragen)} (minimaal {nodig} vereist). Lees de theorie nog eens door.")
+            st.error(f"❌ Score: {sum(antw)}/10 (minimaal 8 vereist). Je liep vast op:\n" + "\n".join(f"- {fv}" for fv in foute_vragen))
+            bijles = vraag_mentor(f"You are {st.session_state.mentor_naam}. The student failed Module {nr} on these questions: {foute_vragen}. Give short, clear, encouraging tutoring in Dutch specifically explaining the concepts behind these missed questions so they understand before retaking the test.")
+            st.info(f"🎓 **Persoonlijke Bijles van {st.session_state.mentor_naam}:**\n\n{bijles}")
 
 elif st.session_state.fase == "Afstuderen":
     if st.session_state.rol == "Dominant":
@@ -198,7 +200,7 @@ elif st.session_state.fase == "Afstuderen":
             st.session_state.chat_history = [("assistant", f"*[{st.session_state.mentor_naam}]:* Examen gestart.\n\n**Simulatie-Sub:** *friemelt onrustig aan haar mouw* \"Ik weet niet of ik dit wel kan vanavond...\"")]
             sla_op()
             st.rerun()
-        else:
+    else:
         if not st.session_state.get("sub_examen_gedaan"):
             st.subheader("🎭 Eindproef: Praktijkexamen Zelfbescherming & Etiquette")
             st.write("Voordat je afstudeert en in Fase 3 een Verbond sluit, test jouw mentor of jij jouw grenzen en etiquette in de praktijk beheerst.")
