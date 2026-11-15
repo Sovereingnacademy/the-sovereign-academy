@@ -99,6 +99,7 @@ if st.session_state.get("gids_open"):
                         st.markdown(f"### {m_info.get('naam', 'Begeleider')} — *{m_info.get('specialisatie', '')}*")
                         st.write(m_info.get("bio_nl", ""))
     st.stop()
+    
 
 if st.session_state.fase == "Intake":
     try:
