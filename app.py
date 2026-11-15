@@ -144,7 +144,7 @@ if st.session_state.fase == "Intake":
                 st.write("👑")
             st.markdown("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
 
-        with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
+    with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
         for (geslacht, profiel), m_info in MEESTERS.items():
             st.markdown(f"**{m_info.get('naam')}** (*{profiel} — {geslacht}*): {m_info.get('stijl')}")
 
