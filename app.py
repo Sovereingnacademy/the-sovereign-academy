@@ -35,6 +35,14 @@ def sla_op():
         sb.table("dossiers").upsert(data).execute()
 
 def vraag_mentor(prompt_tekst):
+    @st.cache_data(show_spinner=False)
+def vertaal_en(tekst):
+    if not tekst or not api_key:
+        return tekst
+    return vraag_mentor(f"Translate the following text naturally into English, preserving all markdown formatting, emojis, and BDSM/D/s terminology accurately. Output ONLY the translation:\n\n{tekst}")
+
+def t(tekst):
+    return vertaal_en(tekst) if is_en else tekst
     client = genai.Client(api_key=api_key)
     modellen = (m.name for m in client.models.list() if "flash" in m.name.lower() and not any(x in m.name for x in ("1.5", "2.0", "2.5")))
     return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=2000)).text
