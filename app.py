@@ -21,7 +21,7 @@ sb_url, sb_key = st.secrets.get("SUPABASE_URL", ""), st.secrets.get("SUPABASE_KE
 sb = create_client(sb_url, sb_key) if (sb_url and sb_key) else None
 MEESTER_FOTOS = {"Meester Julian": "julian.jpg", "Meester Marcus": "marcus.jpg", "Meester Viktor": "victor.jpg", "Meesteres Elena": "elena.jpg", "Meesteres Sophia": "sophia.jpg", "Meesteres Clara": "clara.jpg"}
 
-for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False)]:
+for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("steun_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False)]:
     if k not in st.session_state:
         st.session_state[k] = v
 for k in ("chat_history", "notities"):
@@ -59,6 +59,35 @@ def vertaal_module(mod_dict):
     except Exception:
         return mod_dict
 
+def toon_steun_en_feedback(sleutel_prefix):
+    st.subheader("☕ Support The Sovereign Academy" if is_en else "☕ Steun The Sovereign Academy")
+    st.write("The Sovereign Academy remains 100% free and anonymous so everyone can learn safely. Would you like to help cover the AI costs?" if is_en else "The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
+    st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
+    st.markdown("---")
+    st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
+    st.caption("🔄 *This curated list is updated regularly with new safe recommendations.*" if is_en else "🔄 *Deze lijst wordt van tijd tot tijd aangevuld met nieuwe, zorgvuldig gekozen aanbevelingen.*")
+    with st.container(border=True):
+        st.markdown("**1. Comfort, Kneeling Pads & Aftercare**\nSupportive cushions for Nadu poses, luxury journals for check-ins, and natural massage oils for Aftercare." if is_en else "**1. Comfort, Knielkussens & Aftercare**\nOndersteunende kussens voor de Nadu-pose, luxe notitieboeken en natuurlijke massage-olie voor Aftercare.")
+        st.link_button("🔗 View selection (Bol.com)" if is_en else "🔗 Bekijk selectie (Bol.com)", "https://bol.com")
+    with st.container(border=True):
+        st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
+        st.link_button("🔗 View selection (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk selectie (EasyToys / Lovehoney)", "https://easytoys.nl")
+    with st.container(border=True):
+        st.markdown("**3. Essential Books on D/s Psychology & Communication**\nRecommended reading on consent, negotiation, and healthy power dynamics." if is_en else "**3. Verdiepende Boeken over D/s-Psychologie & Communicatie**\nAanbevolen literatuur over consent, negotiation en gezonde machtsverhoudingen.")
+        st.link_button("🔗 View reading list (Amazon NL)" if is_en else "🔗 Bekijk boekenlijst (Amazon NL)", "https://amazon.nl")
+    with st.container(border=True):
+        st.markdown("**4. App-Controlled Play & Long-Distance Control (Lovense — Official Store)**\nPersonal Academy favorite: high-quality, app-controlled toys for long-distance D/s dynamics and remote control. Discreetly shipped from within Europe with a 1-year warranty (PayPal, Klarna & Card)." if is_en else "**4. App-Gestuurde Interactie & Afstandsbediening (Lovense — Officiële Shop)**\nPersoonlijke favoriet van de Academie: hoogwaardige, app-gestuurde toys voor D/s-dynamieken op afstand. Discreet en snel verzonden vanuit Europa (geen douanekosten, 1 jaar garantie, betalen via o.a. Klarna, PayPal of creditcard).")
+        st.link_button("🔗 View Official Lovense Store" if is_en else "🔗 Bekijk Officiële Lovense Shop", "https://lovense.com")
+    st.markdown("---")
+    st.subheader("💡 Anonymous Feedback, Questions & Wishes" if is_en else "💡 Anonieme Feedback, Vragen & Wensen")
+    st.write("Missing a topic, want to dive deeper into something, or have a question about the app? Leave an anonymous message below (100% private)." if is_en else "Mis je een onderwerp, wil je ergens dieper op ingaan of heb je een vraag over de app? Laat hieronder een anoniem bericht achter (100% privé).")
+    fb_cat = st.selectbox("Topic:" if is_en else "Onderwerp:", ("Nieuw lesonderwerp / verdieping", "Vraag over de app", "Suggestie / verbeterpunt", "Compliment") if not is_en else ("New lesson topic / deeper dive", "Question about the app", "Suggestion / improvement", "Compliment"), key=f"{sleutel_prefix}_cat")
+    fb_tekst = st.text_area("Your anonymous message:" if is_en else "Jouw anonieme bericht:", height=100, key=f"{sleutel_prefix}_txt")
+    if st.button("📩 Send Anonymously" if is_en else "📩 Verstuur Anoniem", key=f"{sleutel_prefix}_btn") and fb_tekst.strip():
+        if sb:
+            sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip()}).execute()
+        st.success("✅ Thank you! Your message has been received anonymously." if is_en else "✅ Dankjewel! Je bericht is volledig anoniem ontvangen.")
+
 is_vale = "Vale" in st.session_state.mentor_naam
 titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.session_state.verbond_actief else (("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr"))
 
@@ -84,6 +113,11 @@ with st.sidebar:
     st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
     if st.button(("🏛️ Meet Staff & Masters" if is_en else "🏛️ Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
         st.session_state.gids_open = not st.session_state.gids_open
+        st.session_state.steun_open = False
+        st.rerun()
+    if st.button(("🛍️ Recommended & Support" if is_en else "🛍️ Aanbevolen & Steun") if not st.session_state.steun_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
+        st.session_state.steun_open = not st.session_state.steun_open
+        st.session_state.gids_open = False
         st.rerun()
     if st.button(("🆘 Care Mode (Help/Rest)" if is_en else "🆘 Zorgmodus (Direct hulp/rust)") if not st.session_state.zorgmodus else ("✅ Close Care Mode" if is_en else "✅ Zorgmodus sluiten")):
         st.session_state.zorgmodus = not st.session_state.zorgmodus
@@ -117,6 +151,10 @@ if st.session_state.gids_open:
                 st.write(t(m_info.get("stijl")))
     st.stop()
 
+if st.session_state.steun_open:
+    toon_steun_en_feedback("menu")
+    st.stop()
+
 if st.session_state.fase == "Intake":
     try:
         st.image("academy.jpg", use_container_width=True)
@@ -134,7 +172,7 @@ if st.session_state.fase == "Intake":
                     if in_naam.strip() and len(in_pin.strip()) == 4:
                         res = sb.table("dossiers").select("*").eq("schuilnaam", in_naam.strip()).execute()
                         if res.data:
-                            d = res.data[0]
+                            d = res.data
                             if d.get("pincode") == in_pin.strip():
                                 for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd"):
                                     if d.get(k) is not None:
@@ -383,27 +421,4 @@ elif st.session_state.fase == "Praktijkkamer":
                 sla_op()
 
     with tabs[tab_namen.index(t_shop)]:
-        st.subheader("☕ Support The Sovereign Academy" if is_en else "☕ Steun The Sovereign Academy")
-        st.write("The Sovereign Academy remains 100% free and anonymous so everyone can learn safely. Would you like to help cover the AI costs?" if is_en else "The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
-        st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
-        st.markdown("---")
-        st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
-        st.caption("🔄 *This curated list is updated regularly with new safe recommendations.*" if is_en else "🔄 *Deze lijst wordt van tijd tot tijd aangevuld met nieuwe, zorgvuldig gekozen aanbevelingen.*")
-        with st.container(border=True):
-            st.markdown("**1. Comfort, Kneeling Pads & Aftercare**\nSupportive cushions for Nadu poses, luxury journals for check-ins, and natural massage oils for Aftercare." if is_en else "**1. Comfort, Knielkussens & Aftercare**\nOndersteunende kussens voor de Nadu-pose, luxe notitieboeken en natuurlijke massage-olie voor Aftercare.")
-            st.link_button("🔗 View selection (Bol.com)" if is_en else "🔗 Bekijk selectie (Bol.com)", "https://www.bol.com")
-        with st.container(border=True):
-            st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
-            st.link_button("🔗 View selection (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk selectie (EasyToys / Lovehoney)", "https://easytoys.nl")
-        with st.container(border=True):
-            st.markdown("**3. Essential Books on D/s Psychology & Communication**\nRecommended reading on consent, negotiation, and healthy power dynamics." if is_en else "**3. Verdiepende Boeken over D/s-Psychologie & Communicatie**\nAanbevolen literatuur over consent, negotiation en gezonde machtsverhoudingen.")
-            st.link_button("🔗 View reading list (Amazon NL)" if is_en else "🔗 Bekijk boekenlijst (Amazon NL)", "https://www.amazon.nl")
-        st.markdown("---")
-        st.subheader("💡 Anonymous Feedback, Questions & Wishes" if is_en else "💡 Anonieme Feedback, Vragen & Wensen")
-        st.write("Missing a topic, want to dive deeper into something, or have a question about the app? Leave an anonymous message below (100% private)." if is_en else "Mis je een onderwerp, wil je ergens dieper op ingaan of heb je een vraag over de app? Laat hieronder een anoniem bericht achter (100% privé).")
-        fb_cat = st.selectbox("Topic:" if is_en else "Onderwerp:", ("Nieuw lesonderwerp / verdieping", "Vraag over de app", "Suggestie / verbeterpunt", "Compliment") if not is_en else ("New lesson topic / deeper dive", "Question about the app", "Suggestion / improvement", "Compliment"))
-        fb_tekst = st.text_area("Your anonymous message:" if is_en else "Jouw anonieme bericht:", height=100, key="fb_input")
-        if st.button("📩 Send Anonymously" if is_en else "📩 Verstuur Anoniem") and fb_tekst.strip():
-            if sb:
-                sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip()}).execute()
-            st.success("✅ Thank you! Your message has been received anonymously." if is_en else "✅ Dankjewel! Je bericht is volledig anoniem ontvangen.")
+        toon_steun_en_feedback("tab")
