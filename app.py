@@ -80,7 +80,12 @@ if st.session_state.zorgmodus:
     st.warning("🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
 
 if st.session_state.fase == "Intake":
+    try:
+        st.image("academy.jpg", use_container_width=True)
+    except Exception:
+        pass
     st.subheader("🏛️ Welcome to The Sovereign Academy" if is_en else "🏛️ Welkom bij The Sovereign Academy")
+
     with st.container(border=True):
         st.markdown("**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
         if sb:
