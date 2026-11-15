@@ -1,335 +1,143 @@
-import streamlit as st
-from datetime import datetime, timedelta
-from google import genai
-from google.genai import types
-from supabase import create_client
-from curriculum import MODULES
-from checklist import CHECKLIST_CATEGORIEEN
-from meesters import MEESTERS
-from dom_curriculum import DOM_MODULES
+MODULES = {
+    1: {
+        "titel": "Sub Module 1: Bewuste Overgave, Kracht & Zelfkennis",
+        "theorie": (
+            "### 1. Overgave is een Keuze, Geen Zwakte\n"
+            "Echte submissie betekent niet dat je minderwaardig bent of niets meer te zeggen hebt. Integendeel: bewuste overgave is een **actieve keuze** vanuit kracht. Je vertrouwt een ander tijdelijk de regie toe omdat jij dat wilt, en jij behoudt altijd de eindverantwoordelijkheid over jouw eigen grenzen.\n\n"
+            "### 2. Waarom Zoek je Overgave? (De Psychologie)\n"
+            "* **Mentale rust (Loslaten):** Veel sterke mensen die overdag alles moeten regelen en beslissen, ervaren diepe rust wanneer een betrouwbare Dominant de leiding overneemt.\n"
+            "* **Structuur en focus:** Duidelijke kaders en regels halen de onrust uit je hoofd en brengen je terug in je lichaam.\n\n"
+            "### 3. Het Verschil Tussen Een Goede Dom en Een 'Wannabe'\n"
+            "Een echte Dominant respecteert jouw tempo, luistert naar je grenzen en zorgt voor jouw veiligheid. Een 'wannabe' eist direct gehoorzaamheid zonder vertrouwen op te bouwen, negeert je grenzen of gebruikt jouw overgave alleen voor zijn eigen ego."
+        ),
+        "vragen": [
+            {"v": "1. Wat is het belangrijkste kenmerk van gezonde submissie?", "o": ("Dat je vanuit eigen kracht en vertrouwen tijdelijk de regie uit handen geeft.", "Dat je nooit meer een eigen mening mag hebben."), "a": "Dat je vanuit eigen kracht en vertrouwen tijdelijk de regie uit handen geeft."},
+            {"v": "2. Waarom ervaren veel zelfstandige mensen rust in een D/s-dynamiek?", "o": ("Omdat ze even niet alles zelf hoeven te beslissen en de controle mogen loslaten.", "Omdat ze niet zelfstandig kunnen denken."), "a": "Omdat ze even niet alles zelf hoeven te beslissen en de controle mogen loslaten."},
+            {"v": "3. Hoe herken je een 'wannabe' Dominant?", "o": ("Hij eist direct blinde gehoorzaamheid zonder voorgesprek en zet je onder druk om grenzen te negeren.", "Hij neemt uitgebreid de tijd om je grenzen te bespreken."), "a": "Hij eist direct blinde gehoorzaamheid zonder voorgesprek en zet je onder druk om grenzen te negeren."},
+            {"v": "4. Wie blijft uiteindelijk altijd verantwoordelijk voor jouw eigen veiligheid en grenzen?", "o": ("Jijzelf, door eerlijk en op tijd te communiceren.", "Alleen de Dominant, jij hoeft nooit iets te zeggen."), "a": "Jijzelf, door eerlijk en op tijd te communiceren."},
+            {"v": "5. Is een submissive minder waard dan een Dominant?", "o": ("Nee, beide rollen zijn gelijkwaardig; het verschil zit alleen in de rolverdeling.", "Ja, de Dominant staat altijd boven de sub als mens."), "a": "Nee, beide rollen zijn gelijkwaardig; het verschil zit alleen in de rolverdeling."},
+            {"v": "6. Wat doe je als een Dominant zegt: 'Een echte sub heeft geen grenzen nodig'?", "o": ("Direct afstand nemen; dit is een grote rode vlag van onveiligheid.", "Je grenzen loslaten om te bewijzen dat je een echte sub bent."), "a": "Direct afstand nemen; dit is een grote rode vlag van onveiligheid."},
+            {"v": "7. Wat betekent 'service' (dienstbaarheid) in een gezonde D/s-dynamiek?", "o": ("Aandacht, toewijding en zorg voor elkaar vanuit wederzijds respect.", "Dat je al het huishoudelijk werk zonder waardering moet doen."), "a": "Aandacht, toewijding en zorg voor elkaar vanuit wederzijds respect."},
+            {"v": "8. Mag een submissive vragen stellen over waarom een bepaalde regel bestaat?", "o": ("Ja, buiten de sessie om ('Out of Character') is er altijd ruimte voor open overleg.", "Nee, een sub mag nooit vragen stellen."), "a": "Ja, buiten de sessie om ('Out of Character') is er altijd ruimte voor open overleg."}
+        ]
+    },
 
-st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
-taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
-is_en = "English" in taal
-st.title("🏛️ The Sovereign Academy")
-st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
+    2: {
+        "titel": "Sub Module 2: Consent, Limits & Het Verkeerslichtsysteem",
+        "theorie": (
+            "### 1. Jouw Stem is Je Sterkste Veiligheidsmiddel\n"
+            "Binnen BDSM en D/s is **consent (instemming)** het fundament van alles. Instemming is nooit definitief: je mag op elk moment van gedachten veranderen, zelfs midden in een sessie.\n\n"
+            "### 2. Hard Limits versus Soft Limits\n"
+            "* **Hard Limit (Rood):** Een absolute grens die voortkomt uit trauma, walging, angst of fysiek gevaar. Hier gaat niemand overheen, ook niet 'om even te proberen'.\n"
+            "* **Soft Limit (Oranje/Geel):** Iets wat je spannend of onbekend vindt, maar waar je onder strikte voorwaarden en met veel vertrouwen misschien voorzichtig aan wilt ruiken.\n\n"
+            "### 3. Het Verkeerslichtsysteem (GROEN / GEEL / ROOD)\n"
+            "* **GROEN:** Alles gaat goed, ik voel me veilig en kan doorgaan.\n"
+            "* **GEEL:** Het wordt intens of spannend; verlaag het tempo of check even bij mij in.\n"
+            "* **ROOD:** Stop onmiddellijk met elke handeling en stap uit de rol."
+        ),
+        "vragen": [
+            {"v": "1. Wat is het verschil tussen een Hard Limit en een Soft Limit?", "o": ("Een Hard Limit is een absolute no-go; een Soft Limit is een spannende grens die alleen met veel vertrouwen voorzichtig verkend mag worden.", "Een Hard Limit mag je na een maand wel overschrijden."), "a": "Een Hard Limit is een absolute no-go; een Soft Limit is een spannende grens die alleen met veel vertrouwen voorzichtig verkend mag worden."},
+            {"v": "2. Wat betekent het als jij tijdens een oefening 'GEEL' zegt?", "o": ("Doe het iets rustiger aan, verlaag de intensiteit of check even bij mij in.", "Stop de hele sessie direct en verlaat de kamer."), "a": "Doe het iets rustiger aan, verlaag de intensiteit of check even bij mij in."},
+            {"v": "3. Wanneer mag je het safewoord 'ROOD' gebruiken?", "o": ("Op elk gewenst moment, zonder dat je jezelf hoeft te verontschuldigen of te verdedigen.", "Alleen als je echt gewond bent."), "a": "Op elk gewenst moment, zonder dat je jezelf hoeft te verontschuldigen of te verdedigen."},
+            {"v": "4. Wat als je niet kunt praten (bijvoorbeeld door een gag of intense spanning)?", "o": ("Je spreekt vooraf een non-verbaal safewoord af, zoals een belletje vasthouden of drie keer tikken.", "Dan kun je helaas niets aangeven."), "a": "Je spreekt vooraf een non-verbaal safewoord af, zoals een belletje vasthouden of drie keer tikken."},
+            {"v": "5. Mag je op een later moment terugkomen op iets waarmee je eerder had ingestemd?", "o": ("Ja, consent is doorlopend en mag altijd worden ingetrokken.", "Nee, afspraak is afspraak."), "a": "Ja, consent is doorlopend en mag altijd worden ingetrokken."},
+            {"v": "6. Waarom is het belangrijk om ook medische klachten (zoals knie-, rug- of hartklachten) vooraf te delen?", "o": ("Zodat houdingen en handelingen veilig worden aangepast zonder blijvende schade.", "Dat hoeft alleen als je een dokter bezoekt."), "a": "Zodat houdingen en handelingen veilig worden aangepast zonder blijvende schade."},
+            {"v": "7. Een Dominant reageert geïrriteerd wanneer jij 'ROOD' zegt. Wat zegt dat over hem?", "o": ("Dat hij onveilig is en zijn eigen ego belangrijker vindt dan jouw welzijn.", "Dat jij de sessie hebt verpest."), "a": "Dat hij onveilig is en zijn eigen ego belangrijker vindt dan jouw welzijn."},
+            {"v": "8. Wat hoort in een goed voorgesprek (negotiation) aan bod te komen?", "o": ("Wensen, Hard Limits, Soft Limits, medische aandachtspunten, safewoorden en wensen voor Aftercare.", "Alleen welke straffen je wilt krijgen."), "a": "Wensen, Hard Limits, Soft Limits, medische aandachtspunten, safewoorden en wensen voor Aftercare."}
+        ]
+    },
 
-api_key = st.secrets.get("GEMINI_API_KEY", "")
-sb_url, sb_key = st.secrets.get("SUPABASE_URL", ""), st.secrets.get("SUPABASE_KEY", "")
-sb = create_client(sb_url, sb_key) if (sb_url and sb_key) else None
-MEESTER_FOTOS = {
-    "Meester Julian": "julian.jpg", "Meester Marcus": "marcus.jpg", "Meester Victor": "victor.jpg",
-    "Meesteres Elena": "elena.jpg", "Meesteres Sophia": "sophia.jpg", "Meesteres Clara": "clara.jpg"
+        3: {
+        "titel": "Sub Module 3: Etiquette, Houdingen & Protocol",
+        "theorie": (
+            "### 1. Waarom Etiquette Rust Geeft in Je Hoofd\n"
+            "Vaste omgangsvormen — zoals aanspreekvormen (*Meneer/Mevrouw* of *Meester/Meesteres*), oogcontact en lichaamshoudingen — zijn geen spelletje om je klein te houden. Ze werken als een **mentale drempel**: zodra jij de houding aanneemt, schakelt je brein van de drukke buitenwereld naar rust en focus.\n\n"
+            "### 2. Belangrijke Basishoudingen\n"
+            "* **Nadu:** Je zit op je knieën (altijd op een zacht kussen of kleed!), knieën iets uit elkaar, rug recht, handen ontspannen met de handpalmen omlaag op je bovenbenen.\n"
+            "* **Inspection (Presentatie):** Rechtop staan, voeten op heupbreedte, handen op de rug en een open, trotse blik recht vooruit.\n"
+            "* **De Strafpose:** Gezicht naar de muur, handen op de rug. Bedoeld om prikkels te verlagen en je gedachten te ordenen.\n\n"
+            "### 3. Non-Verbaal Communiceren\n"
+            "Heb je even geen spreekrecht, maar wil je iets belangsrijks melden? Draai dan in *Nadu* rustig één handpalm omhoog op je dij. Een oplettende Dominant ziet direct dat je toestemming vraagt om te spreken."
+        ),
+        "vragen": [
+            {"v": "1. Wat is het belangrijkste mentale doel van etiquette en vaste rituelen?", "o": ("Het helpt je brein om de drukte van de dag los te laten en veilig te landen in overgave.", "Het dient alleen om aan anderen te laten zien hoe streng de Dom is."), "a": "Het helpt je brein om de drukte van de dag los te laten en veilig te landen in overgave."},
+            {"v": "2. Hoe zit je correct in de 'Nadu'-houding?", "o": ("Op een zachte ondergrond, knieën licht gespreid, rug recht en handpalmen omlaag op je bovenbenen.", "Op een harde stenen vloer met gebogen rug en gekruiste armen."), "a": "Op een zachte ondergrond, knieën licht gespreid, rug recht en handpalmen omlaag op je bovenbenen."},
+            {"v": "3. Waar moet je fysiek altijd op letten als je langere tijd in 'Nadu' zit?", "o": ("Dat je knieën en enkels niet overbelast raken en je tijdig aangeeft als je last krijgt of van houding moet wisselen.", "Dat je door de pijn heen bijt totdat je benen slapen."), "a": "Dat je knieën en enkels niet overbelast raken en je tijdig aangeeft als je last krijgt of van houding moet wisselen."},
+            {"v": "4. Hoe vraag je beleefd toestemming om te spreken wanneer je in 'Nadu' zit zonder spreekrecht?", "o": ("Door rustig één handpalm omhoog te draaien op je dijbeen.", "Door hard te zuchten tot de Dom kijkt."), "a": "Door rustig één handpalm omhoog te draaien op je dijbeen."},
+            {"v": "5. Wat straalt de 'Inspection'-houding uit?", "o": ("Openheid, trots en waardige aanwezigheid.", "Schaamte en onzekerheid."), "a": "Openheid, trots en waardige aanwezigheid."},
+            {"v": "6. Waarvoor dient de 'Strafpose' (met het gezicht naar de muur)?", "o": ("Om prikkels van buitenaf te verminderen zodat onrustige gedachten tot bedaren komen.", "Om je het gevoel te geven dat je verstoten bent."), "a": "Om prikkels van buitenaf te verminderen zodat onrustige gedachten tot bedaren komen."},
+            {"v": "7. Je vergeet per ongeluk de juiste aanspreekvorm te gebruiken. Wat is de beste reactie?", "o": ("Rustig je fout herstellen met de juiste aanspreekvorm, zonder in paniek te raken.", "Boos weglopen omdat het niet lukt."), "a": "Rustig je fout herstellen met de juiste aanspreekvorm, zonder in paniek te raken."},
+            {"v": "8. Wat gaat altijd vóór elke vorm van etiquette of houding?", "o": ("Jouw lichamelijke veiligheid, ademhaling en het gebruik van het safewoord.", "Het koste wat kost volhouden van de pose."), "a": "Jouw lichamelijke veiligheid, ademhaling en het gebruik van het safewoord."}
+        ]
+    },
+
+        4: {
+        "titel": "Sub Module 4: Subspace, Endorfines & Subdrop Begrijpen",
+        "theorie": (
+            "### 1. Wat Gebeurt Er in Je Brein Tijdens Subspace?\n"
+            "Wanneer je je diep overgeeft aan een sessie, intense focus of fysieke prikkels (zoals bondage of impact play), maakt je lichaam een krachtige mix van **endorfine**, **oxytocine** en **adrenaline** aan. Hierdoor kom je in **Subspace**: een zweverige, kalme roes waarin dagelijkse zorgen verdwijnen en pijn veel zachter aanvoelt.\n\n"
+            "### 2. Waarom Voorzichtigheid in Subspace Belangrijk Is\n"
+            "In die diepe roes werkt jouw eigen pijn- en vermoeidheidsrem minder scherp. Daarom spreek je grenzen altijd vóór de sessie af en ga je in Subspace geen onbekende, nieuwe risico's aan.\n\n"
+            "### 3. Subdrop Herkennen en Opvangen (12 tot 48 uur later)\n"
+            "* **Wat is Subdrop?** Na de sessie zakken de hoge hormoonspiegels weer terug naar normaal. Tussen **12 en 48 uur later** kun je je plotseling leeg, somber, moe of huilerig voelen.\n"
+            "* **Dit is volkomen normaal:** Het betekent niet dat de sessie fout was of dat er iets mis is met jou. Zorg voor warmte, water, rust en stuur een berichtje naar je begeleider."
+        ),
+        "vragen": [
+            {"v": "1. Wat is 'Subspace'?", "o": ("Een diepe, kalme trance veroorzaakt door endorfine en oxytocine tijdens overgave.", "Een straf waarbij je in een aparte kamer moet zitten."), "a": "Een diepe, kalme trance veroorzaakt door endorfine en oxytocine tijdens overgave."},
+            {"v": "2. Waarom mag je in diepe Subspace beter geen nieuwe, onbesproken grenzen verkennen?", "o": ("Omdat endorfine je pijngrens verdooft, waardoor je te laat voelt dat iets te ver gaat.", "Omdat je in Subspace niet mag praten."), "a": "Omdat endorfine je pijngrens verdooft, waardoor je te laat voelt dat iets te ver gaat."},
+            {"v": "3. Wanneer treedt 'Subdrop' meestal op?", "o": ("Tussen 12 en 48 uur na een intensieve sessie, wanneer de hormoonspiegels dalen.", "Alleen tijdens de eerste 2 minuten van een sessie."), "a": "Tussen 12 en 48 uur na een intensieve sessie, wanneer de hormoonspiegels dalen."},
+            {"v": "4. Welke symptomen horen bij Subdrop?", "o": ("Plotselinge somberheid, huilbuien, leeg gevoel, vermoeidheid of onzekerheid.", "Extreme hyperactiviteit en honger."), "a": "Plotselinge somberheid, huilbuien, leeg gevoel, vermoeidheid of onzekerheid."},
+            {"v": "5. Betekent Subdrop dat de sessie of jouw band met je Dominant niet goed was?", "o": ("Nee, het is een natuurlijke lichamelijke reactie op een grote hormoonschommeling.", "Ja, het betekent altijd dat je moet stoppen met D/s."), "a": "Nee, het is een natuurlijke lichamelijke reactie op een grote hormoonschommeling."},
+            {"v": "6. Wat helpt het beste wanneer je merkt dat je in een Subdrop zit?", "o": ("Warmte, voldoende water drinken, goed eten, rust nemen en contact zoeken met je begeleider.", "Jezelf opsluiten en je schamen voor je tranen."), "a": "Warmte, voldoende water drinken, goed eten, rust nemen en contact zoeken met je begeleider."},
+            {"v": "7. Waarom rillen veel mensen direct na afloop van een intensieve sessie?", "o": ("Door de plotselinge daling van adrenaline en spanning in het zenuwstelsel.", "Alleen omdat ze te weinig kleren aan hebben."), "a": "Door de plotselinge daling van adrenaline en spanning in het zenuwstelsel."},
+            {"v": "8. Wat is 'Aftercare'?", "o": ("De warme, zorgzame nazorg direct na de sessie (deken, drinken, nabijheid) om weer rustig te landen.", "Het opruimen van de kamer terwijl je alleen gelaten wordt."), "a": "De warme, zorgzame nazorg direct na de sessie (deken, drinken, nabijheid) om weer rustig te landen."}
+        ]
+    },
+
+        5: {
+        "titel": "Sub Module 5: Innerlijke Onrust ('Stuiteren'), Brat-gedrag & Closure",
+        "theorie": (
+            "### 1. Wat Is 'Stuiteren' en Waar Komt Het Vandaan?\n"
+            "Soms merk je dat je hoofd vol zit, je onrustig wordt of plotseling tegengas gaat geven ('stuiteren'), juist op momenten dat het stil wordt. Vaak is dit geen echte boosheid, maar een onbewuste vraag om **duidelijke kaders en houvast** zodat je hoofd eindelijk tot bedaren kan komen.\n\n"
+            "### 2. Speels Brat-gedrag versus Echte Weerstand\n"
+            "* **Speels Brat-gedrag:** Uitdagend of eigenwijs doen met een knipoog, waarbij je de verbinding zoekt en wilt voelen dat je Dominant kalm en onverstoorbaar blijft.\n"
+            "* **Echte weerstand of angst:** Wanneer iets écht niet goed voelt, wees dan direct eerlijk en stop het spel. Echte grenzen verpak je nooit als grapje.\n\n"
+            "### 3. Discipline als Ontlading (*Closure*)\n"
+            "Een correctie, strafregel of rusthouding binnen een gezonde dynamiek is nooit bedoeld om je af te breken. Het dient als **closure**: een helder eindpunt waarmee opgebouwde spanning ontlaadt en de lucht direct weer helemaal schoon is."
+        ),
+        "vragen": [
+            {"v": "1. Wat schuilt er meestal achter onrustig, uitdagend gedrag ('stuiteren') op een rustig moment?", "o": ("Een behoefte aan duidelijke kaders en houvast om je innerlijke onrust tot rust te brengen.", "Een wens om de relatie of dynamiek te beëindigen."), "a": "Een behoefte aan duidelijke kaders en houvast om je innerlijke onrust tot rust te brengen."},
+            {"v": "2. Wat is het belangrijkste verschil tussen speels 'Brat'-gedrag en echte weerstand?", "o": ("Bij speels Brat-gedrag zoek je contact en veiligheid; bij echte weerstand voel je angst, pijn of tegenzin en zeg je direct stop.", "Er is geen verschil; je moet altijd doorgaan."), "a": "Bij speels Brat-gedrag zoek je contact en veiligheid; bij echte weerstand voel je angst, pijn of tegenzin en zeg je direct stop."},
+            {"v": "3. Waarom mag je een echte grens of angst nooit verpakken als 'speels verzet'?", "o": ("Omdat je Dominant dan denkt dat het onderdeel van het spel is en doorgaat terwijl jij eigenlijk wilt stoppen.", "Omdat een sub niet mag grappen."), "a": "Omdat je Dominant dan denkt dat het onderdeel van het spel is en doorgaat terwijl jij eigenlijk wilt stoppen."},
+            {"v": "4. Wat betekent 'closure' (afsluiting) na een correctie of straf?", "o": ("Dat het voorval volledig is afgehandeld, de spanning is ontladen en jullie weer warm en goed met elkaar zijn.", "Dat je de rest van de week straf hebt."), "a": "Dat het voorval volledig is afgehandeld, de spanning is ontladen en jullie weer warm en goed met elkaar zijn."},
+            {"v": "5. Welk hulpmiddel helpt het beste om een 'stuiterend' hoofd snel weer rustig te krijgen?", "o": ("Een concreet ankerpunt zoals je gedachten opschrijven in je notitieboekje of rustig in Nadu zitten.", "Urenlang blijven piekeren zonder iets te zeggen."), "a": "Een concreet ankerpunt zoals je gedachten opschrijven in je notitieboekje of rustig in Nadu zitten."},
+            {"v": "6. Hoe reageert een betrouwbare Dominant op uitdagend Brat-gedrag?", "o": ("Met ijzeren kalmte, humor en een duidelijke grens, zonder zelf boos te worden.", "Door te schreeuwen en de controle over zijn eigen emoties te verliezen."), "a": "Met ijzeren kalmte, humor en een duidelijke grens, zonder zelf boos te worden."},
+            {"v": "7. Is langdurig doodzwijgen ('silent treatment') een gezonde vorm van discipline?", "o": ("Nee, doodzwijgen veroorzaakt verlatingsangst en onveiligheid in plaats van leiding.", "Ja, dat is de beste straf."), "a": "Nee, doodzwijgen veroorzaakt verlatingsangst en onveiligheid in plaats van leiding."},
+            {"v": "8. Wat doe je als je merkt dat een opdracht of correctie je emotioneel te veel wordt?", "o": ("Je geeft direct 'GEEL' of 'ROOD' aan zodat er direct ruimte is voor rust en gesprek.", "Je verstopt je gevoelens tot je instort."), "a": "Je geeft direct 'GEEL' of 'ROOD' aan zodat er direct ruimte is voor rust en gesprek."}
+        ]
+    },
+
+        6: {
+        "titel": "Sub Module 6: Rode Vlaggen, Zelfbescherming & Het Verbond",
+        "theorie": (
+            "### 1. Rode Vlaggen Herkennen ('Neppers' & Misbruik)\n"
+            "Nu je bijna afstudeert aan The Sovereign Academy, ken je jouw eigen waarde en grenzen. Laat je nooit overrompelen door mensen die het woord 'Dominant' misbruiken:\n"
+            "* **Isolatie:** Een goede Dom(me) moedigt jouw contact met vrienden, familie en je eigen leven aan. Iemand die je probeert af te zonderen is onveilig.\n"
+            "* **Financiële of digitale druk:** Stuur nooit naaktfoto's met je gezicht erop naar iemand die je net kent, en geef nooit geld uit angst of druk.\n"
+            "* **Geen ruimte voor 'Nee' of 'Rood':** Zodra iemand boos wordt als jij een grens aangeeft, verbreek je direct het contact.\n\n"
+            "### 2. Jouw Eigen Kracht in Fase 3 (Het Verbond)\n"
+            "In Fase 3 kies jij zelf een vaste Meester of Meesteres die aansluit bij jouw karakter (*Brat*, *Classic Submissive* of *Slave / Slavin*). Onthoud: een goede dynamiek maakt jou **sterker, rustiger en trotser op jezelf**."
+        ),
+        "vragen": [
+            {"v": "1. Wat is een duidelijke 'rode vlag' bij een online of echte Dominant?", "o": ("Hij probeert je te isoleren van vrienden/familie of zet je onder druk om direct naaktfoto's te sturen.", "Hij vraagt om eerst rustig een voorgesprek te houden over je grenzen."), "a": "Hij probeert je te isoleren van vrienden/familie of zet je onder druk om direct naaktfoto's te sturen."},
+            {"v": "2. Mag een Dominant ooit bepalen dat jij jouw safewoord 'ROOD' niet meer mag gebruiken?", "o": ("Nee, nooit. Het recht om op elk moment te stoppen is onvoorwaardelijk.", "Ja, zodra je een contract hebt getekend."), "a": "Nee, nooit. Het recht om op elk moment te stoppen is onvoorwaardelijk."},
+            {"v": "3. Hoe bescherm je jouw digitale veiligheid bij online D/s-contacten?", "o": ("Gebruik een schuilnaam, deel geen adresgegevens en stuur nooit herkenbare intieme foto's.", "Deel direct je volledige naam, werkadres en wachtwoorden."), "a": "Gebruik een schuilnaam, deel geen adresgegevens en stuur nooit herkenbare intieme foto's."},
+            {"v": "4. Wat is het allerbelangrijkste teken dat een D/s-dynamiek gezond voor je is?", "o": ("Dat je meer rust ervaart, je veilig voelt en groeit in zelfvertrouwen en eigenwaarde.", "Dat je constant bang bent om een fout te maken."), "a": "Dat je meer rust ervaart, je veilig voelt en groeit in zelfvertrouwen en eigenwaarde."},
+            {"v": "5. Wat doe je als een opdracht in het dagelijks leven jouw werk, gezondheid of veiligheid in gevaar brengt?", "o": ("Je voert de opdracht niet uit en meldt direct 'Out of Character' dat dit tegen je veiligheidsgrenzen ingaat.", "Je voert hem toch uit omdat je gehoorzaam moet zijn."), "a": "Je voert de opdracht niet uit en meldt direct 'Out of Character' dat dit tegen je veiligheidsgrenzen ingaat."},
+            {"v": "6. Waar staat 'Out of Character' (OOC) voor?", "o": ("Even uit de rol stappen om als twee gelijkwaardige volwassenen iets praktisch of emotioneels te bespreken.", "Het definitief beëindigen van de opleiding."), "a": "Even uit de rol stappen om als twee gelijkwaardige volwassenen iets praktisch of emotioneels te bespreken."},
+            {"v": "7. Waarom vul je jouw uitgebreide Grenzenlijst (Checklist) zo eerlijk mogelijk in?", "o": ("Zodat jouw Meester of Meesteres precies weet waar jouw verlangens én jouw veilige grenzen liggen.", "Zodat je op alles 'Ja' kunt zetten om indruk te maken."), "a": "Zodat jouw Meester of Meesteres precies weet waar jouw verlangens én jouw veilige grenzen liggen."},
+            {"v": "8. Wat heb je geleerd als je straks afstudeert aan The Sovereign Academy?", "o": ("Dat bewuste overgave een daad van kracht is, mits gedragen door wederzijds respect, veiligheid en zelfkennis.", "Dat een submissive altijd alles zonder nadenken moet slikken."), "a": "Dat bewuste overgave een daad van kracht is, mits gedragen door wederzijds respect, veiligheid en zelfkennis."}
+        ]
+    }
 }
 
-for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False)]:
-    if k not in st.session_state:
-        st.session_state[k] = v
-for k in ("chat_history", "notities"):
-    if k not in st.session_state:
-        st.session_state[k] = []
-if "grenzen" not in st.session_state:
-    st.session_state.grenzen = {}
-
-def sla_op():
-    if sb and st.session_state.schuilnaam and st.session_state.pincode:
-        data = {k: st.session_state[k] for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd")}
-        sb.table("dossiers").upsert(data).execute()
-
-def vraag_mentor(prompt_tekst):
-    client = genai.Client(api_key=api_key)
-    modellen = (m.name for m in client.models.list() if "flash" in m.name.lower() and not any(x in m.name for x in ("1.5", "2.0", "2.5")))
-    return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=2000)).text
-
-is_vale = "Vale" in st.session_state.mentor_naam
-titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.session_state.verbond_actief else (("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr"))
-
-with st.sidebar:
-    try:
-        st.image(st.session_state.mentor_foto, width=120)
-    except Exception:
-        st.write("👑" if st.session_state.verbond_actief else "🏛️")
-    st.header("📊 Academy Dossier")
-    if st.session_state.schuilnaam:
-        st.success(f"🔑 **{st.session_state.schuilnaam}**")
-    st.write(f"**Track / Rol:** {st.session_state.rol}")
-    st.write(f"**{'Dominant' if st.session_state.verbond_actief else 'Mentor'}:** {st.session_state.mentor_naam}")
-    if st.session_state.rol == "Submissive":
-        st.write(f"**Address / Titel:** {titel_txt}")
-        st.write(f"**Profile:** {st.session_state.sub_type}")
-    if st.session_state.verbond_actief or st.session_state.dom_examen_actief:
-        st.success("👑 **Fase 3 Actief**")
-    else:
-        st.write(f"**Module:** {st.session_state.module_nr} / 6")
-        st.progress(min(st.session_state.module_nr / 6, 1.0))
-    st.markdown("---")
-    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
-    if st.button("🏛️ Kennismaking Staf & Meesters" if not st.session_state.get("gids_open") else "🔙 Terug naar de Academie"):
-        st.session_state.gids_open = not st.session_state.get("gids_open", False)
-        st.rerun()
-    if st.button("🆘 Zorgmodus (Direct hulp/rust)" if not st.session_state.zorgmodus else "✅ Zorgmodus sluiten"):
-        st.session_state.zorgmodus = not st.session_state.zorgmodus
-        st.rerun()
-    if st.session_state.schuilnaam:
-        if st.button("🚪 Uitloggen (Dossier veilig sluiten)"):
-            sla_op()
-            for k in list(st.session_state.keys()):
-                del st.session_state[k]
-            st.rerun()
-    else:
-        if st.button("🔄 Sessie resetten"):
-            for k in list(st.session_state.keys()):
-                del st.session_state[k]
-            st.rerun()
-
-
-if st.session_state.zorgmodus:
-    st.warning("🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
-if st.session_state.get("gids_open"):
-    st.subheader("🏛️ Kennismaking: Staf, Meesters & Meesteressen")
-    st.write("Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
-    for (geslacht, profiel), m_info in MEESTERS.items():
-        naam = m_info.get("naam")
-        with st.container(border=True):
-            c1, c2 = st.columns((1, 3))
-            with c1:
-                st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
-            with c2:
-                st.markdown(f"### {naam} — *{profiel}*")
-                st.write(m_info.get("stijl"))
-    st.stop()
-    
-
-if st.session_state.fase == "Intake":
-    try:
-        st.image("academy.jpg", use_container_width=True)
-    except Exception:
-        pass
-    st.subheader("🏛️ Welkom bij The Sovereign Academy")
-    with st.container(border=True):
-        st.markdown("**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
-        if sb:
-            with st.expander("🔑 Heb je al een anonieme Dossiercode? Log hier in (of maak er een aan)"):
-                c1, c2 = st.columns(2)
-                in_naam = c1.text_input("Schuilnaam (bijv. Vlinder):")
-                in_pin = c2.text_input("4-cijferige pincode:", type="password", max_chars=4)
-                if st.button("📂 Open of Maak Dossier"):
-                    if in_naam.strip() and len(in_pin.strip()) == 4:
-                        res = sb.table("dossiers").select("*").eq("schuilnaam", in_naam.strip()).execute()
-                        if res.data:
-                            d = res.data
-                            if d.get("pincode") == in_pin.strip():
-                                for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd"):
-                                    if d.get(k) is not None:
-                                        st.session_state[k] = d[k]
-                                st.session_state.notitieboek_actief = bool(st.session_state.notities)
-                                st.session_state.grenzenlijst_actief = bool(st.session_state.grenzen)
-                                st.session_state.fase = "Praktijkkamer" if st.session_state.module_nr > 0 else "Intake"
-                                st.rerun()
-                            else:
-                                st.error("❌ Onjuiste pincode voor deze schuilnaam.")
-                        else:
-                            st.session_state.schuilnaam, st.session_state.pincode = in_naam.strip(), in_pin.strip()
-                            sla_op()
-                            st.success(f"✅ Nieuw anoniem dossier aangemaakt voor **{in_naam.strip()}**! Kies hieronder je traject.")
-                    else:
-                        st.warning("Vul een schuilnaam en een 4-cijferige pincode in.")
-
-    st.subheader("👥 Maak kennis met de Academie-leiding")
-    col_b, col_v = st.columns(2)
-    with col_b:
-        with st.container(border=True):
-            try:
-                st.image("bastian.jpg", width=140)
-            except Exception:
-                st.write("🎩")
-            st.markdown("**Headmaster Bastian**\n*Kalm, gestructureerd en scherpzinnig.* Bastian bewaakt de kaders met vaderlijke rust, heldere regels en onverstoorbaar gezag.")
-    with col_v:
-        with st.container(border=True):
-            try:
-                st.image("vale.jpg", width=140)
-            except Exception:
-                st.write("👑")
-            st.markdown("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
-
-    with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
-        for (geslacht, profiel), m_info in MEESTERS.items():
-            st.markdown(f"**{m_info.get('naam')}** (*{profiel} — {geslacht}*): {m_info.get('stijl')}")
-
-    st.subheader("🚪 Start jouw traject")
-    avatar_optie = st.radio("Kies jouw eigen profiel-icoon in de chat:", ("👤 Neutraal", "👩 Vrouw", "👨 Man"), horizontal=True)
-    st.session_state.user_avatar = avatar_optie.split()
-    rol_keuze = st.radio("Kies jouw traject:", ("Submissive (6 Modules + Begeleiding & Fase 3)", "Dominant (6 Modules + 60 Examenvragen & Praktijkexamen)"))
-    mentor_keuze = st.radio("Kies jouw begeleider:", ("Headmaster Bastian", "Headmistress Vale"))
-    if st.button("Start Module 1 ➡️"):
-        st.session_state.rol = "Dominant" if "Dominant" in rol_keuze else "Submissive"
-        st.session_state.mentor_naam = mentor_keuze
-        st.session_state.mentor_foto = "vale.jpg" if "Vale" in mentor_keuze else "bastian.jpg"
-        st.session_state.sub_type = "Dominant in Opleiding" if st.session_state.rol == "Dominant" else "Classic Submissive"
-        st.session_state.module_nr = 1
-        st.session_state.fase = "Les"
-        sla_op()
-        st.rerun()
-
-
-elif st.session_state.fase == "Les":
-    nr = max(1, st.session_state.module_nr)
-    if st.session_state.rol == "Dominant":
-        mod = DOM_MODULES.get(nr)
-        st.subheader(f"🎓 {mod.get('titel')}")
-        with st.expander("📖 Uitgebreide Theorie", expanded=True):
-            st.markdown(mod.get("theorie"))
-        antw = [st.radio(q.get("v"), q.get("o"), key=f"dq_{nr}_{i}") == q.get("a") for i, q in enumerate(mod.get("vragen"))]
-        if st.button("Lever examenonderdeel in"):
-            if sum(antw) >= 8:
-                st.session_state.laatste_les_tijd = datetime.now().isoformat()
-                st.session_state.fase = "Praktijkkamer"
-                if not st.session_state.chat_history:
-                    st.session_state.chat_history.append(("assistant", f"*{st.session_state.mentor_naam} knikt goedkeurend ({sum(antw)}/10).* Bespreek hier je inzichten uit Module {nr}."))
-                sla_op()
-                st.rerun()
-            else:
-                st.error(f"❌ Score: {sum(antw)}/10 (minimaal 8 vereist). Lees de theorie nog eens door.")
-
-    else:
-        mod = MODULES.get(nr)
-        st.subheader(f"📚 {mod.get('titel')}")
-        with st.expander("📖 Verplichte Theorie", expanded=True):
-            st.markdown(mod.get("theorie"))
-        t1 = st.radio(f"Vraag 1: {mod.get('v1')}", mod.get("o1"))
-        t2 = st.radio(f"Vraag 2: {mod.get('v2')}", mod.get("o2"))
-        if st.button("Lever toets in"):
-            if t1 == mod.get("a1") and t2 == mod.get("a2"):
-                st.session_state.laatste_les_tijd = datetime.now().isoformat()
-                st.session_state.fase = "Praktijkkamer"
-                if not st.session_state.chat_history:
-                    st.session_state.chat_history.append(("assistant", f"*{st.session_state.mentor_naam} slaat je dossier dicht.* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"))
-                sla_op()
-                st.rerun()
-            else:
-                st.error("❌ Nog niet helemaal juist. Lees de theorie nog eens door.")
-
-elif st.session_state.fase == "Afstuderen":
-    if st.session_state.rol == "Dominant":
-        st.subheader("👑 Fase 3: Het Live Praktijkexamen (Dominant)")
-        scenario = st.radio("Kies je examenscenario:", ("Scenario 1: Onrustige Brat ('stuiteren').", "Scenario 2: Submissive met zware Subdrop.", "Scenario 3: Onzekere beginner bij Soft Limit."))
-        if st.button("🎭 Start Live Praktijkexamen"):
-            st.session_state.dom_examen_actief, st.session_state.meester_stijl, st.session_state.fase = True, scenario, "Praktijkkamer"
-            st.session_state.chat_history = [("assistant", f"*[{st.session_state.mentor_naam}]:* Examen gestart.\n\n**Simulatie-Sub:** *friemelt onrustig aan haar mouw* \"Ik weet niet of ik dit wel kan vanavond...\"")]
-            sla_op()
-            st.rerun()
-
-    else:
-        st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond")
-        voorkeur = st.radio("Ik wens begeleid te worden door een:", ("Mannelijk", "Vrouwelijk"), horizontal=True)
-        for (geslacht, profiel), info in MEESTERS.items():
-            if geslacht == voorkeur:
-                naam = info.get("naam")
-                with st.container(border=True):
-                    c1, c2 = st.columns((1, 3))
-                    with c1:
-                        st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
-                    with c2:
-                        st.markdown(f"### {naam} — *{profiel}*")
-                        st.write(info.get("stijl"))
-                        if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
-                            st.session_state.mentor_naam, st.session_state.meester_stijl = naam, info.get("stijl")
-                            st.session_state.mentor_foto = MEESTER_FOTOS.get(naam, "bastian.jpg")
-                            st.session_state.verbond_actief = st.session_state.notitieboek_actief = st.session_state.grenzenlijst_actief = True
-                            st.session_state.chat_history, st.session_state.fase = [("assistant", info.get("intro_nl"))], "Praktijkkamer"
-                            sla_op()
-                            st.rerun()
-
-
-elif st.session_state.fase == "Praktijkkamer":
-    mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
-    pauze_actief = False
-    if st.session_state.laatste_les_tijd and not st.session_state.verbond_actief and not st.session_state.dom_examen_actief:
-        verschil = datetime.now() - datetime.fromisoformat(st.session_state.laatste_les_tijd)
-        if verschil < timedelta(hours=12):
-            pauze_actief = True
-            uren_over = 12 - int(verschil.total_seconds() // 3600)
-            st.info(f"⏳ **Bezinkingspauze actief:** Laat de lesstof eerst rustig landen. Over ongeveer **{uren_over} uur** opent de volgende module (de chat, Zorgmodus en je notitieboekje blijven 24/7 bereikbaar).")
-
-    if not pauze_actief and not st.session_state.verbond_actief and not st.session_state.dom_examen_actief:
-        if st.session_state.module_nr < 6:
-            if st.button(f"Start Module {st.session_state.module_nr + 1} ➡️"):
-                st.session_state.module_nr += 1
-                st.session_state.fase = "Les"
-                sla_op()
-                st.rerun()
-        else:
-            if st.button("👑 Ga naar Fase 3"):
-                st.session_state.fase = "Afstuderen"
-                sla_op()
-                st.rerun()
-
-    tab_namen = ["💬 Praktijkkamer", "🛍️ Aanbevolen & Steun"]
-    if st.session_state.notitieboek_actief:
-        tab_namen.insert(1, "📓 Notitieboekje")
-    if st.session_state.grenzenlijst_actief:
-        tab_namen.insert(1, "🔒 Grenzenlijst")
-    tabs = st.tabs(tab_namen)
-
-    with next(iter(tabs)):
-        for role, text in st.session_state.chat_history:
-            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else "👤")):
-                st.write(text)
-        if user_input := st.chat_input("Typ je reactie..."):
-            st.session_state.chat_history.append(("user", user_input))
-            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
-                st.session_state.chat_history.append(("assistant", f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."))
-                sla_op()
-                st.rerun()
-            zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
-            regels = f"Respond in Dutch as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST]."
-            gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
-            antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
-            for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
-                if trig in antwoord:
-                    antwoord = antwoord.replace(trig, "").strip()
-                    st.session_state[state_k] = True
-            st.session_state.chat_history.append(("assistant", antwoord))
-            sla_op()
-            st.rerun()
-
-    if st.session_state.notitieboek_actief:
-        with tabs[tab_namen.index("📓 Notitieboekje")]:
-            notitie_tekst = st.text_area("Notitie / Check-in:", height=120)
-            if st.button("Indienen") and notitie_tekst.strip():
-                reactie = vraag_mentor(f"You are {mentor}. Respond calmly in Dutch to: \"{notitie_tekst}\"")
-                st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
-                sla_op()
-                st.rerun()
-            for item in reversed(st.session_state.notities):
-                with st.container(border=True):
-                    st.write(item.get("tekst"))
-                    st.markdown(f"**{mentor}:** {item.get('reactie')}")
-
-    if st.session_state.grenzenlijst_actief:
-        with tabs[tab_namen.index("🔒 Grenzenlijst")]:
-            opties = ("⚪ Nog niet ingevuld", "🟢 Ja / Heerlijk", "🟡 Nieuwsgierig / Voorzichtig", "🟠 Soft Limit", "🔴 Absolute No-Go")
-            nieuwe_grenzen = {}
-            for cat, items in CHECKLIST_CATEGORIEEN.items():
-                with st.expander(cat):
-                    for item in items:
-                        keuze = st.selectbox(item, opties, index=opties.index(st.session_state.grenzen.get(item, "⚪ Nog niet ingevuld")), key=f"chk_{item}")
-                        if keuze != "⚪ Nog niet ingevuld":
-                            nieuwe_grenzen[item] = keuze
-            if st.button("💾 Sla checklist op"):
-                st.session_state.grenzen = nieuwe_grenzen
-                sla_op()
-                st.success("✅ Opgeslagen in jouw database-dossier!")
-
-    with tabs[tab_namen.index("🛍️ Aanbevolen & Steun")]:
-        st.subheader("☕ Steun The Sovereign Academy")
-        st.write("The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
-        st.link_button("💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
-        st.markdown("---")
-        st.subheader("📚 Aanbevolen Uitrusting & Literatuur")
-        with st.container(border=True):
-            st.markdown("**1. Comfort & Houdingen (Knielkussens & Verzorging)**\nEen zacht ondersteunend kussen beschermt je knieën tijdens de Nadu-pose, en natuurlijke olie helpt bij ontspanning tijdens Aftercare.")
-            st.link_button("🔗 Bekijk bij partner (Bol.com)", "https://bol.com")
-        with st.container(border=True):
-            st.markdown("**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor wie in Fase 3 verder wil verkennen.")
-            st.link_button("🔗 Bekijk bij partner (EasyToys / Lovehoney)", "https://easytoys.nl")
