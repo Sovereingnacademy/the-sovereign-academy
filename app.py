@@ -84,8 +84,7 @@ if st.session_state.fase == "Intake":
         st.image("academy.jpg", use_container_width=True)
     except Exception:
         pass
-    st.subheader("🏛️ Welcome to The Sovereign Academy" if is_en else "🏛️ Welkom bij The Sovereign Academy")
-
+    st.subheader("🏛️ Welkom bij The Sovereign Academy")
     with st.container(border=True):
         st.markdown("**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
         if sb:
@@ -97,7 +96,7 @@ if st.session_state.fase == "Intake":
                     if in_naam.strip() and len(in_pin.strip()) == 4:
                         res = sb.table("dossiers").select("*").eq("schuilnaam", in_naam.strip()).execute()
                         if res.data:
-                            d = res.data[0]
+                            d = res.data
                             if d.get("pincode") == in_pin.strip():
                                 for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd"):
                                     if d.get(k) is not None:
@@ -115,6 +114,30 @@ if st.session_state.fase == "Intake":
                     else:
                         st.warning("Vul een schuilnaam en een 4-cijferige pincode in.")
 
+    st.subheader("👥 Maak kennis met de Academie-leiding")
+    col_b, col_v = st.columns(2)
+    with col_b:
+        with st.container(border=True):
+            try:
+                st.image("bastian.jpg", width=140)
+            except Exception:
+                st.write("🎩")
+            st.markdown("**Headmaster Bastian**\n*Kalm, gestructureerd en scherpzinnig.* Bastian bewaakt de kaders met vaderlijke rust, heldere regels en onverstoorbaar gezag.")
+    with col_v:
+        with st.container(border=True):
+            try:
+                st.image("vale.jpg", width=140)
+            except Exception:
+                st.write("👑")
+            st.markdown("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
+
+    with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
+        for m_naam, m_info in MEESTERS.items():
+            st.markdown(f"**{m_naam}** — *{m_info.get('specialisatie')}*: {m_info.get('bio_nl')}")
+
+    st.subheader("🚪 Start jouw traject")
+    avatar_optie = st.radio("Kies jouw eigen profiel-icoon in de chat:", ("👤 Neutraal", "👩 Vrouw", "👨 Man"), horizontal=True)
+    st.session_state.user_avatar = avatar_optie.split()
     rol_keuze = st.radio("Kies jouw traject:", ("Submissive (6 Modules + Begeleiding & Fase 3)", "Dominant (6 Modules + 60 Examenvragen & Praktijkexamen)"))
     mentor_keuze = st.radio("Kies jouw begeleider:", ("Headmaster Bastian", "Headmistress Vale"))
     if st.button("Start Module 1 ➡️"):
@@ -126,6 +149,7 @@ if st.session_state.fase == "Intake":
         st.session_state.fase = "Les"
         sla_op()
         st.rerun()
+
 
 elif st.session_state.fase == "Les":
     nr = max(1, st.session_state.module_nr)
