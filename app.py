@@ -175,15 +175,16 @@ elif st.session_state.fase == "Les":
     nr = max(1, st.session_state.module_nr)
     is_dom = st.session_state.rol == "Dominant"
     mod = DOM_MODULES.get(nr) if is_dom else MODULES.get(nr)
-    st.subheader(f"{'🎓' if is_dom else '📚'} {mod.get('titel')}")
-    with st.expander("📖 Verplichte Theorie", expanded=True):
-        st.markdown(mod.get("theorie"))
+    st.subheader(f"{'🎓' if is_dom else '📚'} {t(mod.get('titel'))}")
+    with st.expander(t("📖 Verplichte Theorie"), expanded=True):
+        st.markdown(t(mod.get("theorie")))
     vragen = mod.get("vragen")
     antw = []
     for i, q in enumerate(vragen):
-        opties = list(q.get("o"))
+        opties = [t(opt) for opt in q.get("o")]
+        goed_antw = t(q.get("a"))
         random.Random(f"{nr}_{i}").shuffle(opties)
-        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}") == q.get("a"))
+        antw.append(st.radio(t(q.get("v")), opties, key=f"q_{nr}_{i}") == goed_antw)
 
     if st.button("Lever toets in"):
         foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
