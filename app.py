@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import json
 from datetime import datetime, timedelta
 from google import genai
 from google.genai import types
@@ -47,6 +48,15 @@ def vertaal_en(tekst):
 
 def t(tekst):
     return vertaal_en(tekst) if is_en else tekst
+@st.cache_data(show_spinner="Translating module...")
+def vertaal_module(mod_dict):
+    if not api_key:
+        return mod_dict
+    ruw = vraag_mentor(f"Translate all Dutch string values in this JSON object into natural English (keep keys 'titel', 'theorie', 'vragen', 'v', 'o', 'a' unchanged and keep markdown formatting). Return ONLY valid JSON without markdown code blocks:\n\n{json.dumps(mod_dict, ensure_ascii=False)}")
+    try:
+        return json.loads(ruw.strip().removeprefix("```json").removesuffix("```").strip())
+    except Exception:
+        return mod_dict
 
 is_vale = "Vale" in st.session_state.mentor_naam
 titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.session_state.verbond_actief else (("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr"))
@@ -174,17 +184,17 @@ if st.session_state.fase == "Intake":
 elif st.session_state.fase == "Les":
     nr = max(1, st.session_state.module_nr)
     is_dom = st.session_state.rol == "Dominant"
-    mod = DOM_MODULES.get(nr) if is_dom else MODULES.get(nr)
-    st.subheader(f"{'🎓' if is_dom else '📚'} {t(mod.get('titel'))}")
-    with st.expander(t("📖 Verplichte Theorie"), expanded=True):
-        st.markdown(t(mod.get("theorie")))
+    ruw_mod = DOM_MODULES.get(nr) if is_dom else MODULES.get(nr)
+    mod = vertaal_module(ruw_mod) if is_en else ruw_mod
+    st.subheader(f"{'🎓' if is_dom else '📚'} {mod.get('titel')}")
+    with st.expander("📖 Required Theory" if is_en else "📖 Verplichte Theorie", expanded=True):
+        st.markdown(mod.get("theorie"))
     vragen = mod.get("vragen")
     antw = []
     for i, q in enumerate(vragen):
-        opties = [t(opt) for opt in q.get("o")]
-        goed_antw = t(q.get("a"))
+        opties = list(q.get("o"))
         random.Random(f"{nr}_{i}").shuffle(opties)
-        antw.append(st.radio(t(q.get("v")), opties, key=f"q_{nr}_{i}") == goed_antw)
+        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}") == q.get("a"))
 
     if st.button("Lever toets in"):
         foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
