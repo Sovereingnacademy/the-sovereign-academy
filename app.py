@@ -81,6 +81,21 @@ with st.sidebar:
 
 if st.session_state.zorgmodus:
     st.warning("🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
+if st.session_state.get("gids_open"):
+    st.subheader("🏛️ Kennismaking: Staf, Meesters & Meesteressen")
+    st.write("Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
+    for m_naam, m_info in MEESTERS.items():
+        with st.container(border=True):
+            c1, c2 = st.columns((1, 3))
+            with c1:
+                try:
+                    st.image(m_info.get("foto"), width=120)
+                except Exception:
+                    st.write("👑")
+            with c2:
+                st.markdown(f"### {m_naam} — *{m_info.get('specialisatie')}*")
+                st.write(m_info.get("bio_nl"))
+    st.stop()
 
 if st.session_state.fase == "Intake":
     try:
