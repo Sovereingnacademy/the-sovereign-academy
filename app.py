@@ -382,7 +382,7 @@ elif st.session_state.fase == "Praktijkkamer":
                 st.session_state.chat_history.append(("user", f"*[Lines completed: I wrote all {aantal_regels} lines without a single mistake.]*" if is_en else f"*[Strafregels voltooid: Ik heb alle {aantal_regels} regels foutloos uitgeschreven.]*"))
                 sla_op()
 
-       with tabs[tab_namen.index(t_shop)]:
+    with tabs[tab_namen.index(t_shop)]:
         st.subheader("☕ Support The Sovereign Academy" if is_en else "☕ Steun The Sovereign Academy")
         st.write("The Sovereign Academy remains 100% free and anonymous so everyone can learn safely. Would you like to help cover the AI costs?" if is_en else "The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
         st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
