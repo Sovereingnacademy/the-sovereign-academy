@@ -17,6 +17,10 @@ st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 sb_url, sb_key = st.secrets.get("SUPABASE_URL", ""), st.secrets.get("SUPABASE_KEY", "")
 sb = create_client(sb_url, sb_key) if (sb_url and sb_key) else None
+MEESTER_FOTOS = {
+    "Meester Julian": "julian.jpg", "Meester Marcus": "marcus.jpg", "Meester Victor": "victor.jpg",
+    "Meesteres Elena": "elena.jpg", "Meesteres Sophia": "sophia.jpg", "Meesteres Clara": "clara.jpg"
+}
 
 for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False)]:
     if k not in st.session_state:
@@ -85,10 +89,14 @@ if st.session_state.get("gids_open"):
     st.subheader("🏛️ Kennismaking: Staf, Meesters & Meesteressen")
     st.write("Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
     for (geslacht, profiel), m_info in MEESTERS.items():
-        icoon = "🎩" if geslacht == "Mannelijk" else "👑"
+        naam = m_info.get("naam")
         with st.container(border=True):
-            st.markdown(f"### {icoon} {m_info.get('naam')} — *{profiel} ({geslacht})*")
-            st.write(m_info.get("stijl"))
+            c1, c2 = st.columns((1, 3))
+            with c1:
+                st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
+            with c2:
+                st.markdown(f"### {naam} — *{profiel}*")
+                st.write(m_info.get("stijl"))
     st.stop()
     
 
@@ -213,19 +221,25 @@ elif st.session_state.fase == "Afstuderen":
 
     else:
         st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond")
-        voorkeur = st.radio("Ik wens begeleid te worden door een:", ("Mannelijk (Meester)", "Vrouwelijk (Meesteres)"), horizontal=True)
-        kandidaten = ("Meester Julian", "Meester Marcus") if "Mannelijk" in voorkeur else ("Meesteres Elena", "Meesteres Sophia")
-        for naam in kandidaten:
-            info = MEESTERS.get(naam)
-            with st.container(border=True):
-                st.markdown(f"### {naam} — *{info.get('specialisatie')}*")
-                st.write(info.get("bio_nl"))
-                if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
-                    st.session_state.mentor_naam, st.session_state.meester_stijl, st.session_state.mentor_foto = naam, info.get("stijl"), info.get("foto")
-                    st.session_state.verbond_actief = st.session_state.notitieboek_actief = st.session_state.grenzenlijst_actief = True
-                    st.session_state.chat_history, st.session_state.fase = [("assistant", info.get("intro_nl"))], "Praktijkkamer"
-                    sla_op()
-                    st.rerun()
+        voorkeur = st.radio("Ik wens begeleid te worden door een:", ("Mannelijk", "Vrouwelijk"), horizontal=True)
+        for (geslacht, profiel), info in MEESTERS.items():
+            if geslacht == voorkeur:
+                naam = info.get("naam")
+                with st.container(border=True):
+                    c1, c2 = st.columns((1, 3))
+                    with c1:
+                        st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
+                    with c2:
+                        st.markdown(f"### {naam} — *{profiel}*")
+                        st.write(info.get("stijl"))
+                        if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
+                            st.session_state.mentor_naam, st.session_state.meester_stijl = naam, info.get("stijl")
+                            st.session_state.mentor_foto = MEESTER_FOTOS.get(naam, "bastian.jpg")
+                            st.session_state.verbond_actief = st.session_state.notitieboek_actief = st.session_state.grenzenlijst_actief = True
+                            st.session_state.chat_history, st.session_state.fase = [("assistant", info.get("intro_nl"))], "Praktijkkamer"
+                            sla_op()
+                            st.rerun()
+
 
 elif st.session_state.fase == "Praktijkkamer":
     mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
