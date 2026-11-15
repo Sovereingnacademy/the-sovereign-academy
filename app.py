@@ -60,6 +60,9 @@ with st.sidebar:
         st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
     st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
+    if st.button("🏛️ Kennismaking Staf & Meesters" if not st.session_state.get("gids_open") else "🔙 Terug naar de Academie"):
+        st.session_state.gids_open = not st.session_state.get("gids_open", False)
+        st.rerun()
     if st.button("🆘 Zorgmodus (Direct hulp/rust)" if not st.session_state.zorgmodus else "✅ Zorgmodus sluiten"):
         st.session_state.zorgmodus = not st.session_state.zorgmodus
         st.rerun()
