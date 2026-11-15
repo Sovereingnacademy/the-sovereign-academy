@@ -382,15 +382,28 @@ elif st.session_state.fase == "Praktijkkamer":
                 st.session_state.chat_history.append(("user", f"*[Lines completed: I wrote all {aantal_regels} lines without a single mistake.]*" if is_en else f"*[Strafregels voltooid: Ik heb alle {aantal_regels} regels foutloos uitgeschreven.]*"))
                 sla_op()
 
-    with tabs[tab_namen.index(t_shop)]:
+       with tabs[tab_namen.index(t_shop)]:
         st.subheader("☕ Support The Sovereign Academy" if is_en else "☕ Steun The Sovereign Academy")
         st.write("The Sovereign Academy remains 100% free and anonymous so everyone can learn safely. Would you like to help cover the AI costs?" if is_en else "The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
         st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
         st.markdown("---")
-        st.subheader("📚 Recommended Gear & Literature" if is_en else "📚 Aanbevolen Uitrusting & Literatuur")
+        st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
+        st.caption("🔄 *This curated list is updated regularly with new safe recommendations.*" if is_en else "🔄 *Deze lijst wordt van tijd tot tijd aangevuld met nieuwe, zorgvuldig gekozen aanbevelingen.*")
         with st.container(border=True):
-            st.markdown("**1. Comfort & Poses (Kneeling Pads & Care)**\nA soft supportive cushion protects your knees during the Nadu pose, and natural oil helps you relax during Aftercare." if is_en else "**1. Comfort & Houdingen (Knielkussens & Verzorging)**\nEen zacht ondersteunend kussen beschermt je knieën tijdens de Nadu-pose, en natuurlijke olie helpt bij ontspanning tijdens Aftercare.")
-            st.link_button("🔗 View at partner (Bol.com)" if is_en else "🔗 Bekijk bij partner (Bol.com)", "https://bol.com")
+            st.markdown("**1. Comfort, Kneeling Pads & Aftercare**\nSupportive cushions for Nadu poses, luxury journals for check-ins, and natural massage oils for Aftercare." if is_en else "**1. Comfort, Knielkussens & Aftercare**\nOndersteunende kussens voor de Nadu-pose, luxe notitieboeken en natuurlijke massage-olie voor Aftercare.")
+            st.link_button("🔗 View selection (Bol.com)" if is_en else "🔗 Bekijk selectie (Bol.com)", "https://www.bol.com")
         with st.container(border=True):
-            st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for those exploring Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor wie in Fase 3 verder wil verkennen.")
-            st.link_button("🔗 View at partner (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk bij partner (EasyToys / Lovehoney)", "https://easytoys.nl")
+            st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
+            st.link_button("🔗 View selection (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk selectie (EasyToys / Lovehoney)", "https://easytoys.nl")
+        with st.container(border=True):
+            st.markdown("**3. Essential Books on D/s Psychology & Communication**\nRecommended reading on consent, negotiation, and healthy power dynamics." if is_en else "**3. Verdiepende Boeken over D/s-Psychologie & Communicatie**\nAanbevolen literatuur over consent, negotiation en gezonde machtsverhoudingen.")
+            st.link_button("🔗 View reading list (Amazon NL)" if is_en else "🔗 Bekijk boekenlijst (Amazon NL)", "https://www.amazon.nl")
+        st.markdown("---")
+        st.subheader("💡 Anonymous Feedback, Questions & Wishes" if is_en else "💡 Anonieme Feedback, Vragen & Wensen")
+        st.write("Missing a topic, want to dive deeper into something, or have a question about the app? Leave an anonymous message below (100% private)." if is_en else "Mis je een onderwerp, wil je ergens dieper op ingaan of heb je een vraag over de app? Laat hieronder een anoniem bericht achter (100% privé).")
+        fb_cat = st.selectbox("Topic:" if is_en else "Onderwerp:", ("Nieuw lesonderwerp / verdieping", "Vraag over de app", "Suggestie / verbeterpunt", "Compliment") if not is_en else ("New lesson topic / deeper dive", "Question about the app", "Suggestion / improvement", "Compliment"))
+        fb_tekst = st.text_area("Your anonymous message:" if is_en else "Jouw anonieme bericht:", height=100, key="fb_input")
+        if st.button("📩 Send Anonymously" if is_en else "📩 Verstuur Anoniem") and fb_tekst.strip():
+            if sb:
+                sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip()}).execute()
+            st.success("✅ Thank you! Your message has been received anonymously." if is_en else "✅ Dankjewel! Je bericht is volledig anoniem ontvangen.")
