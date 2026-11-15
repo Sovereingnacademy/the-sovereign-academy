@@ -257,3 +257,140 @@ elif st.session_state.fase == "Afstuderen":
                                 st.session_state.chat_history, st.session_state.fase = [("assistant", t(info.get("intro_nl")))], "Praktijkkamer"
                                 sla_op()
                                 st.rerun()
+
+elif st.session_state.fase == "Praktijkkamer":
+    mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
+    pauze_actief = False
+    if st.session_state.laatste_les_tijd and not st.session_state.verbond_actief and not st.session_state.dom_examen_actief:
+        verschil = datetime.now() - datetime.fromisoformat(st.session_state.laatste_les_tijd)
+        if verschil < timedelta(hours=12):
+            pauze_actief = True
+            uren_over = 12 - int(verschil.total_seconds() // 3600)
+            st.info(f"⏳ **Reflection pause active:** Let the material settle first. The next module opens in about **{uren_over} hours** (chat, Care Mode, and your notebook remain available 24/7)." if is_en else f"⏳ **Bezinkingspauze actief:** Laat de lesstof eerst rustig landen. Over ongeveer **{uren_over} uur** opent de volgende module (de chat, Zorgmodus en je notitieboekje blijven 24/7 bereikbaar).")
+
+    if not pauze_actief and not st.session_state.verbond_actief and not st.session_state.dom_examen_actief:
+        if st.session_state.module_nr < 6:
+            if st.button(f"Start Module {st.session_state.module_nr + 1} ➡️"):
+                st.session_state.module_nr += 1
+                st.session_state.fase = "Les"
+                sla_op()
+                st.rerun()
+        else:
+            if st.button("👑 Proceed to Phase 3" if is_en else "👑 Ga naar Fase 3"):
+                st.session_state.fase = "Afstuderen"
+                sla_op()
+                st.rerun()
+
+    t_chat = "💬 Practice Room" if is_en else "💬 Praktijkkamer"
+    t_disc = "⏱️ Discipline & Lines" if is_en else "⏱️ Discipline & Strafregels"
+    t_shop = "🛍️ Recommended & Support" if is_en else "🛍️ Aanbevolen & Steun"
+    t_note = "📓 Notebook" if is_en else "📓 Notitieboekje"
+    t_lim = "🔒 Limits Checklist" if is_en else "🔒 Grenzenlijst"
+
+    tab_namen = [t_chat, t_disc, t_shop]
+    if st.session_state.notitieboek_actief:
+        tab_namen.insert(1, t_note)
+    if st.session_state.grenzenlijst_actief:
+        tab_namen.insert(1, t_lim)
+    tabs = st.tabs(tab_namen)
+
+    with next(iter(tabs)):
+        for role, text in st.session_state.chat_history:
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+                st.write(text)
+        if user_input := st.chat_input("Type your response..." if is_en else "Typ je reactie..."):
+            st.session_state.chat_history.append(("user", user_input))
+            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
+                st.session_state.chat_history.append(("assistant", f"*{mentor} stops immediately.* Easy now, breathe. You are completely safe." if is_en else f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."))
+                sla_op()
+                st.rerun()
+            zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
+            taal_instr = "in English" if is_en else "in Dutch"
+            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]."
+            gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
+            antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
+            for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
+                if trig in antwoord:
+                    antwoord = antwoord.replace(trig, "").strip()
+                    st.session_state[state_k] = True
+            for p_naam in ("Brat", "Classic Submissive", "Slave / Slavin"):
+                if f"[PROFIEL:{p_naam}]" in antwoord:
+                    antwoord = antwoord.replace(f"[PROFIEL:{p_naam}]", "").strip()
+                    st.session_state.sub_type = p_naam
+            st.session_state.chat_history.append(("assistant", antwoord))
+            sla_op()
+            st.rerun()
+
+    if st.session_state.notitieboek_actief:
+        with tabs[tab_namen.index(t_note)]:
+            notitie_tekst = st.text_area("Note / Check-in:" if is_en else "Notitie / Check-in:", height=120)
+            if st.button("Submit" if is_en else "Indienen") and notitie_tekst.strip():
+                reactie = vraag_mentor(f"You are {mentor}. Respond calmly {'in English' if is_en else 'in Dutch'} to: \"{notitie_tekst}\"")
+                st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
+                sla_op()
+                st.rerun()
+            for item in reversed(st.session_state.notities):
+                with st.container(border=True):
+                    st.write(item.get("tekst"))
+                    st.markdown(f"**{mentor}:** {item.get('reactie')}")
+
+    if st.session_state.grenzenlijst_actief:
+        with tabs[tab_namen.index(t_lim)]:
+            opties = ("⚪ Nog niet ingevuld", "🟢 Ja / Heerlijk", "🟡 Nieuwsgierig / Voorzichtig", "🟠 Soft Limit", "🔴 Absolute No-Go")
+            nieuwe_grenzen = {}
+            for cat, items in CHECKLIST_CATEGORIEEN.items():
+                with st.expander(cat):
+                    for item in items:
+                        keuze = st.selectbox(item, opties, index=opties.index(st.session_state.grenzen.get(item, "⚪ Nog niet ingevuld")), key=f"chk_{item}")
+                        if keuze != "⚪ Nog niet ingevuld":
+                            nieuwe_grenzen[item] = keuze
+            if st.button("💾 Save checklist" if is_en else "💾 Sla checklist op"):
+                st.session_state.grenzen = nieuwe_grenzen
+                sla_op()
+                st.success("✅ Saved to your dossier!" if is_en else "✅ Opgeslagen in jouw database-dossier!")
+
+    with tabs[tab_namen.index(t_disc)]:
+        st.subheader("⏱️ Corner & Pose Timer" if is_en else "⏱️ Strafhoek- & Pose-Timer")
+        if not st.session_state.straf_start:
+            if st.button("▶️ Clock In (Start Pose / Corner)" if is_en else "▶️ Inklokken (Start Houding / Strafhoek)"):
+                st.session_state.straf_start = datetime.now().isoformat()
+                st.rerun()
+        else:
+            start_dt = datetime.fromisoformat(st.session_state.straf_start)
+            st.info(f"⏳ Active since **{start_dt.strftime('%H:%M:%S')}**..." if is_en else f"⏳ Bezig sinds **{start_dt.strftime('%H:%M:%S')}**...")
+            if st.button("⏹️ Clock Out & Report" if is_en else "⏹️ Uitklokken & Melden"):
+                minuten = round((datetime.now() - start_dt).total_seconds() / 60, 1)
+                st.session_state.straf_start = ""
+                st.session_state.chat_history.append(("user", f"*[Time log: I just completed {minuten} minutes in my pose / corner.]*" if is_en else f"*[Tijdregistratie: Ik heb zojuist {minuten} minuten in mijn houding / de strafhoek gezeten.]*"))
+                sla_op()
+                st.rerun()
+        st.markdown("---")
+        st.subheader("✍️ Automatic Line Writing Check" if is_en else "✍️ Automatische Strafregel-Controle")
+        standaard_zin = "I will always address my mentor with respect." if is_en else "Ik spreek mijn begeleider altijd met respect aan."
+        doel_zin = st.text_input("Assigned line (exact text):" if is_en else "Opgegeven strafregel (exacte tekst):", value=standaard_zin)
+        aantal_regels = st.number_input("Number of assigned lines:" if is_en else "Aantal opgedragen regels:", min_value=1, max_value=100, value=10)
+        ingevoerd = st.text_area("Type your lines here (one per line, no copy-pasting):" if is_en else "Typ hier jouw strafregels (elke regel op een nieuwe lijn, niet kopiëren/plakken):", height=160)
+        if st.button("🔍 Check Lines" if is_en else "🔍 Controleer Strafregels"):
+            regels_lijst = [r.strip() for r in ingevoerd.strip().splitlines() if r.strip()]
+            fouten = [i + 1 for i, r in enumerate(regels_lijst) if r != doel_zin.strip()]
+            if len(regels_lijst) != aantal_regels:
+                st.error(f"❌ Incomplete: you wrote {len(regels_lijst)} out of {aantal_regels} lines." if is_en else f"❌ Onvolledig: je hebt {len(regels_lijst)} van de {aantal_regels} regels geschreven.")
+            elif fouten:
+                st.error(f"❌ Spelling or punctuation error on line(s): {fouten}. Check capitalization and periods!" if is_en else f"❌ Spel- of leestekenfout gevonden op regel(s): {fouten}. Let op hoofdletters en punten!")
+            else:
+                st.success(f"✅ All {aantal_regels} lines are 100% error-free!" if is_en else f"✅ Alle {aantal_regels} regels zijn 100% foutloos geschreven!")
+                st.session_state.chat_history.append(("user", f"*[Lines completed: I wrote all {aantal_regels} lines without a single mistake.]*" if is_en else f"*[Strafregels voltooid: Ik heb alle {aantal_regels} regels foutloos uitgeschreven.]*"))
+                sla_op()
+
+    with tabs[tab_namen.index(t_shop)]:
+        st.subheader("☕ Support The Sovereign Academy" if is_en else "☕ Steun The Sovereign Academy")
+        st.write("The Sovereign Academy remains 100% free and anonymous so everyone can learn safely. Would you like to help cover the AI costs?" if is_en else "The Sovereign Academy blijft 100% gratis en anoniem zodat iedereen veilig kan leren. Wil je helpen de AI-kosten te dekken?")
+        st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
+        st.markdown("---")
+        st.subheader("📚 Recommended Gear & Literature" if is_en else "📚 Aanbevolen Uitrusting & Literatuur")
+        with st.container(border=True):
+            st.markdown("**1. Comfort & Poses (Kneeling Pads & Care)**\nA soft supportive cushion protects your knees during the Nadu pose, and natural oil helps you relax during Aftercare." if is_en else "**1. Comfort & Houdingen (Knielkussens & Verzorging)**\nEen zacht ondersteunend kussen beschermt je knieën tijdens de Nadu-pose, en natuurlijke olie helpt bij ontspanning tijdens Aftercare.")
+            st.link_button("🔗 View at partner (Bol.com)" if is_en else "🔗 Bekijk bij partner (Bol.com)", "https://bol.com")
+        with st.container(border=True):
+            st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for those exploring Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor wie in Fase 3 verder wil verkennen.")
+            st.link_button("🔗 View at partner (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk bij partner (EasyToys / Lovehoney)", "https://easytoys.nl")
