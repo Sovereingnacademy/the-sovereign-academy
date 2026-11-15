@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 from datetime import datetime, timedelta
 from google import genai
 from google.genai import types
@@ -169,7 +170,12 @@ elif st.session_state.fase == "Les":
     with st.expander("📖 Verplichte Theorie", expanded=True):
         st.markdown(mod.get("theorie"))
     vragen = mod.get("vragen")
-    antw = [st.radio(q.get("v"), q.get("o"), key=f"q_{nr}_{i}") == q.get("a") for i, q in enumerate(vragen)]
+    antw = []
+    for i, q in enumerate(vragen):
+        opties = list(q.get("o"))
+        random.Random(f"{nr}_{i}").shuffle(opties)
+        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}") == q.get("a"))
+
     if st.button("Lever toets in"):
         nodig = 8 if is_dom else 7
         if sum(antw) >= nodig:
@@ -254,13 +260,18 @@ elif st.session_state.fase == "Praktijkkamer":
                 sla_op()
                 st.rerun()
             zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
-            regels = f"Respond in Dutch as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST]."
+            regels = f"Respond in Dutch as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]."
             gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
                 if trig in antwoord:
                     antwoord = antwoord.replace(trig, "").strip()
                     st.session_state[state_k] = True
+            for p_naam in ("Brat", "Classic Submissive", "Slave / Slavin"):
+                if f"[PROFIEL:{p_naam}]" in antwoord:
+                    antwoord = antwoord.replace(f"[PROFIEL:{p_naam}]", "").strip()
+                    st.session_state.sub_type = p_naam
+
             st.session_state.chat_history.append(("assistant", antwoord))
             sla_op()
             st.rerun()
