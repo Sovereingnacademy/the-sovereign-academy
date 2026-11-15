@@ -10,7 +10,7 @@ from checklist import CHECKLIST_CATEGORIEEN
 from meesters import MEESTERS
 from dom_curriculum import DOM_MODULES
 
-st.set_page_config(page_title="The Sovereign Academy", page_icon="🏛️", layout="centered")
+st.set_page_config(page_title="The Sovereign Academy", page_icon="logo.png", layout="centered")
 taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
 is_en = "English" in taal
 st.title("🏛️ The Sovereign Academy")
