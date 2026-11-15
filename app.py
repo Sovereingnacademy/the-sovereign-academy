@@ -111,9 +111,9 @@ if st.session_state.fase == "Intake":
         st.image("academy.jpg", use_container_width=True)
     except Exception:
         pass
-    st.subheader(t("🏛️ Welkom bij The Sovereign Academy")
+    st.subheader(t("🏛️ Welkom bij The Sovereign Academy"))
     with st.container(border=True):
-        st.markdown(t("**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
+        st.markdown(t("**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem."))
         if sb:
             with st.expander("🔑 Heb je al een anonieme Dossiercode? Log hier in (of maak er een aan)"):
                 c1, c2 = st.columns(2)
@@ -141,16 +141,16 @@ if st.session_state.fase == "Intake":
                     else:
                         st.warning("Vul een schuilnaam en een 4-cijferige pincode in.")
 
-    st.subheader(t("👥 Maak kennis met de Academie-leiding")
+    st.subheader(t("👥 Maak kennis met de Academie-leiding"))
     col_b, col_v = st.columns(2)
     with col_b:
         with st.container(border=True):
             st.image("bastian.jpg", width=140)
-            st.markdown(t("**Headmaster Bastian**\n*Kalm, gestructureerd en scherpzinnig.* Bastian bewaakt de kaders met vaderlijke rust, heldere regels en onverstoorbaar gezag.")
+            st.markdown(t("**Headmaster Bastian**\n*Kalm, gestructureerd en scherpzinnig.* Bastian bewaakt de kaders met vaderlijke rust, heldere regels en onverstoorbaar gezag."))
     with col_v:
         with st.container(border=True):
             st.image("vale.jpg", width=140)
-            st.markdown(t("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
+            st.markdown(t("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt."))
 
     with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
         for (geslacht, profiel), m_info in MEESTERS.items():
