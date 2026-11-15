@@ -63,10 +63,18 @@ with st.sidebar:
     if st.button("🆘 Zorgmodus (Direct hulp/rust)" if not st.session_state.zorgmodus else "✅ Zorgmodus sluiten"):
         st.session_state.zorgmodus = not st.session_state.zorgmodus
         st.rerun()
-    if st.button("🔄 Reset / Uitloggen"):
-        for k in list(st.session_state.keys()):
-            del st.session_state[k]
-        st.rerun()
+    if st.session_state.schuilnaam:
+        if st.button("🚪 Uitloggen (Dossier veilig sluiten)"):
+            sla_op()
+            for k in list(st.session_state.keys()):
+                del st.session_state[k]
+            st.rerun()
+    else:
+        if st.button("🔄 Sessie resetten"):
+            for k in list(st.session_state.keys()):
+                del st.session_state[k]
+            st.rerun()
+
 
 if st.session_state.zorgmodus:
     st.warning("🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
