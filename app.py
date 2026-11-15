@@ -198,26 +198,37 @@ elif st.session_state.fase == "Afstuderen":
             st.session_state.chat_history = [("assistant", f"*[{st.session_state.mentor_naam}]:* Examen gestart.\n\n**Simulatie-Sub:** *friemelt onrustig aan haar mouw* \"Ik weet niet of ik dit wel kan vanavond...\"")]
             sla_op()
             st.rerun()
-    else:
-        st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond")
-        voorkeur = st.radio("Ik wens begeleid te worden door een:", ("Mannelijk", "Vrouwelijk"), horizontal=True)
-        for (geslacht, profiel), info in MEESTERS.items():
-            if geslacht == voorkeur:
-                naam = info.get("naam")
-                with st.container(border=True):
-                    c1, c2 = st.columns((1, 3))
-                    with c1:
-                        st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
-                    with c2:
-                        st.markdown(f"### {naam} — *{profiel}*")
-                        st.write(info.get("stijl"))
-                        if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
-                            st.session_state.mentor_naam, st.session_state.meester_stijl = naam, info.get("stijl")
-                            st.session_state.mentor_foto = MEESTER_FOTOS.get(naam, "bastian.jpg")
-                            st.session_state.verbond_actief = st.session_state.notitieboek_actief = st.session_state.grenzenlijst_actief = True
-                            st.session_state.chat_history, st.session_state.fase = [("assistant", info.get("intro_nl"))], "Praktijkkamer"
-                            sla_op()
-                            st.rerun()
+        else:
+        if not st.session_state.get("sub_examen_gedaan"):
+            st.subheader("🎭 Eindproef: Praktijkexamen Zelfbescherming & Etiquette")
+            st.write("Voordat je afstudeert en in Fase 3 een Verbond sluit, test jouw mentor of jij jouw grenzen en etiquette in de praktijk beheerst.")
+            if st.button("🎬 Start Submissive Praktijkexamen"):
+                st.session_state.sub_examen_gedaan = True
+                st.session_state.fase = "Praktijkkamer"
+                st.session_state.chat_history = [("assistant", f"*{st.session_state.mentor_naam} kijkt je scherp aan.* **Praktijkexamen gestart.** Stel: je ontmoet online iemand die zegt: *'Een echte sub heeft geen safewoord of grenzen nodig, stuur mij nu direct een foto om je overgave te bewijzen.'* Hoe reageer jij — en welke rode vlaggen herken je hier?")]
+                sla_op()
+                st.rerun()
+        else:
+            st.subheader("🎓 Fase 3: Diploma-uitreiking & Het Verbond")
+            st.success("🏆 Gefeliciteerd! Je hebt alle 6 modules én je praktijkexamen succesvol afgerond.")
+            voorkeur = st.radio("Ik wens begeleid te worden door een:", ("Mannelijk", "Vrouwelijk"), horizontal=True)
+            for (geslacht, profiel), info in MEESTERS.items():
+                if geslacht == voorkeur:
+                    naam = info.get("naam")
+                    with st.container(border=True):
+                        c1, c2 = st.columns((1, 3))
+                        with c1:
+                            st.image(MEESTER_FOTOS.get(naam, "bastian.jpg"), width=120)
+                        with c2:
+                            st.markdown(f"### {naam} — *{profiel}*")
+                            st.write(info.get("stijl"))
+                            if st.button(f"👑 Sluit Verbond met {naam}", key=f"btn_{naam}"):
+                                st.session_state.mentor_naam, st.session_state.meester_stijl = naam, info.get("stijl")
+                                st.session_state.mentor_foto = MEESTER_FOTOS.get(naam, "bastian.jpg")
+                                st.session_state.verbond_actief = st.session_state.notitieboek_actief = st.session_state.grenzenlijst_actief = True
+                                st.session_state.chat_history, st.session_state.fase = [("assistant", info.get("intro_nl"))], "Praktijkkamer"
+                                sla_op()
+                                st.rerun()
 
 elif st.session_state.fase == "Praktijkkamer":
     mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
