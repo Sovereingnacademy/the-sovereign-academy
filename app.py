@@ -84,20 +84,11 @@ if st.session_state.zorgmodus:
 if st.session_state.get("gids_open"):
     st.subheader("🏛️ Kennismaking: Staf, Meesters & Meesteressen")
     st.write("Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
-    for groep in MEESTERS.values():
-        kandidaten = groep.values() if isinstance(groep, dict) else groep
-        for m_info in kandidaten:
-            if isinstance(m_info, dict):
-                with st.container(border=True):
-                    c1, c2 = st.columns((1, 3))
-                    with c1:
-                        try:
-                            st.image(m_info.get("foto"), width=120)
-                        except Exception:
-                            st.write("👑")
-                    with c2:
-                        st.markdown(f"### {m_info.get('naam', 'Begeleider')} — *{m_info.get('specialisatie', '')}*")
-                        st.write(m_info.get("bio_nl", ""))
+    for (geslacht, profiel), m_info in MEESTERS.items():
+        icoon = "🎩" if geslacht == "Mannelijk" else "👑"
+        with st.container(border=True):
+            st.markdown(f"### {icoon} {m_info.get('naam')} — *{profiel} ({geslacht})*")
+            st.write(m_info.get("stijl"))
     st.stop()
     
 
@@ -153,9 +144,9 @@ if st.session_state.fase == "Intake":
                 st.write("👑")
             st.markdown("**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
 
-    with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
-        for m_naam, m_info in MEESTERS.items():
-            st.markdown(f"**{m_naam}** — *{m_info.get('specialisatie')}*: {m_info.get('bio_nl')}")
+        with st.expander("🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
+        for (geslacht, profiel), m_info in MEESTERS.items():
+            st.markdown(f"**{m_info.get('naam')}** (*{profiel} — {geslacht}*): {m_info.get('stijl')}")
 
     st.subheader("🚪 Start jouw traject")
     avatar_optie = st.radio("Kies jouw eigen profiel-icoon in de chat:", ("👤 Neutraal", "👩 Vrouw", "👨 Man"), horizontal=True)
