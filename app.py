@@ -156,7 +156,7 @@ if st.session_state.fase == "Intake":
         for (geslacht, profiel), m_info in MEESTERS.items():
             st.markdown(f"**{m_info.get('naam')}** (*{profiel}*): {m_info.get('stijl')}")
 
-    st.subheader(t("🚪 Start jouw traject")
+    st.subheader(t("🚪 Start jouw traject"))
     avatar_optie = st.radio("Kies jouw eigen profiel-icoon in de chat:", ("👤 Neutraal", "👩 Vrouw", "👨 Man"), horizontal=True)
     st.session_state.user_avatar = avatar_optie.split()
     rol_keuze = st.radio("Kies jouw traject:", ("Submissive (6 Modules + Begeleiding & Fase 3)", "Dominant (6 Modules + 60 Examenvragen & Praktijkexamen)"))
