@@ -84,9 +84,25 @@ def toon_steun_en_feedback(sleutel_prefix):
     fb_cat = st.selectbox("Topic:" if is_en else "Onderwerp:", ("Nieuw lesonderwerp / verdieping", "Vraag over de app", "Suggestie / verbeterpunt", "Compliment") if not is_en else ("New lesson topic / deeper dive", "Question about the app", "Suggestion / improvement", "Compliment"), key=f"{sleutel_prefix}_cat")
     fb_tekst = st.text_area("Your anonymous message:" if is_en else "Jouw anonieme bericht:", height=100, key=f"{sleutel_prefix}_txt")
     if st.button("📩 Send Anonymously" if is_en else "📩 Verstuur Anoniem", key=f"{sleutel_prefix}_btn") and fb_tekst.strip():
+        code = st.session_state.schuilnaam if st.session_state.schuilnaam else f"SA-{random.randint(1000, 9999)}"
         if sb:
-            sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip()}).execute()
-        st.success("✅ Thank you! Your message has been received anonymously." if is_en else "✅ Dankjewel! Je bericht is volledig anoniem ontvangen.")
+            sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip(), "ticket_code": code}).execute()
+        st.success(f"✅ Thank you! Your message has been received. Save your code **{code}** to read our personal reply below!" if is_en else f"✅ Dankjewel! Je bericht is anoniem ontvangen. Bewaar jouw code **{code}** om hieronder ons persoonlijke antwoord te lezen!")
+
+    if sb:
+        with st.expander("📬 Read reply from the Academy (enter your alias or ticket code)" if is_en else "📬 Lees reactie van de Academie-leiding (vul je schuilnaam of ticketcode in)"):
+            zoek_code = st.text_input("Your alias or ticket code (e.g. SA-4821):" if is_en else "Jouw schuilnaam of ticketcode (bijv. SA-4821):", value=st.session_state.schuilnaam, key=f"{sleutel_prefix}_chk")
+            if zoek_code.strip():
+                berichten = sb.table("feedback").select("*").eq("ticket_code", zoek_code.strip()).execute().data
+                if not berichten:
+                    st.info("No messages found for this code yet." if is_en else "Geen berichten gevonden voor deze code.")
+                for b in reversed(berichten):
+                    with st.container(border=True):
+                        st.markdown(f"**{b.get('onderwerp')}:** {b.get('bericht')}")
+                        if b.get("antwoord"):
+                            st.success(f"**🏛️ Academy Response:** {b.get('antwoord')}" if is_en else f"**🏛️ Reactie van de Academie-leiding:** {b.get('antwoord')}")
+                        else:
+                            st.caption("⏳ *Awaiting personal response from the Academy...*" if is_en else "⏳ *In afwachting van een persoonlijke reactie van de Academie-leiding...*")
 
 is_vale = "Vale" in st.session_state.mentor_naam
 titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.session_state.verbond_actief else (("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr"))
