@@ -11,6 +11,21 @@ from meesters import MEESTERS
 from dom_curriculum import DOM_MODULES
 
 st.set_page_config(page_title="The Sovereign Academy", page_icon="logo.png", layout="centered")
+LOGO_URL = "https://githubusercontent.com"
+st.markdown(f"""
+    <script>
+        var link = window.parent.document.querySelector("link[rel*='icon']") || window.parent.document.createElement('link');
+        link.type = 'image/png';
+        link.rel = 'shortcut icon';
+        link.href = '{LOGO_URL}';
+        window.parent.document.getElementsByTagName('head').appendChild(link);
+        var apple = window.parent.document.createElement('link');
+        apple.rel = 'apple-touch-icon';
+        apple.href = '{LOGO_URL}';
+        window.parent.document.getElementsByTagName('head').appendChild(apple);
+    </script>
+""", unsafe_allow_html=True)
+
 taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
 is_en = "English" in taal
 st.title("🏛️ The Sovereign Academy")
@@ -21,7 +36,14 @@ sb_url, sb_key = st.secrets.get("SUPABASE_URL", ""), st.secrets.get("SUPABASE_KE
 sb = create_client(sb_url, sb_key) if (sb_url and sb_key) else None
 MEESTER_FOTOS = {"Meester Julian": "julian.jpg", "Meester Marcus": "marcus.jpg", "Meester Viktor": "victor.jpg", "Meesteres Elena": "elena.jpg", "Meesteres Sophia": "sophia.jpg", "Meesteres Clara": "clara.jpg"}
 
-for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("steun_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False)]:
+if sb and "bezoek_geteld" not in st.session_state:
+    st.session_state.bezoek_geteld = True
+    try:
+        sb.table("bezoekers").insert({"tijdstip": datetime.now().isoformat()}).execute()
+    except Exception:
+        pass
+
+for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("steun_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False), ("poging", 0)]:
     if k not in st.session_state:
         st.session_state[k] = v
 for k in ("chat_history", "notities"):
@@ -36,9 +58,12 @@ def sla_op():
         sb.table("dossiers").upsert(data).execute()
 
 def vraag_mentor(prompt_tekst):
-    client = genai.Client(api_key=api_key)
-    modellen = (m.name for m in client.models.list() if "flash" in m.name.lower() and not any(x in m.name for x in ("1.5", "2.0", "2.5")))
-    return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=2000)).text
+    try:
+        client = genai.Client(api_key=api_key)
+        modellen = (m.name for m in client.models.list() if "flash" in m.name.lower() and not any(x in m.name for x in ("1.5", "2.0", "2.5")))
+        return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=2000)).text
+    except Exception:
+        return "*(The connection to the Academy server paused briefly. Take a calm breath and resend your message in a few seconds.)*" if is_en else "*(De verbinding met de Academie-server hapert heel even. Adem rustig door en verstuur je bericht over een paar seconden opnieuw.)*"
 
 @st.cache_data(show_spinner=False)
 def vertaal_en(tekst):
@@ -65,25 +90,24 @@ def toon_steun_en_feedback(sleutel_prefix):
     st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
     st.markdown("---")
     st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
-    st.caption("ℹ️ *Transparantie: Sommige links op deze pagina zijn affiliate-links. Als je via deze links iets bestelt, ontvangt The Sovereign Academy een kleine commissie (zonder extra kosten voor jou) om dit platform gratis te houden. Deze lijst wordt regelmatig aangevuld.*" if not is_en else "ℹ️ *Disclosure: Some links on this page are affiliate links. If you purchase through them, The Sovereign Academy may earn a small commission at no extra cost to you, helping keep this platform free. This list is updated regularly.*")
+    st.caption("ℹ️ *Disclosure: Some links on this page are affiliate links. If you purchase through them, The Sovereign Academy may earn a small commission at no extra cost to you, helping keep this platform free. This list is updated regularly.*" if is_en else "ℹ️ *Transparantie: Sommige links op deze pagina zijn affiliate-links. Als je via deze links iets bestelt, ontvangt The Sovereign Academy een kleine commissie (zonder extra kosten voor jou) om dit platform gratis te houden. Deze lijst wordt van tijd tot tijd aangevuld.*")
     with st.container(border=True):
         st.markdown("**1. Comfort, Kneeling Pads & Aftercare**\nSupportive cushions for Nadu poses, luxury journals for check-ins, and natural massage oils for Aftercare." if is_en else "**1. Comfort, Knielkussens & Aftercare**\nOndersteunende kussens voor de Nadu-pose, luxe notitieboeken en natuurlijke massage-olie voor Aftercare.")
         st.link_button("🔗 View selection (Bol.com)" if is_en else "🔗 Bekijk selectie (Bol.com)", "https://bol.com")
     with st.container(border=True):
         st.markdown("**2. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
-        st.link_button("🔗 View selection (EasyToys / Lovehoney)" if is_en else "🔗 Bekijk selectie (EasyToys / Lovehoney)", "https://easytoys.nl")
+        st.link_button("🔗 View selection (EasyToys)" if is_en else "🔗 Bekijk selectie (EasyToys)", "https://easytoys.nl")
     with st.container(border=True):
-        st.markdown("**3. Essential Books on D/s Psychology & Communication**\nRecommended reading on consent, negotiation, and healthy power dynamics." if is_en else "**3. Verdiepende Boeken over D/s-Psychologie & Communicatie**\nAanbevolen literatuur over consent, negotiation en gezonde machtsverhoudingen.")
-        st.link_button("🔗 View reading list (Amazon NL)" if is_en else "🔗 Bekijk boekenlijst (Amazon NL)", "https://amazon.nl")
+        st.markdown("**3. The Sovereign Academy Workbook & Reflection Journal (Coming Soon on Amazon)**\nOur own physical & digital workbook with printable Limits Checklists, Aftercare trackers, and D/s reflection exercises." if is_en else "**3. Het Officiële Sovereign Academy Werkboek & Reflectie-Journaal (Binnenkort op Amazon)**\nOns eigen fysieke & digitale werkboek met invulbare Grenzenlijsten, Aftercare-checklists en D/s-reflectieoefeningen.")
     with st.container(border=True):
-        st.markdown("**4. App-Controlled Play & Long-Distance Control (Lovense — Official Store)**\nPersonal Academy favorite: high-quality, app-controlled toys for long-distance D/s dynamics and remote control. Discreetly shipped from within Europe with a 1-year warranty (PayPal, Klarna & Card)." if is_en else "**4. App-Gestuurde Interactie & Afstandsbediening (Lovense — Officiële Shop)**\nPersoonlijke favoriet van de Academie: hoogwaardige, app-gestuurde toys voor D/s-dynamieken op afstand. Discreet en snel verzonden vanuit Europa (geen douanekosten, 1 jaar garantie, betalen via o.a. Klarna, PayPal of creditcard).")
+        st.markdown("**4. App-Controlled Play & Long-Distance Control (Lovense — Official Store)**\nPersonal Academy favorites: high-quality, app-controlled toys for long-distance D/s dynamics and remote control. Discreetly shipped from within Europe with a 1-year warranty (PayPal, Klarna & Card)." if is_en else "**4. App-Gestuurde Interactie & Afstandsbediening (Lovense — Officiële Shop)**\nPersoonlijke favorieten van de Academie: hoogwaardige, app-gestuurde toys voor D/s-dynamieken op afstand. Discreet en snel verzonden vanuit Europa (geen douanekosten, 1 jaar garantie, betalen via o.a. Klarna, PayPal of creditcard).")
+        st.link_button("🔗 Lovense Domi 2 (Mini Wand — Academy Favorite!)" if is_en else "🔗 Lovense Domi 2 (Mini Wand — Favoriet van de Academie!)", "https://lovense.com")
         c_l1, c_l2 = st.columns(2)
-        c_l1.link_button("🔗 Lovense Lush 4 (Remote Egg)", "https://www.lovense.com/r/2y3k79")
-        c_l2.link_button("🔗 Lovense Hush 2 (Remote Plug)", "https://www.lovense.com/r/4bdfyd")
+        c_l1.link_button("🔗 Lovense Lush 4 (Remote Egg)", "https://lovense.com")
+        c_l2.link_button("🔗 Lovense Hush 2 (Remote Plug)", "https://lovense.com")
         c_l3, c_l4 = st.columns(2)
-        c_l3.link_button("🔗 Lovense Gemini (Nipple Clamps)", "https://www.lovense.com/r/j0tutn")
-        c_l4.link_button("🔗 Lovense Edge 2 (For Him)", "https://www.lovense.com/r/k4ic5o")
-        st.link_button("🔗 Lovense Domi 2 (Mini Wand — Academy Favorite!)" if is_en else "🔗 Lovense Domi 2 (Mini Wand — Favoriet van de Academie!)", "https://www.lovense.com/r/d1lv45")
+        c_l3.link_button("🔗 Lovense Gemini (Nipple Clamps)", "https://lovense.com")
+        c_l4.link_button("🔗 Lovense Edge 2 (For Him)", "https://lovense.com")
     st.markdown("---")
     st.subheader("💡 Anonymous Feedback, Questions & Wishes" if is_en else "💡 Anonieme Feedback, Vragen & Wensen")
     st.write("Missing a topic, want to dive deeper into something, or have a question about the app? Leave an anonymous message below (100% private)." if is_en else "Mis je een onderwerp, wil je ergens dieper op ingaan of heb je een vraag over de app? Laat hieronder een anoniem bericht achter (100% privé).")
@@ -92,14 +116,20 @@ def toon_steun_en_feedback(sleutel_prefix):
     if st.button("📩 Send Anonymously" if is_en else "📩 Verstuur Anoniem", key=f"{sleutel_prefix}_btn") and fb_tekst.strip():
         code = st.session_state.schuilnaam if st.session_state.schuilnaam else f"SA-{random.randint(1000, 9999)}"
         if sb:
-            sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip(), "ticket_code": code}).execute()
+            try:
+                sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip(), "ticket_code": code}).execute()
+            except Exception:
+                sb.table("feedback").insert({"tijdstip": datetime.now().isoformat(), "onderwerp": fb_cat, "bericht": fb_tekst.strip()}).execute()
         st.success(f"✅ Thank you! Your message has been received. Save your code **{code}** to read our personal reply below!" if is_en else f"✅ Dankjewel! Je bericht is anoniem ontvangen. Bewaar jouw code **{code}** om hieronder ons persoonlijke antwoord te lezen!")
 
     if sb:
         with st.expander("📬 Read reply from the Academy (enter your alias or ticket code)" if is_en else "📬 Lees reactie van de Academie-leiding (vul je schuilnaam of ticketcode in)"):
             zoek_code = st.text_input("Your alias or ticket code (e.g. SA-4821):" if is_en else "Jouw schuilnaam of ticketcode (bijv. SA-4821):", value=st.session_state.schuilnaam, key=f"{sleutel_prefix}_chk")
             if zoek_code.strip():
-                berichten = sb.table("feedback").select("*").eq("ticket_code", zoek_code.strip()).execute().data
+                try:
+                    berichten = sb.table("feedback").select("*").eq("ticket_code", zoek_code.strip()).execute().data
+                except Exception:
+                    berichten = []
                 if not berichten:
                     st.info("No messages found for this code yet." if is_en else "Geen berichten gevonden voor deze code.")
                 for b in reversed(berichten):
@@ -136,13 +166,17 @@ with st.sidebar:
     if st.button(("🏛️ Meet Staff & Masters" if is_en else "🏛️ Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
         st.session_state.gids_open = not st.session_state.gids_open
         st.session_state.steun_open = False
+        st.session_state.zorgmodus = False
         st.rerun()
     if st.button(("🛍️ Recommended & Support" if is_en else "🛍️ Aanbevolen & Steun") if not st.session_state.steun_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
         st.session_state.steun_open = not st.session_state.steun_open
         st.session_state.gids_open = False
+        st.session_state.zorgmodus = False
         st.rerun()
     if st.button(("🆘 Care Mode (Help/Rest)" if is_en else "🆘 Zorgmodus (Direct hulp/rust)") if not st.session_state.zorgmodus else ("✅ Close Care Mode" if is_en else "✅ Zorgmodus sluiten")):
         st.session_state.zorgmodus = not st.session_state.zorgmodus
+        st.session_state.gids_open = False
+        st.session_state.steun_open = False
         st.rerun()
     if st.session_state.schuilnaam:
         if st.button("🚪 Log out (Save dossier)" if is_en else "🚪 Uitloggen (Dossier veilig sluiten)"):
@@ -157,7 +191,22 @@ with st.sidebar:
             st.rerun()
 
 if st.session_state.zorgmodus:
+    mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
     st.warning("🆘 **24/7 Care Mode Active:** You are completely safe. Breathe calmly. Your mentor stands beside you outside of any role." if is_en else "🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
+    if "zorg_chat" not in st.session_state:
+        st.session_state.zorg_chat = [("assistant", f"*{mentor} sits beside you calmly, completely out of any role.* Take a deep breath. There are no rules, no expectations, and no pressure right now. Tell me what you are feeling, or just rest here." if is_en else f"*{mentor} komt rustig naast je zitten, volledig buiten elke rol.* Haal eerst maar eens rustig adem. Er zijn nu geen regels, geen verwachtingen en geen druk. Vertel maar wat je voelt, of blijf gewoon even rustig hier.")]
+    for role, text in st.session_state.zorg_chat:
+        with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+            st.write(text)
+    if zorg_input := st.chat_input("Share what you feel (100% safe, out of role)..." if is_en else "Vertel rustig wat je voelt (100% veilig, buiten elke rol)..."):
+        st.session_state.zorg_chat.append(("user", zorg_input))
+        taal_instr = "in English" if is_en else "in Dutch"
+        zorg_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. CRITICAL: 24/7 Care Mode is active. Drop ALL strictness, dominance, or roleplay completely. Be warm, grounding, gentle, and reassuring. Help the user breathe, feel safe, and process any subdrop, domdrop, or overwhelm."
+        gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.zorg_chat)
+        antwoord = vraag_mentor(f"{zorg_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
+        st.session_state.zorg_chat.append(("assistant", antwoord))
+        st.rerun()
+    st.stop()
 
 if st.session_state.gids_open:
     st.subheader("🏛️ Meet the Staff, Masters & Mistresses" if is_en else "🏛️ Kennismaking: Staf, Meesters & Meesteressen")
@@ -194,7 +243,7 @@ if st.session_state.fase == "Intake":
                     if in_naam.strip() and len(in_pin.strip()) == 4:
                         res = sb.table("dossiers").select("*").eq("schuilnaam", in_naam.strip()).execute()
                         if res.data:
-                            d = res.data
+                            d = res.data[0]
                             if d.get("pincode") == in_pin.strip():
                                 for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd"):
                                     if d.get(k) is not None:
@@ -229,7 +278,7 @@ if st.session_state.fase == "Intake":
 
     st.subheader("🚪 Start your journey" if is_en else "🚪 Start jouw traject")
     avatar_optie = st.radio("Choose your profile icon in chat:" if is_en else "Kies jouw eigen profiel-icoon in de chat:", ("👤 Neutral", "👩 Woman", "👨 Man") if is_en else ("👤 Neutraal", "👩 Vrouw", "👨 Man"), horizontal=True)
-    st.session_state.user_avatar = avatar_optie.split()[0]
+    st.session_state.user_avatar = avatar_optie.split()
     rol_keuze = st.radio("Choose your track:" if is_en else "Kies jouw traject:", ("Submissive (6 Modules + 60 Exam Questions & Practical Exam)", "Dominant (6 Modules + 60 Exam Questions & Practical Exam)") if is_en else ("Submissive (6 Modules + 60 Toetsvragen & Praktijkexamen)", "Dominant (6 Modules + 60 Examenvragen & Praktijkexamen)"))
     mentor_keuze = st.radio("Choose your mentor:" if is_en else "Kies jouw begeleider:", ("Headmaster Bastian", "Headmistress Vale"))
     if st.button("Start Module 1 ➡️"):
@@ -254,8 +303,8 @@ elif st.session_state.fase == "Les":
     antw = []
     for i, q in enumerate(vragen):
         opties = list(q.get("o"))
-        random.Random(f"{nr}_{i}").shuffle(opties)
-        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}") == q.get("a"))
+        random.Random(f"hussel_{nr}_{i}_{st.session_state.poging}_{st.session_state.rol}").shuffle(opties)
+        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}_{st.session_state.poging}") == q.get("a"))
     if st.button("Submit Exam" if is_en else "Lever toets in"):
         foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
         if sum(antw) >= 8:
@@ -270,6 +319,7 @@ elif st.session_state.fase == "Les":
             sla_op()
             st.rerun()
         else:
+            st.session_state.poging += 1
             st.error((f"❌ Score: {sum(antw)}/10 (at least 8 required). You missed:\n" if is_en else f"❌ Score: {sum(antw)}/10 (minimaal 8 vereist). Je liep vast op:\n") + "\n".join(f"- {fv}" for fv in foute_vragen))
             bijles = vraag_mentor(f"You are {st.session_state.mentor_naam}. The student failed Module {nr} on these questions: {foute_vragen}. Give short, clear, encouraging tutoring {'in English' if is_en else 'in Dutch'} specifically explaining the concepts behind these missed questions.")
             st.info(f"🎓 **{'Personal Tutoring from' if is_en else 'Persoonlijke Bijles van'} {st.session_state.mentor_naam}:**\n\n{bijles}")
