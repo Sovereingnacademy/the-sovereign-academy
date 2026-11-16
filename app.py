@@ -321,8 +321,9 @@ elif st.session_state.fase == "Les":
         st.info("🔒 Lees alle hoofdstukken hierboven en vink ze aan om de toets te ontgrendelen." if not is_en else "🔒 Read all chapters above and check them off to unlock the exam.")
     elif st.session_state.get("bijles_actief", False):
         st.warning(f"🎓 **{'Mandatory Tutoring Session with' if is_en else 'Verplichte Bijles-sessie met'} {mentor}** — {'Discuss your mistakes below until your mentor unlocks your retake.' if is_en else 'Bespreek hieronder je fouten totdat jouw begeleider je herkansing vrijgeeft.'}")
+        u_av = st.session_state.user_avatar if isinstance(st.session_state.user_avatar, str) and len(st.session_state.user_avatar) <= 4 else "👤"
         for role, text in st.session_state.get("bijles_chat", []):
-            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else u_av)):
                 st.write(text)
         if bijles_in := st.chat_input("Answer your mentor's question or ask for clarification..." if is_en else "Beantwoord de vraag van je begeleider of vraag om extra uitleg..."):
             st.session_state.bijles_chat.append(("user", bijles_in))
