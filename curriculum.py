@@ -1,15 +1,37 @@
 MODULES = {
     1: {
         "titel": "Sub Module 1: Bewuste Overgave, Kracht & Zelfkennis",
-        "theorie": (
-            "### 1. Overgave is een Keuze, Geen Zwakte\n"
-            "Echte submissie betekent niet dat je minderwaardig bent of niets meer te zeggen hebt. Integendeel: bewuste overgave is een **actieve keuze** vanuit kracht. Je vertrouwt een ander tijdelijk de regie toe omdat jij dat wilt, en jij behoudt altijd de eindverantwoordelijkheid over jouw eigen grenzen.\n\n"
-            "### 2. Waarom Zoek je Overgave? (De Psychologie)\n"
-            "* **Mentale rust (Loslaten):** Veel sterke mensen die overdag alles moeten regelen en beslissen, ervaren diepe rust wanneer een betrouwbare Dominant de leiding overneemt.\n"
-            "* **Structuur en focus:** Duidelijke kaders en regels halen de onrust uit je hoofd en brengen je terug in je lichaam.\n\n"
-            "### 3. Het Verschil Tussen Een Goede Dom en Een 'Wannabe'\n"
-            "Een echte Dominant respecteert jouw tempo, luistert naar je grenzen en zorgt voor jouw veiligheid. Een 'wannabe' eist direct gehoorzaamheid zonder vertrouwen op te bouwen, negeert je grenzen of gebruikt jouw overgave alleen voor zijn eigen ego."
-        ),
+        "theorie": """### Hoofdstuk 1: De Essentie van Bewuste Overgave (Submission)
+Binnen de D/s-wereld (Dominance & Submission) wordt onderdanigheid door buitenstaanders vaak verkeerd begrepen als zwakte, minderwaardigheid of het laten over je heen lopen. In werkelijkheid is **bewuste overgave een daad van grote innerlijke kracht, zelfkennis en vertrouwen**. Je geeft jouw regie niet weg omdat je zelf niets kunt, maar omdat je bewust kiest om de controle tijdelijk in bruikleen te geven aan iemand die dat vertrouwen waard is.
+
+* **Macht in bruikleen:** Jij blijft altijd de eigenaar van jouw lichaam, jouw geest en jouw grenzen. Een gezonde Dominant dwingt geen gehoorzaamheid af; jij schenkt jouw overgave vrijwillig binnen veilige, vooraf afgesproken kaders.
+* **De mentale rust van overgave:** In het dagelijks leven draag je vaak talloze verantwoordelijkheden, keuzes en verwachtingen. Wanneer je in een veilige D/s-dynamiek de regie mag overdragen, ontstaat er mentale stilte en diepe ontspanning in je hoofd.
+
+---
+
+### Hoofdstuk 2: Zelfrespect, Eigenwaarde & De Gouden Standaard
+Een sterke submissive kent haar eigen waarde. Je bent geen voetveeg en geen bezit zonder stem, maar een volwaardig mens met gevoelens, wensen en een eigen kompas.
+
+* **Gezonde overgave vs. Ongezonde zelfopoffering:** Gezonde overgave geeft je energie, trots, rust en verbinding. Ongezonde zelfopoffering herken je aan angst, voortdurende spanning, je eigen welzijn verwaarlozen om de ander maar tevreden te houden, of het gevoel dat je geen 'nee' meer mag zeggen.
+* **Echte Dominantie herkennen:** Een betrouwbare Dominant respecteert jouw tempo, luistert zonder oordeel naar jouw vragen en bewaakt jouw grenzen net zo scherp als jijzelf. Iemand die jou onder druk zet, schuldgevoelens aanpraat of zegt *"Een echte sub heeft geen grenzen nodig"*, is géén echte Dominant maar iemand die misbruik maakt van jouw openheid.
+
+---
+
+### Hoofdstuk 3: Verschillende Stijlen van Submissiveness
+Geen enkele submissive is hetzelfde. Binnen The Sovereign Academy werken we met verschillende profielen, die ook in elkaar kunnen overlopen:
+
+* **Classic Submissive:** Houdt van duidelijke structuur, etiquette, rituelen, dienstbaarheid en warme, gestructureerde leiding.
+* **Brat (Speelse Uitdager):** Zoekt de spanning en verbinding door speels te plagen, kleine regels uit te testen en de Dominant uit te dagen om zijn of haar standvastigheid en humor te tonen.
+* **Slave / Slavin (Diepe Overgave):** Verlangt naar een vergaande, intensieve vorm van overgave, discipline en toewijding binnen een zeer zorgvuldig opgebouwd en veilig verbond.
+* **Switch:** Voelt zowel de behoefte om de controle los te laten (submissive) als om zelf de leiding en zorg te nemen (Dominant), afhankelijk van het moment of de partner.
+
+---
+
+### Hoofdstuk 4: Eerlijkheid, Communicatie & Jouw Stem in de Dynamiek
+Goede submissiveness is nooit passief achteroverleunen en hopen dat de ander jouw gedachten leest. Het vraagt om **radicale eerlijkheid** over wat je voelt, wat je nodig hebt en waar je spanning ervaart.
+
+* **Actieve deelname:** Jouw feedback tijdens en na een sessie is onmisbaar voor de Dominant. Door helder te benoemen wat je raakt, wat fijn is en wat te ver gaat, help je de Dominant om jou nog beter en veiliger te begeleiden.
+* **Respectvolle houding:** Etiquette en aanspreekvormen (zoals het gebruik van *'u'* en een gepaste titel) zijn geen middelen om je klein te maken, maar rituelen die helpen om bewust uit je dagelijkse rol te stappen en de focus en rust van de dynamiek binnen te treden.""",
         "vragen": [
             {"v": "1. Wat is het belangrijkste kenmerk van gezonde submissie?", "o": ("Dat je vanuit eigen kracht en vertrouwen tijdelijk de regie uit handen geeft.", "Dat je nooit meer een eigen mening of gevoel mag hebben.", "Dat je alles doet wat een ander vraagt om aardig gevonden te worden."), "a": "Dat je vanuit eigen kracht en vertrouwen tijdelijk de regie uit handen geeft."},
             {"v": "2. Waarom ervaren veel zelfstandige mensen rust in een D/s-dynamiek?", "o": ("Omdat ze even niet alles zelf hoeven te beslissen en de controle veilig mogen loslaten.", "Omdat ze in het dagelijks leven niet zelfstandig kunnen nadenken.", "Omdat ze dan geen verantwoordelijkheid meer hebben voor hun eigen fouten."), "a": "Omdat ze even niet alles zelf hoeven te beslissen en de controle veilig mogen loslaten."},
@@ -26,17 +48,41 @@ MODULES = {
 
         2: {
         "titel": "Sub Module 2: Consent, Limits & Het Verkeerslichtsysteem",
-        "theorie": (
-            "### 1. Jouw Stem is Je Sterkste Veiligheidsmiddel\n"
-            "Binnen BDSM en D/s is **consent (instemming)** het fundament van alles. Instemming is nooit definitief: je mag op elk moment van gedachten veranderen, zelfs midden in een sessie.\n\n"
-            "### 2. Hard Limits versus Soft Limits\n"
-            "* **Hard Limit (Rood):** Een absolute grens die voortkomt uit trauma, walging, angst of fysiek gevaar. Hier gaat niemand overheen, ook niet 'om even te proberen'.\n"
-            "* **Soft Limit (Oranje/Geel):** Iets wat je spannend of onbekend vindt, maar waar je onder strikte voorwaarden en met veel vertrouwen misschien voorzichtig aan wilt ruiken.\n\n"
-            "### 3. Het Verkeerslichtsysteem (GROEN / GEEL / ROOD)\n"
-            "* **GROEN:** Alles gaat goed, ik voel me veilig en kan doorgaan.\n"
-            "* **GEEL:** Het wordt intens of spannend; verlaag het tempo of check even bij mij in.\n"
-            "* **ROOD:** Stop onmiddellijk met elke handeling en stap uit de rol."
-        ),
+        "theorie": """### Hoofdstuk 1: Zelfbescherming & Het Belang van Grenzen
+Jouw grenzen zijn de muren van een veilig kasteel: juist omdat die muren stevig en duidelijk zijn, kun jij binnenin volledig ontspannen en loslaten. Een submissive die haar grenzen kent en durft uit te spreken, is niet "moeilijk" of "saai" — zij is juist een volwassen, betrouwbare gesprekspartner.
+
+* **Hard Limits (Absolute No-Go's):** Dit zijn zaken die je onder geen enkele voorwaarde wilt doen of ervaren (fysiek, mentaal of emotioneel). Een Hard Limit staat vast en mag tijdens een sessie nooit ter discussie worden gesteld of "stiekem" worden uitgeprobeerd.
+* **Soft Limits (Nieuwsgierig met Spanning):** Dit zijn onderwerpen waar je nieuwsgierig naar bent, maar die ook spannend of onbekend voelen. Een Soft Limit verken je alleen wanneer je je helemaal veilig voelt, in hele kleine stapjes en met duidelijke afspraken vooraf.
+
+---
+
+### Hoofdstuk 2: Negotiation — Jouw Voorbereiding op Veiligheid
+Vóórdat er ooit een sessie, opdracht of dynamiek start, vindt er een **negotiation** (voorgesprek) plaats. Dit gesprek voer je altijd op een neutraal, rustig moment — volledig nuchter, buiten een rollenspel en zonder tijdsdruk.
+
+* **Wat bespreek je altijd vooraf?** Jouw Hard Limits, jouw Soft Limits, jouw verlangens, eventuele medische bijzonderheden (zoals blessures, gewrichtsklachten, astma of medicatie), psychische triggers en hoe jij na afloop verzorgd wilt worden (Aftercare).
+* **Geldige Consent (Toestemming):** Toestemming is alleen geldig wanneer deze vrijwillig, geïnformeerd, enthousiast en nuchter wordt gegeven. Als je 'ja' zegt uit angst om een Dominant teleur te stellen of te verliezen, is dat géén gezonde basis. Bovendien mag je jouw consent op elk moment intrekken, ook midden in een handeling.
+
+---
+
+### Hoofdstuk 3: Het Stoplichtsysteem & Non-Verbale Safewoorden
+Tijdens een intens moment kun je zo diep in je emotie of *Subspace* zakken dat nadenken en praten lastig worden. Daarom gebruik je het eenvoudige en universele **Stoplichtsysteem**:
+
+* **Groen:** Alles gaat goed, ik voel me veilig en we kunnen doorgaan.
+* **Geel:** Het wordt heel intens, ik nader een grens of ik heb even een kort adempauze en een check-in nodig (zonder dat de hele sessie direct hoeft te stoppen).
+* **Rood:** Directe stop. Alle handelingen stoppen onmiddellijk zonder vragen of discussie, en de Dominant stapt direct uit de rol om zorg te bieden.
+* **Non-verbale safewoorden:** Wanneer je door een gag, emotie of spanning niet kunt spreken, spreek je vooraf een duidelijk fysiek signaal af — zoals het vasthouden van een belletje of sleutelbos die je laat vallen, of drie keer stevig tikken.
+
+---
+
+### Hoofdstuk 4: Rode Vlaggen Herkennen (Zelfbescherming Online & Offline)
+Zeker bij online kennismakingen of nieuwe contacten is het cruciaal om **rode vlaggen** direct te herkennen en serieus te nemen.
+
+* **Alarmsignalen om direct afstand te nemen:**
+  * Iemand die weigert een negotiation te doen of safewoorden onzin vindt.
+  * Iemand die direct in het eerste gesprek om intieme foto's, persoonlijke gegevens (adres, werk, achternaam) of geld vraagt.
+  * Iemand die jouw grenzen probeert weg te praten of je schuldgevoelens aanpraat wanneer je 'nee' zegt.
+  * Iemand die probeert je te isoleren van vrienden, familie of je normale dagelijks leven.
+* **Veilig online starten:** Gebruik altijd een aparte schuilnaam, deel nooit herkenbare foto's of locatiegegevens in de kennismakingsfase en luister altijd naar je onderbuikgevoel: bij twijfel zet je direct een stap terug.""",
         "vragen": [
             {"v": "1. Wat is het belangrijkste verschil tussen een Hard Limit en een Soft Limit?", "o": ("Een Hard Limit is een absolute no-go; een Soft Limit is een spannende grens die alleen met veel vertrouwen voorzichtig verkend mag worden.", "Een Hard Limit mag na een maand worden overschreden, een Soft Limit nooit.", "Een Soft Limit geldt alleen wanneer je moe bent."), "a": "Een Hard Limit is een absolute no-go; een Soft Limit is een spannende grens die alleen met veel vertrouwen voorzichtig verkend mag worden."},
             {"v": "2. Wat betekent het als jij tijdens een oefening 'GEEL' zegt?", "o": ("Doe het iets rustiger aan, verlaag de intensiteit of check even bij mij in.", "Stop de hele sessie onmiddellijk en verlaat de ruimte.", "Alles gaat fantastisch, je mag nog een stap verder gaan."), "a": "Doe het iets rustiger aan, verlaag de intensiteit of check even bij mij in."},
@@ -53,16 +99,35 @@ MODULES = {
 
         3: {
         "titel": "Sub Module 3: Etiquette, Houdingen & Protocol",
-        "theorie": (
-            "### 1. Waarom Etiquette Rust Geeft in Je Hoofd\n"
-            "Vaste omgangsvormen — zoals aanspreekvormen (*Meneer/Mevrouw* of *Meester/Meesteres*), oogcontact en lichaamshoudingen — zijn geen spelletje om je klein te houden. Ze werken als een **mentale drempel**: zodra jij de houding aanneemt, schakelt je brein van de drukke buitenwereld naar rust en focus.\n\n"
-            "### 2. Belangrijke Basishoudingen\n"
-            "* **Nadu:** Je zit op je knieën (altijd op een zacht kussen of kleed!), knieën iets uit elkaar, rug recht, handen ontspannen met de handpalmen omlaag op je bovenbenen.\n"
-            "* **Inspection (Presentatie):** Rechtop staan, voeten op heupbreedte, handen op de rug en een open, trotse blik recht vooruit.\n"
-            "* **De Strafpose:** Gezicht naar de muur, handen op de rug. Bedoeld om prikkels te verlagen en je gedachten te ordenen.\n\n"
-            "### 3. Non-Verbaal Communiceren\n"
-            "Heb je even geen spreekrecht, maar wil je iets belangsrijks melden? Draai dan in *Nadu* rustig één handpalm omhoog op je dij. Een oplettende Dominant ziet direct dat je toestemming vraagt om te spreken."
-        ),
+        "theorie": """### Hoofdstuk 1: Etiquette, Rituelen & De Kracht van Aanspreekvormen
+Binnen een D/s-dynamiek zijn etiquette en rituelen geen lege formaliteiten om je klein te maken, maar **mentale bruggen** die jou helpen om bewust uit de drukte van het dagelijks leven te stappen en de veilige ruimte van overgave binnen te treden.
+
+* **De functie van aanspreekvormen:** Het aanspreken van je Dominant met *'u'* en een gekozen titel (zoals *Sir*, *Meester*, *Meesteres* of *Miss*) herinnert zowel jou als je Dominant direct aan de afgesproken rolverdeling. Het haalt het gelijkwaardige, alledaagse "gewoon even kletsen" weg en brengt directe focus, respect en rust.
+* **Houdingen en Rituelen:** Een vaste begroeting, een rustige houding (zoals de *Nadu*-pose met knieën licht gespreid, handen op de dijen en rechte rug) of het vragen om toestemming voordat je spreekt helpt om je gedachten stil te zetten en je aandacht volledig in je lichaam te brengen.
+
+---
+
+### Hoofdstuk 2: De Psychologie van Dienstbaarheid & Trots
+Voor veel mensen buiten de D/s-wereld klinkt het woord *"dienstbaarheid"* negatief, alsof je een sloofje bent. Binnen bewuste submissie is dienstbaarheid echter een **bron van diepe trots, aandacht en verbinding**.
+
+* **Aandacht in de kleinste dingen:** Of het nu gaat om het met zorg inschenken van een glas water, het netjes klaarleggen van attributen, het bijhouden van een check-in dagboek of het stipt uitvoeren van een dagelijkse opdracht — de kracht zit in de bewuste aandacht waarmee je het doet.
+* **De voldoening van vertrouwen:** Wanneer jouw Dominant ziet dat jij opdrachten met zorg en toewijding uitvoert, groeit zijn of haar vertrouwen om jou steeds dieper te begeleiden. Die wederzijdse waardering geeft een krachtig gevoel van rust en eigenwaarde.
+
+---
+
+### Hoofdstuk 3: Omgaan met Fouten, Correctie & Discipline
+Niemand is perfect, en binnen een D/s-opleiding of dynamiek zul je onvermijdelijk weleens een regel vergeten, te laat inchecken of een speelse uitglijder maken. Hoe je daarmee omgaat, bepaalt je groei.
+
+* **Eerlijkheid boven smoesjes:** Een volwassen submissive zoekt geen uitvluchten wanneer zij een fout maakt, maar erkent deze rustig, oprecht en zonder zichzelf omlaag te halen (*"Mijn excuses Sir, ik ben vergeten op tijd te melden"*).
+* **Het doel van discipline en correctie:** Een gezonde correctie (zoals een korte bezinning in de hoek, het schrijven van strafregels of een passende fysieke correctie) is nooit bedoeld om jou te vernederen of af te breken. Het doel is **ontlading van schuldgevoel, herstel van focus en het afsluiten van de fout**, zodat je daarna weer met een schone lei en een licht hart verder kunt.
+
+---
+
+### Hoofdstuk 4: Gezonde Inzet vs. Perfectionisme & Overbelasting
+Sommige beginnende submissives leggen de lat zo extreem hoog voor zichzelf dat ze voortdurend bang zijn om te falen. Dat is niet de bedoeling van overgave.
+
+* **Geen faalangst in overgave:** Een Dominant zoekt geen foutloze robot, maar een mens van vlees en bloed die zich durft te laten zien — inclusief onzekerheden en leermomenten.
+* **Op tijd aangeven als iets te veel wordt:** Als een opdracht botst met je werk, studie, gezondheid of slaap, meld je dat tijdig en respectvol. Echte discipline betekent ook goed voor jezelf zorgen zodat je duurzaam in je kracht blijft.""",
         "vragen": [
             {"v": "1. Wat is het belangrijkste mentale doel van etiquette en vaste rituelen?", "o": ("Het helpt je brein om de drukte van de dag los te laten en veilig te landen in focus en overgave.", "Het dient alleen om aan de buitenwereld te laten zien hoe streng de Dominant is.", "Het zorgt ervoor dat je nooit meer mag lachen tijdens een ontmoeting."), "a": "Het helpt je brein om de drukte van de dag los te laten en veilig te landen in focus en overgave."},
             {"v": "2. Hoe zit je correct in de 'Nadu'-houding?", "o": ("Op een zachte ondergrond, knieën licht gespreid, rug recht en handpalmen omlaag op je bovenbenen.", "Op een harde stenen vloer met gebogen rug en gekruiste armen.", "Met je knieën strak tegen elkaar en je handen achter je rug gebonden."), "a": "Op een zachte ondergrond, knieën licht gespreid, rug recht en handpalmen omlaag op je bovenbenen."},
@@ -79,15 +144,39 @@ MODULES = {
 
         4: {
         "titel": "Sub Module 4: Subspace, Endorfines & Subdrop Begrijpen",
-        "theorie": (
-            "### 1. Wat Gebeurt Er in Je Brein Tijdens Subspace?\n"
-            "Wanneer je je diep overgeeft aan een sessie, intense focus of fysieke prikkels (zoals bondage of impact play), maakt je lichaam een krachtige mix van **endorfine**, **oxytocine** en **adrenaline** aan. Hierdoor kom je in **Subspace**: een zweverige, kalme roes waarin dagelijkse zorgen verdwijnen en pijn veel zachter aanvoelt.\n\n"
-            "### 2. Waarom Voorzichtigheid in Subspace Belangrijk Is\n"
-            "In die diepe roes werkt jouw eigen pijn- en vermoeidheidsrem minder scherp. Daarom spreek je grenzen altijd vóór de sessie af en ga je in Subspace geen onbekende, nieuwe risico's aan.\n\n"
-            "### 3. Subdrop Herkennen en Opvangen (12 tot 48 uur later)\n"
-            "* **Wat is Subdrop?** Na de sessie zakken de hoge hormoonspiegels weer terug naar normaal. Tussen **12 en 48 uur later** kun je je plotseling leeg, somber, moe of huilerig voelen.\n"
-            "* **Dit is volkomen normaal:** Het betekent niet dat de sessie fout was of dat er iets mis is met jou. Zorg voor warmte, water, rust en stuur een berichtje naar je begeleider."
-        ),
+        "theorie": """### Hoofdstuk 1: Wat Gebeurt er in je Lichaam tijdens Subspace?
+Wanneer je je tijdens een sessie diep overgeeft aan aanraking, spanning, bondage of gecontroleerde pijnprikkels, schakelt je lichaam over op een bijzondere chemische reactie. Je brein maakt grote hoeveelheden **endorfine** (natuurlijke pijnstiller en gelukshormoon), **adrenaline** en **oxytocine** (het knuffel- en hechtingshormoon) aan.
+
+* **Hoe Subspace voelt:** Je kunt een warm, zweverig, diep ontspannen of bijna dromerig gevoel ervaren. Piekerende gedachten vallen weg, tijd lijkt te vertragen en je voelt een intense verbondenheid en rust.
+* **Waarom je eigen kompas trager werkt:** Omdat endorfine pijn dempt en je denkende brein op de achtergrond raakt, merk je in Subspace minder scherp of een houding te lang duurt, of je het koud krijgt of dat een touw begint te knellen. Juist daarom vertrouw je op een betrouwbare Dominant die voor jou oplet — én blijf je het Stoplichtsysteem gebruiken.
+
+---
+
+### Hoofdstuk 2: Het Verschil tussen Overgave en een Freeze-Reactie
+Het is heel belangrijk dat jijzelf het verschil leert herkennen tussen **diepe, veilige ontspanning** en een **freeze-reactie (verstijving)** van je zenuwstelsel.
+
+* **Veilige Subspace:** Je ademhaling is rustig en diep, je spieren voelen zwaar en ontspannen, en hoewel praten traag gaat, voel je je geborgen en aanwezig.
+* **Freeze (Overbelasting):** Je ademhaling stokt of wordt heel oppervlakkig, je lichaam verstijft, je voelt je afgesloten van de wereld (*dissociatie*) of je durft geen 'nee' meer te zeggen terwijl het eigenlijk te veel is.
+* **Wat je doet als je dreigt te bevriezen:** Wacht niet tot het helemaal blokkeert, maar zeg op tijd **"Geel"** (of gebruik je non-verbale signaal) zodat je Dominant het tempo direct verlaagt en je helpt om weer rustig te ademen.
+
+---
+
+### Hoofdstuk 3: Jouw Behoefte aan Aftercare Kennen en Uitspreken
+Na elke intense sessie — zowel fysiek als emotioneel of online — daalt het niveau van endorfine en adrenaline weer. **Aftercare** is de zorgzame overgangsfase waarin je lichaam en hart veilig terugkeren naar de dagelijkse werkelijkheid.
+
+* **Iedereen landt anders:** De één heeft na afloop behoefte om stevig vastgehouden te worden, te praten en gerustgesteld te worden. De ander wil juist onder een warme deken in stilte met een glas water bijkomen zonder veel woorden.
+* **Jouw verantwoordelijkheid:** Niemand kan in jouw hoofd kijken. Door vooraf (en na afloop) eerlijk aan te geven wat jij fijn vindt — bijvoorbeeld een warme deken, water, iets zoets voor je bloedsuiker of even vasthouden — help je jouw Dominant om jou precies de juiste zorg te geven.
+
+---
+
+### Hoofdstuk 4: Subdrop Herkennen, Begrijpen & Opvangen
+Soms voel je je direct na een sessie geweldig, maar krijg je **12 tot 72 uur later** plotseling een flinke emotionele of lichamelijke dip. Dit heet **Subdrop** en is een volkomen natuurlijke reactie van je lichaam na het wegvallen van intensieve hormonen.
+
+* **Typische signalen van Subdrop:** Onverklaarbare huilbuien, somberheid, extreme vermoeidheid, prikkelbaarheid, spierpijn, koude rillingen of plotselinge gedachten als *"Ik heb het niet goed genoeg gedaan"* of *"Misschien vindt hij/zij mij toch niet leuk"*.
+* **Hoe je Subdrop opvangt:**
+  1. **Herken het als chemie, niet als waarheid:** Herinner jezelf eraan dat je brein simpelweg aan het bijtanken is en dat je sombere gedachten tijdelijk zijn.
+  2. **Zorg goed voor je lichaam:** Drink voldoende water, eet gezond, neem een warme douche en gun jezelf extra slaap.
+  3. **Deel het met je Dominant (of gebruik de 24/7 Zorgmodus):** Stuur een kort berichtje (*"Ik merk dat ik vandaag wat last heb van Subdrop"*). Even gehoord en gerustgesteld worden haalt de zwaarte er vaak direct af.""",
         "vragen": [
             {"v": "1. Wat is 'Subspace'?", "o": ("Een diepe, kalme trance veroorzaakt door endorfine en oxytocine tijdens overgave.", "Een straf waarbij je een uur lang in een aparte kamer moet zitten.", "Het moment waarop je spijt krijgt van je keuze voor BDSM."), "a": "Een diepe, kalme trance veroorzaakt door endorfine en oxytocine tijdens overgave."},
             {"v": "2. Waarom mag je in diepe Subspace beter geen nieuwe, onbesproken grenzen verkennen?", "o": ("Omdat endorfine je pijngrens verdooft, waardoor je pas de volgende dag voelt dat iets te ver ging.", "Omdat je in Subspace wettelijk geen toestemming mag geven.", "Omdat je in Subspace helemaal niet meer kunt praten."), "a": "Omdat endorfine je pijngrens verdooft, waardoor je pas de volgende dag voelt dat iets te ver ging."},
@@ -104,15 +193,36 @@ MODULES = {
 
         5: {
         "titel": "Sub Module 5: Innerlijke Onrust ('Stuiteren'), Brat-gedrag & Closure",
-        "theorie": (
-            "### 1. Wat Is 'Stuiteren' en Waar Komt Het Vandaan?\n"
-            "Soms merk je dat je hoofd vol zit, je onrustig wordt of plotseling tegengas gaat geven ('stuiteren'), juist op momenten dat het stil wordt. Vaak is dit geen echte boosheid, maar een onbewuste vraag om **duidelijke kaders en houvast** zodat je hoofd eindelijk tot bedaren kan komen.\n\n"
-            "### 2. Speels Brat-gedrag versus Echte Weerstand\n"
-            "* **Speels Brat-gedrag:** Uitdagend of eigenwijs doen met een knipoog, waarbij je de verbinding zoekt en wilt voelen dat je Dominant kalm en onverstoorbaar blijft.\n"
-            "* **Echte weerstand of angst:** Wanneer iets écht niet goed voelt, wees dan direct eerlijk en stop het spel. Echte grenzen verpak je nooit als grapje.\n\n"
-            "### 3. Discipline als Ontlading (*Closure*)\n"
-            "Een correctie, strafregel of rusthouding binnen een gezonde dynamiek is nooit bedoeld om je af te breken. Het dient als **closure**: een helder eindpunt waarmee opgebouwde spanning ontlaadt en de lucht direct weer helemaal schoon is."
-        ),
+        "theorie": """### Hoofdstuk 1: Fysieke Veiligheid & Kennen van Je Eigen Lichaam
+Bewuste overgave betekent nooit dat je jouw verstand uitschakelt als het om fysieke veiligheid gaat. Juist een goed onderlegde submissive weet waar haar lichaam kwetsbaar is, zodat zij tijdens bondage, houdingen of intens spel direct op tijd aan de bel kan trekken.
+
+* **Zenuwbanen en doorbloeding:** Rond je **polsen**, **bovenarmen/oksels**, **schouders** en **knieholtes** lopen belangrijke zenuwen en bloedvaten vlak onder de huid. Als touwen, boeien of een houding te strak zitten, ontstaat er al snel afknelling.
+* **Alarmsignalen die je nooit negeert:** Tintelingen (*"slapende" vingers of tenen*), een doof gevoel, koude handen/voeten, bleke of blauwe huid of scherpe, stekende gewrichtspijn zijn **geen** "lekkere BDSM-pijn", maar directe waarschuwingssignalen van je zenuwstelsel. Meld dit meteen (bijvoorbeeld met *"Geel"* of *"Rood"*) zodat de druk onmiddellijk wordt weggenomen.
+
+---
+
+### Hoofdstuk 2: Veilig Spel met Bondage, Gags & Impact Play
+Ook al is de Dominant verantwoordelijk voor de techniek en de materialen, jij bent als submissive een actieve partner die weet wat wel en niet veilig is.
+
+* **De veiligheidsregels bij Bondage:** Er moeten altijd **twee vingers** tussen de boei of het touw en je huid passen. Daarnaast ligt er bij elke vorm van vastbinden een speciale **EHBO-veiligheidsschaar met stompe punt** binnen handbereik van de Dominant, en word je vastgebonden **nooit** alleen in een kamer achtergelaten.
+* **Veiligheid bij Gags (Mondknevels):** Gebruik alleen een gag als je volledig vrij door je neus kunt ademen (niet bij verkoudheid of benauwdheid) en spreek vóórdat de gag omgaat altijd een **non-verbaal safewoord** af, zoals een belletje in je hand of drie keer tikken op je Dominant.
+* **Veilige zones bij Impact Play:** Lichte of stevige slagen (spanking, paddles, floggers) horen uitsluitend op gespierde, vlezige zones zoals de billen en bovenbenen. Slagen op de **nieren** (onderrug net onder de ribben), de **ruggengraat**, de **nek**, het **hoofd** of **gewrichten** zijn gevaarlijk en altijd uit den boze.
+
+---
+
+### Hoofdstuk 3: Hoog-Risico Activiteiten & Verantwoordelijkheid (RACK)
+Binnen de D/s-gemeenschap werkt men volgens **RACK (Risk-Aware Consensual Kink)**: je bent je bewust van de risico's van een activiteit en neemt samen maatregelen om die zo klein mogelijk te houden.
+
+* **Hoog-risico spel (zoals Breathplay):** Activiteiten waarbij de ademhaling of bloedtoevoer naar het hoofd wordt beperkt (*breathplay* of *choking*), brengen een direct en onvoorspelbaar risico op zuurstoftekort, bewusteloosheid of blijvende schade met zich mee. Dit is nooit iets om "zomaar even uit te proberen" en mag nooit lichtzinnig als vereiste voor overgave worden gepresenteerd.
+* **Nuchterheid en helderheid:** Veilig spelen kan alleen wanneer zowel jij als je Dominant volledig nuchter en helder zijn. Alcohol, drugs of zware slaapmedicatie verdoezelen pijngrenzen en vertragen reacties — dat maakt veilig spelen onmogelijk.
+
+---
+
+### Hoofdstuk 4: Hygiëne, Zelfzorg & Voorbereiding
+Goed voorbereid aan een sessie beginnen geeft rust in je hoofd en beschermt je lichaam.
+
+* **Hygiëne van materialen:** Zorg ervoor dat toys, boeien en attributen vóór en na gebruik grondig worden gereinigd met geschikte *toycleaner* of milde zeep en water. Poreuze materialen (zoals onbehandeld leer of touw) kunnen bacteriën vasthouden en vragen om extra zorg.
+* **Luisteren naar je dagvorm:** Je belastbaarheid is niet elke dag gelijk. Vermoeidheid, stress op je werk, menstruatie of ziekte maken je gevoeliger voor pijn en emotie. Een sterke submissive geeft vooraf eerlijk aan hoe haar energie en lichaam die dag voelen.""",
         "vragen": [
             {"v": "1. Wat schuilt er meestal achter onrustig, uitdagend gedrag ('stuiteren') op een rustig moment?", "o": ("Een behoefte aan duidelijke kaders en houvast om je innerlijke onrust tot rust te brengen.", "Een bewuste wens om de relatie of dynamiek direct te beëindigen.", "Een teken dat je helemaal niet geschikt bent voor een D/s-dynamiek."), "a": "Een behoefte aan duidelijke kaders en houvast om je innerlijke onrust tot rust te brengen."},
             {"v": "2. Wat is het belangrijkste verschil tussen speels 'Brat'-gedrag en echte weerstand?", "o": ("Bij speels Brat-gedrag zoek je contact en veiligheid; bij echte weerstand voel je angst, pijn of tegenzin en zeg je direct stop.", "Er is geen verschil; een goede submissive gaat altijd door met uitdagen.", "Echte weerstand laat je alleen merken door stil te blijven en niets te zeggen."), "a": "Bij speels Brat-gedrag zoek je contact en veiligheid; bij echte weerstand voel je angst, pijn of tegenzin en zeg je direct stop."},
@@ -129,15 +239,39 @@ MODULES = {
 
         6: {
         "titel": "Sub Module 6: Rode Vlaggen, Zelfbescherming & Het Verbond",
-        "theorie": (
-            "### 1. Rode Vlaggen Herkennen ('Neppers' & Misbruik)\n"
-            "Nu je bijna afstudeert aan The Sovereign Academy, ken je jouw eigen waarde en grenzen. Laat je nooit overrompelen door mensen die het woord 'Dominant' misbruiken:\n"
-            "* **Isolatie:** Een goede Dom(me) moedigt jouw contact met vrienden, familie en je eigen leven aan. Iemand die je probeert af te zonderen is onveilig.\n"
-            "* **Financiële of digitale druk:** Stuur nooit naaktfoto's met je gezicht erop naar iemand die je net kent, en geef nooit geld uit angst of druk.\n"
-            "* **Geen ruimte voor 'Nee' of 'Rood':** Zodra iemand boos wordt als jij een grens aangeeft, verbreek je direct het contact.\n\n"
-            "### 2. Jouw Eigen Kracht in Fase 3 (Het Verbond)\n"
-            "In Fase 3 kies jij zelf een vaste Meester of Meesteres die aansluit bij jouw karakter (*Brat*, *Classic Submissive* of *Slave / Slavin*). Onthoud: een goede dynamiek maakt jou **sterker, rustiger en trotser op jezelf**."
-        ),
+        "theorie": """### Hoofdstuk 1: Het D/s-Verbond & Contract als Levend Kompas
+Aan het einde van je basisopleiding ben je klaar om een bewust **D/s-verbond** aan te gaan (zoals in Fase 3 van deze Academie) of om jouw kennis in te zetten in een echte dynamiek. Veel partners leggen hun afspraken vast in een **D/s-contract**.
+
+* **Symbolisch en praktisch, nooit juridisch:** Een D/s-contract heeft voor de wet geen juridische geldigheid — jij behoudt altijd al jouw burgerrechten en je kunt een contract op elk gewenst moment herzien of beëindigen. De echte kracht van een contract zit in de **duidelijkheid, toewijding en rust** die het schept.
+* **Een levend document:** Omdat jij groeit en je leven verandert, is een goed contract nooit in steen gebeiteld. Plan regelmatig (bijvoorbeeld elke paar maanden) een rustig evaluatiemoment buiten de rollen om samen te bekijken welke regels fijn werken en wat aangepast mag worden.
+
+---
+
+### Hoofdstuk 2: De Gezonde Balans tussen Overgave en het Dagelijks Leven
+Echte, gezonde overgave maakt je in het dagelijks leven **sterker, rustiger en zelfverzekerder**. Het mag nooit ten koste gaan van jouw gezondheid, zelfstandigheid of sociale wereld.
+
+* **Jouw eigen leven blijft intact:** Werk, studie, slaap, hobby's en waardevolle contacten met vrienden en familie blijven een onmisbaar onderdeel van jouw leven. Een gezonde Dominant zal jou nooit isoleren van je omgeving en zal je juist aanmoedigen om goed voor jezelf te zorgen.
+* **Gelijkwaardigheid als mens:** Binnen de dynamiek kies je ervoor om je over te geven aan de leiding van je Dominant, maar buiten de scène zijn jullie **100% gelijkwaardige volwassenen**. Bij serieuze beslissingen in het dagelijks leven heb je altijd een volwaardige stem.
+
+---
+
+### Hoofdstuk 3: Zelfreflectie, Evaluatie & Blijven Groeien
+Afstuderen aan de basismodules is geen eindpunt, maar het begin van echte verdieping. Je zult merken dat je behoeften, grenzen en inzichten zich blijven ontwikkelen naarmate je meer ervaring opdoet.
+
+* **Het belang van check-ins en dagboekvoering:** Door regelmatig stil te staan bij wat een opdracht, ritueel of sessie met je doet (zoals in je Notitieboekje), leer je jezelf steeds beter kennen. Je ontdekt welke prikkels je rust geven en waar je nog spanning vasthoudt.
+* **Eerlijk blijven over verschuivende grenzen:** Wat een jaar geleden een spannende Soft Limit was, kan nu heel vertrouwd voelen — en iets wat je vroeger fijn vond, kan door omstandigheden tijdelijk een grens worden. Blijf dit altijd open en zonder schaamte uitspreken.
+
+---
+
+### Hoofdstuk 4: Jouw Kracht als Bewuste Submissive (De Gouden Standaard)
+Met alles wat je in deze zes modules hebt geleerd, heb je een stevig fundament gebouwd dat jou beschermt tegen misbruik en je helpt om de diepte van echte overgave veilig te ervaren.
+
+* **De vijf pijlers van jouw kracht:**
+  1. **Zelfkennis:** Je weet wie je bent en waarom je kiest voor overgave.
+  2. **Heldere grenzen:** Je kent je Hard en Soft Limits en bewaakt je safewoorden zonder schuldgevoel.
+  3. **Eerlijke communicatie:** Je durft uit te spreken wat je voelt, nodig hebt of lastig vindt.
+  4. **Lichaamsbewustzijn:** Je herkent Subspace, Subdrop en fysieke waarschuwingssignalen op tijd.
+  5. **Eigenwaarde:** Je geeft jouw overgave als een kostbaar geschenk aan iemand die jouw veiligheid en respect waard is.""",
         "vragen": [
             {"v": "1. Wat is een duidelijke 'rode vlag' bij een online of echte Dominant?", "o": ("Hij probeert je te isoleren van vrienden/familie of zet je onder druk om direct naaktfoto's te sturen.", "Hij vraagt om eerst rustig een voorgesprek te houden over je grenzen.", "Hij respecteert het wanneer je een opdracht te spannend vindt."), "a": "Hij probeert je te isoleren van vrienden/familie of zet je onder druk om direct naaktfoto's te sturen."},
             {"v": "2. Mag een Dominant ooit bepalen dat jij jouw safewoord 'ROOD' niet meer mag gebruiken?", "o": ("Nee, nooit. Het recht om op elk moment te stoppen is onvoorwaardelijk en onvervreemdbaar.", "Ja, zodra je een contract hebt ondertekend of een halsband draagt.", "Alleen tijdens een officiële strafsessie."), "a": "Nee, nooit. Het recht om op elk moment te stoppen is onvoorwaardelijk en onvervreemdbaar."},
