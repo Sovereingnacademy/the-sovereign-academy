@@ -302,33 +302,83 @@ elif st.session_state.fase == "Les":
     is_dom = st.session_state.rol == "Dominant"
     ruw_mod = DOM_MODULES.get(nr) if is_dom else MODULES.get(nr)
     mod = vertaal_module(ruw_mod) if is_en else ruw_mod
+    mentor, mentor_img = st.session_state.mentor_naam, st.session_state.mentor_foto
     st.subheader(f"{'🎓' if is_dom else '📚'} {mod.get('titel')}")
-    with st.expander("📖 Required Theory" if is_en else "📖 Verplichte Theorie", expanded=True):
-        st.markdown(mod.get("theorie"))
-    vragen = mod.get("vragen")
-    antw = []
-    for i, q in enumerate(vragen):
-        opties = list(q.get("o"))
-        random.Random(f"hussel_{nr}_{i}_{st.session_state.poging}_{st.session_state.rol}").shuffle(opties)
-        antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}_{st.session_state.poging}") == q.get("a"))
-    if st.button("Submit Exam" if is_en else "Lever toets in"):
-        foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
-        if sum(antw) >= 8:
-            st.session_state.laatste_les_tijd = datetime.now().isoformat()
-            st.session_state.fase = "Praktijkkamer"
-            if not st.session_state.chat_history:
-                if is_en:
-                    intro = f"*{st.session_state.mentor_naam} nods approvingly ({sum(antw)}/10).* Discuss your insights from Module {nr} here." if is_dom else f"*{st.session_state.mentor_naam} closes your dossier ({sum(antw)}/10).* Good. Address me formally and as '{titel_txt}'. Tell me: what are you looking for here?"
-                else:
-                    intro = f"*{st.session_state.mentor_naam} knikt goedkeurend ({sum(antw)}/10).* Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{st.session_state.mentor_naam} slaat je dossier dicht ({sum(antw)}/10).* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
-                st.session_state.chat_history.append(("assistant", intro))
-            sla_op()
+
+    hoofdstukken = [h.strip() for h in mod.get("theorie", "").split("### ") if h.strip()]
+    alle_gelezen = True
+    for idx, h in enumerate(hoofdstukken):
+        regels_h = h.splitlines()
+        h_titel = regels_h[0].strip()
+        h_inhoud = "\n".join(regels_h[1:]).strip()
+        with st.expander(f"📖 {h_titel}", expanded=(idx == 0)):
+            st.markdown(h_inhoud)
+            gelezen = st.checkbox("✅ Ik heb dit hoofdstuk aandachtig gelezen en begrepen." if not is_en else "✅ I have read and understood this chapter carefully.", key=f"chk_read_{nr}_{idx}_{st.session_state.rol}")
+            if not gelezen:
+                alle_gelezen = False
+
+    if not alle_gelezen:
+        st.info("🔒 Lees alle hoofdstukken hierboven en vink ze aan om de toets te ontgrendelen." if not is_en else "🔒 Read all chapters above and check them off to unlock the exam.")
+    elif st.session_state.get("bijles_actief", False):
+        st.warning(f"🎓 **{'Mandatory Tutoring Session with' if is_en else 'Verplichte Bijles-sessie met'} {mentor}** — {'Discuss your mistakes below until your mentor unlocks your retake.' if is_en else 'Bespreek hieronder je fouten totdat jouw begeleider je herkansing vrijgeeft.'}")
+        for role, text in st.session_state.get("bijles_chat", []):
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+                st.write(text)
+        if bijles_in := st.chat_input("Answer your mentor's question or ask for clarification..." if is_en else "Beantwoord de vraag van je begeleider of vraag om extra uitleg..."):
+            st.session_state.bijles_chat.append(("user", bijles_in))
+            taal_instr = "in English" if is_en else "in Dutch"
+            f_lijst = st.session_state.get("laatste_fouten", [])
+            bijles_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. You are giving 1-on-1 tutoring because the student failed Module {nr} on: {f_lijst}. Ask a focused follow-up question to check if they truly understand why their answer was wrong, or give deeper explanation if they ask. CRITICAL: Only when you are convinced they now understand the concepts AND they are ready to retake the exam, end your message with the exact tag [HERKANSING_VRIJ] and ask if they want to discuss anything else or start the retake."
+            gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.bijles_chat)
+            antwoord = vraag_mentor(f"{bijles_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
+            if "[HERKANSING_VRIJ]" in antwoord:
+                antwoord = antwoord.replace("[HERKANSING_VRIJ]", "").strip()
+                st.session_state.herkansing_klaar = True
+            st.session_state.bijles_chat.append(("assistant", antwoord))
             st.rerun()
-        else:
-            st.session_state.poging += 1
-            st.error((f"❌ Score: {sum(antw)}/10 (at least 8 required). You missed:\n" if is_en else f"❌ Score: {sum(antw)}/10 (minimaal 8 vereist). Je liep vast op:\n") + "\n".join(f"- {fv}" for fv in foute_vragen))
-            bijles = vraag_mentor(f"You are {st.session_state.mentor_naam}. The student failed Module {nr} on these questions: {foute_vragen}. Give short, clear, encouraging tutoring {'in English' if is_en else 'in Dutch'} specifically explaining the concepts behind these missed questions.")
-            st.info(f"🎓 **{'Personal Tutoring from' if is_en else 'Persoonlijke Bijles van'} {st.session_state.mentor_naam}:**\n\n{bijles}")
+        if st.session_state.get("herkansing_klaar", False):
+            if st.button("🔄 Start Exam Retake" if is_en else "🔄 Start Herkansing van de Toets"):
+                st.session_state.bijles_actief = False
+                st.session_state.herkansing_klaar = False
+                st.session_state.bijles_chat = []
+                st.session_state.poging += 1
+                st.rerun()
+else:
+        st.markdown("---")
+        st.subheader("📝 Module Exam" if is_en else "📝 Module-toets")
+        vragen = mod.get("vragen")
+        antw = []
+        for i, q in enumerate(vragen):
+            opties = list(q.get("o"))
+            random.Random(f"hussel_{nr}_{i}_{st.session_state.poging}_{st.session_state.rol}").shuffle(opties)
+            antw.append(st.radio(q.get("v"), opties, key=f"q_{nr}_{i}_{st.session_state.poging}") == q.get("a"))
+        if st.button("Submit Exam" if is_en else "Lever toets in"):
+            score = sum(antw)
+            geslaagd = score >= 8
+            foute_vragen = [q.get("v") for q, goed in zip(vragen, antw) if not goed]
+            if sb:
+                try:
+                    sb.table("toets_analyse").insert({"tijdstip": datetime.now().isoformat(), "rol": st.session_state.rol, "module_nr": nr, "score": score, "geslaagd": geslaagd, "foute_vragen": " | ".join(foute_vragen)}).execute()
+                except Exception:
+                    pass
+            if geslaagd:
+                st.session_state.laatste_les_tijd = datetime.now().isoformat()
+                st.session_state.fase = "Praktijkkamer"
+                if not st.session_state.chat_history:
+                    if is_en:
+                        intro = f"*{mentor} nods approvingly ({score}/10).* Discuss your insights from Module {nr} here." if is_dom else f"*{mentor} closes your dossier ({score}/10).* Good. Address me formally and as '{titel_txt}'. Tell me: what are you looking for here?"
+                    else:
+                        intro = f"*{mentor} knikt goedkeurend ({score}/10).* Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{mentor} slaat je dossier dicht ({score}/10).* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
+                    st.session_state.chat_history.append(("assistant", intro))
+                sla_op()
+                st.rerun()
+            else:
+                st.session_state.laatste_fouten = foute_vragen
+                st.session_state.bijles_actief = True
+                st.session_state.herkansing_klaar = False
+                start_bijles = vraag_mentor(f"You are {mentor} of The Sovereign Academy. The student just scored {score}/10 on Module {nr} and missed these questions: {foute_vragen}. Step in directly {'in English' if is_en else 'in Dutch'}, point out where they went wrong without immediately giving away all answers, and ask a sharp, constructive question to make sure they truly understand the theory.")
+                st.session_state.bijles_chat = [("assistant", start_bijles)]
+                st.rerun()
 
 elif st.session_state.fase == "Afstuderen":
     if st.session_state.rol == "Dominant":
