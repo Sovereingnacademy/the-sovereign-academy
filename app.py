@@ -360,7 +360,7 @@ elif st.session_state.fase == "Praktijkkamer":
                 st.rerun()
             zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
             taal_instr = "in English" if is_en else "in Dutch"
-            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]."
+            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]. Note: Only if the student specifically asks about safe beginner gear, kneeling comfort, aftercare items, or long-distance app-controlled play, you may subtly mention they can check the 'Recommended & Support' ('Aanbevolen & Steun') section in the sidebar menu."
             gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
