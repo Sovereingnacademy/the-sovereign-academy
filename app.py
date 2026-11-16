@@ -212,7 +212,7 @@ if st.session_state.zorgmodus:
         antwoord = vraag_mentor(f"{zorg_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
         st.session_state.zorg_chat.append(("assistant", antwoord))
         st.rerun()
-st.stop()
+    st.stop()
 
 if st.session_state.gids_open:
     st.subheader("🏛️ Meet the Staff, Masters & Mistresses" if is_en else "🏛️ Kennismaking: Staf, Meesters & Meesteressen")
