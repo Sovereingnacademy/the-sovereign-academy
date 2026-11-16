@@ -442,7 +442,9 @@ elif st.session_state.fase == "Praktijkkamer":
         if verschil < timedelta(hours=12):
             pauze_actief = True
             uren_over = 12 - int(verschil.total_seconds() // 3600)
-            st.info(f"⏳ **Reflection pause active:** Let the material settle first. The next module opens in about **{uren_over} hours** (chat, Care Mode, and your notebook remain available 24/7)." if is_en else f"⏳ **Bezinkingspauze actief:** Laat de lesstof eerst rustig landen. Over ongeveer **{uren_over} uur** opent de volgende module (de chat, Zorgmodus en je notitieboekje blijven 24/7 bereikbaar).")
+            extra_en = ", Care Mode, and your notebook" if st.session_state.notitieboek_actief else " and Care Mode"
+            extra_nl = ", Zorgmodus en je notitieboekje" if st.session_state.notitieboek_actief else " en Zorgmodus"
+            st.info(f"⏳ **Reflection pause active:** Let the material settle first. The next module opens in about **{uren_over} hours** (the chat{extra_en} remain available 24/7)." if is_en else f"⏳ **Bezinkingspauze actief:** Laat de lesstof eerst rustig landen. Over ongeveer **{uren_over} uur** opent de volgende module (de chat{extra_nl} blijven 24/7 bereikbaar).")
 
     if not pauze_actief and not st.session_state.verbond_actief and not st.session_state.dom_examen_actief:
         if st.session_state.module_nr < 6:
