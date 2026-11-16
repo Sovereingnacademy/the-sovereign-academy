@@ -10,19 +10,21 @@ from checklist import CHECKLIST_CATEGORIEEN
 from meesters import MEESTERS
 from dom_curriculum import DOM_MODULES
 
-st.set_page_config(page_title="The Sovereign Academy", page_icon="logo.png", layout="centered")
+st.set_page_config(page_title="The Sovereign Academy", page_icon="logo.jpg", layout="centered")
 LOGO_URL = "https://githubusercontent.com"
 st.markdown(f"""
     <script>
-        var link = window.parent.document.querySelector("link[rel*='icon']") || window.parent.document.createElement('link');
-        link.type = 'image/png';
-        link.rel = 'shortcut icon';
+        var doc = window.parent.document;
+        doc.querySelectorAll("link[rel*='icon']").forEach(e => e.remove());
+        var link = doc.createElement('link');
+        link.rel = 'icon';
+        link.type = 'image/jpeg';
         link.href = '{LOGO_URL}';
-        window.parent.document.getElementsByTagName('head').appendChild(link);
-        var apple = window.parent.document.createElement('link');
+        doc.head.appendChild(link);
+        var apple = doc.createElement('link');
         apple.rel = 'apple-touch-icon';
         apple.href = '{LOGO_URL}';
-        window.parent.document.getElementsByTagName('head').appendChild(apple);
+        doc.head.appendChild(apple);
     </script>
 """, unsafe_allow_html=True)
 
