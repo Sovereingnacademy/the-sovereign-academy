@@ -1,7 +1,37 @@
 DOM_MODULES = {
     1: {
         "titel": "Module 1 (Dominant): Essentie van Leiderschap & Machtsoverdracht",
-        "theorie": "### Wat is échte Dominantie?\nDominantie binnen D/s gaat over **verantwoordelijkheid, zelfbeheersing en het creëren van veiligheid**, nooit over machtsmisbruik of willekeur. De submissive geeft macht in bruikleen; jij beheert die macht met zorg en integriteit.\n\n* **Emotionele regulatie:** Een sterke Dominant blijft kalm wanneer de situatie spannend wordt.\n* **Actief luisteren:** Je leest lichaamstaal, ademhaling en subtiele signalen van spanning.",
+        "theorie": """### Hoofdstuk 1: De Essentie van Echte Dominantie vs. Wannabe-Gedrag
+Binnen de D/s-wereld (Dominance & Submission) bestaat een wereld van verschil tussen **echt leiderschap** en wat men in de community een *'wannabe-Dom'* noemt. Een wannabe denkt dat Dominantie draait om bevelen schreeuwen, hard slaan, eisen stellen vanuit ego of een submissive direct dwingen tot onderwerping. Echte Dominantie is precies het tegenovergestelde: het draait om **zelfbeheersing, verantwoordelijkheid, emotionele intelligentie en het scheppen van absolute veiligheid**.
+
+* **Macht in bruikleen:** Een Dominant neemt geen macht af; een submissive geeft haar macht vrijwillig en bewust in bruikleen. Die overdracht is gebaseerd op vertrouwen. Zodra jij dat vertrouwen schendt door willekeur, ongeduld of egoïsme, vervalt het fundament onder jouw gezag.
+* **Gezag vs. Autoritair gedrag:** Autoritair gedrag leunt op angst, manipulatie en schuldgevoelens (*"Als je een echte sub bent, doe je dit gewoon"*). Authentiek gezag leunt op rust, voorspelbaarheid en innerlijke kracht. Een submissive volgt jou niet omdat ze bang is voor jouw woede, maar omdat ze voelt dat jij haar veilig kunt dragen.
+
+---
+
+### Hoofdstuk 2: Zelfkennis en Emotionele Regulatie van de Dominant
+Voordat je leiding kunt geven aan een ander, moet je volledige regie hebben over jezelf. Een sessie of D/s-dynamiek raakt diepe emoties en kwetsbaarheden. Als jij als Dominant jouw eigen triggers, onzekerheden of frustraties van de werkdag meeneemt in je leiderschap, wordt de dynamiek onveilig.
+
+* **Kalmte onder druk:** Wanneer een scène onverwacht intens wordt of wanneer een submissive emotioneel reageert, ben jij het anker. Je vertraagt, verlaagt je stem, observeert haar ademhaling en bewaakt de kaders. Je verhoogt nooit de intensiteit om emoties weg te drukken.
+* **Omgaan met eigen fouten:** Geen enkele Dominant is onfeilbaar. Het verschil tussen een amateur en een volwassen Meester of Meesteres zit in hoe je met een misstap omgaat. Een fout eerlijk erkennen, herstellen en evalueren tast jouw gezag niet aan — het versterkt juist het respect en de veiligheid, omdat de submissive ziet dat jouw ego niet boven haar welzijn staat.
+* **Zelfreflectie vooraf:** Stel jezelf voor elke interactie de vraag: *Doe ik dit nu vanuit zorg en verbinding voor ons samen, of vanuit mijn eigen onrust, bewijsdrang of slecht humeur?*
+
+---
+
+### Hoofdstuk 3: Actief Observeren en Lezen van de Submissive
+Goed leiderschap begint bij kijken en luisteren. Veel beginners praten te veel en observeren te weinig. Tijdens een sessie of gesprek geeft een submissive voortdurend signalen af — lang voordat er een woord wordt gezegd.
+
+* **Fysieke signalen herkennen:** Let op veranderingen in ademhaling (wordt deze oppervlakkig of stokt hij?), spierspanning in schouders en kaken, oogcontact (zoekt ze verbinding of kijkt ze angstig weg?) en huidskleur of trillingen.
+* **Gezonde spanning vs. Overbelasting:** Gezonde spanning gaat samen met overgave, zachte ademhaling en aanwezigheid. Overbelasting herken je aan verstijving (*freeze*), afwezigheid of geforceerd meewerken. Jouw taak is om dit verschil direct op te merken en het tempo aan te passen.
+* **Ruimte voor eerlijkheid:** Tijdens de kennismaking en evaluatie stel je open vragen zonder oordeel. Een betrouwbare Dominant is vanaf het eerste contact transparant over zijn eigen stijl, grenzen, ervaring en intenties, en geeft de ander alle ruimte om rustig af te tasten zonder druk.
+
+---
+
+### Hoofdstuk 4: Structuur, Kaders en de Balans in de Dynamiek
+Regels, rituelen en structuur zijn binnen D/s geen doel op zich en zeker geen valstrik om iemand voortdurend te kunnen straffen. Integendeel: heldere kaders nemen keuzestress weg bij de submissive en zorgen voor mentale rust.
+
+* **Voorspelbaarheid schept overgave:** Wanneer een submissive precies weet waar zij aan toe is, wat er van haar verwacht wordt en waar de veilige grenzen liggen, durft zij haar controle los te laten.
+* **Wederzijdse balans:** Een gezonde D/s-dynamiek is nooit een eenrichtingsverkeer waarin alleen de wensen van de Dominant tellen. Hoewel de rollen ongelijk zijn (leidend en volgend), zijn beide partners als mens 100% gelijkwaardig. De dynamiek is pas in balans wanneer beiden zich veilig, gehoord, gerespecteerd en vervuld voelen — en wanneer er ruimte blijft om regelmatig samen te evalueren en bij te sturen.""",
         "vragen": [
             {"v": "Waaruit bestaat de kern van verantwoord leiderschap binnen D/s?", "o": ["Verantwoordelijkheid, zelfbeheersing en veiligheid bieden.", "Altijd zonder overleg je eigen zin doordrijven.", "Zorgen dat de submissive nooit vragen durft te stellen."], "a": "Verantwoordelijkheid, zelfbeheersing en veiligheid bieden."},
             {"v": "Hoe verkrijgt een Dominant macht binnen een gezonde dynamiek?", "o": ["De submissive geeft deze vrijwillig in bruikleen.", "Door emotionele druk of schuldgevoelens in te zetten.", "Door vanaf dag één alle grenzen te negeren."], "a": "De submissive geeft deze vrijwillig in bruikleen."},
