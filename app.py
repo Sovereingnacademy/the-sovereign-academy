@@ -65,7 +65,7 @@ def toon_steun_en_feedback(sleutel_prefix):
     st.link_button("💛 Make a voluntary donation (Ko-fi)" if is_en else "💛 Doe een vrijwillige donatie (Ko-fi)", "https://ko-fi.com")
     st.markdown("---")
     st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
-    st.caption("🔄 *This curated list is updated regularly with new safe recommendations.*" if is_en else "🔄 *Deze lijst wordt van tijd tot tijd aangevuld met nieuwe, zorgvuldig gekozen aanbevelingen.*")
+    st.caption("ℹ️ *Transparantie: Sommige links op deze pagina zijn affiliate-links. Als je via deze links iets bestelt, ontvangt The Sovereign Academy een kleine commissie (zonder extra kosten voor jou) om dit platform gratis te houden. Deze lijst wordt regelmatig aangevuld.*" if not is_en else "ℹ️ *Disclosure: Some links on this page are affiliate links. If you purchase through them, The Sovereign Academy may earn a small commission at no extra cost to you, helping keep this platform free. This list is updated regularly.*")
     with st.container(border=True):
         st.markdown("**1. Comfort, Kneeling Pads & Aftercare**\nSupportive cushions for Nadu poses, luxury journals for check-ins, and natural massage oils for Aftercare." if is_en else "**1. Comfort, Knielkussens & Aftercare**\nOndersteunende kussens voor de Nadu-pose, luxe notitieboeken en natuurlijke massage-olie voor Aftercare.")
         st.link_button("🔗 View selection (Bol.com)" if is_en else "🔗 Bekijk selectie (Bol.com)", "https://bol.com")
