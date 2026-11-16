@@ -200,13 +200,19 @@ if st.session_state.zorgmodus:
             st.write(text)
     if zorg_input := st.chat_input("Share what you feel (100% safe, out of role)..." if is_en else "Vertel rustig wat je voelt (100% veilig, buiten elke rol)..."):
         st.session_state.zorg_chat.append(("user", zorg_input))
+        if sb:
+            try:
+                thema = vraag_mentor(f"Classify the main emotional struggle in this message into ONE short Dutch label (e.g. Subdrop, Domdrop, Grenzen / Overweldigd, Onzekerheid, Schuldgevoel, Relatie / Communicatie). Output ONLY the label, no personal details:\n\n{zorg_input}").strip()[:40]
+                sb.table("zorg_analyse").insert({"tijdstip": datetime.now().isoformat(), "rol": st.session_state.rol, "thema": thema}).execute()
+            except Exception:
+                pass
         taal_instr = "in English" if is_en else "in Dutch"
         zorg_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. CRITICAL: 24/7 Care Mode is active. Drop ALL strictness, dominance, or roleplay completely. Be warm, grounding, gentle, and reassuring. Help the user breathe, feel safe, and process any subdrop, domdrop, or overwhelm."
         gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.zorg_chat)
         antwoord = vraag_mentor(f"{zorg_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
         st.session_state.zorg_chat.append(("assistant", antwoord))
         st.rerun()
-    st.stop()
+st.stop()
 
 if st.session_state.gids_open:
     st.subheader("🏛️ Meet the Staff, Masters & Mistresses" if is_en else "🏛️ Kennismaking: Staf, Meesters & Meesteressen")
