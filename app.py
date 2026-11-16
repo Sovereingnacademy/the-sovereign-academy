@@ -195,8 +195,9 @@ if st.session_state.zorgmodus:
     st.warning("🆘 **24/7 Care Mode Active:** You are completely safe. Breathe calmly. Your mentor stands beside you outside of any role." if is_en else "🆘 **24/7 Zorgmodus Actief:** Je bent helemaal veilig. Adem rustig in en uit. Jouw begeleider staat nu buiten elke rol naast je.")
     if "zorg_chat" not in st.session_state:
         st.session_state.zorg_chat = [("assistant", f"*{mentor} sits beside you calmly, completely out of any role.* Take a deep breath. There are no rules, no expectations, and no pressure right now. Tell me what you are feeling, or just rest here." if is_en else f"*{mentor} komt rustig naast je zitten, volledig buiten elke rol.* Haal eerst maar eens rustig adem. Er zijn nu geen regels, geen verwachtingen en geen druk. Vertel maar wat je voelt, of blijf gewoon even rustig hier.")]
+    u_av_z = st.session_state.user_avatar if isinstance(st.session_state.user_avatar, str) and len(st.session_state.user_avatar) <= 4 else "👤"
     for role, text in st.session_state.zorg_chat:
-        with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+        with st.chat_message(role, avatar=(mentor_img if role == "assistant" else u_av_z)):
             st.write(text)
     if zorg_input := st.chat_input("Share what you feel (100% safe, out of role)..." if is_en else "Vertel rustig wat je voelt (100% veilig, buiten elke rol)..."):
         st.session_state.zorg_chat.append(("user", zorg_input))
@@ -470,8 +471,9 @@ elif st.session_state.fase == "Praktijkkamer":
     tabs = st.tabs(tab_namen)
 
     with next(iter(tabs)):
+        u_av = st.session_state.user_avatar if isinstance(st.session_state.user_avatar, str) and len(st.session_state.user_avatar) <= 4 else "👤"
         for role, text in st.session_state.chat_history:
-            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else st.session_state.user_avatar)):
+            with st.chat_message(role, avatar=(mentor_img if role == "assistant" else u_av)):
                 st.write(text)
         if user_input := st.chat_input("Type your response..." if is_en else "Typ je reactie..."):
             st.session_state.chat_history.append(("user", user_input))
