@@ -343,7 +343,7 @@ elif st.session_state.fase == "Les":
                 st.session_state.bijles_chat = []
                 st.session_state.poging += 1
                 st.rerun()
-else:
+    else:
         st.markdown("---")
         st.subheader("📝 Module Exam" if is_en else "📝 Module-toets")
         vragen = mod.get("vragen")
