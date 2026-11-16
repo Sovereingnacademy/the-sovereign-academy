@@ -346,7 +346,9 @@ elif st.session_state.fase == "Les":
                 st.rerun()
     else:
         st.markdown("---")
-        st.subheader("📝 Module Exam" if is_en else "📝 Module-toets")
+        poging_nr = st.session_state.poging
+        poging_txt = (f" (Retake {poging_nr})" if is_en else f" (Herkansing {poging_nr})") if poging_nr > 0 else ""
+        st.subheader(("📝 Module Exam" if is_en else "📝 Module-toets") + poging_txt)
         vragen = mod.get("vragen")
         antw = []
         for i, q in enumerate(vragen):
@@ -365,12 +367,18 @@ elif st.session_state.fase == "Les":
             if geslaagd:
                 st.session_state.laatste_les_tijd = datetime.now().isoformat()
                 st.session_state.fase = "Praktijkkamer"
+                p_nr = st.session_state.poging
+                st.session_state.poging = 0
                 if not st.session_state.chat_history:
                     if is_en:
-                        intro = f"*{mentor} nods approvingly ({score}/10).* Discuss your insights from Module {nr} here." if is_dom else f"*{mentor} closes your dossier ({score}/10).* Good. Address me formally and as '{titel_txt}'. Tell me: what are you looking for here?"
+                        h_en = f" after retake {p_nr}" if p_nr > 0 else ""
+                        intro = f"*{mentor} nods approvingly ({score}/10{h_en}).* Your perseverance paid off. Discuss your insights from Module {nr} here." if is_dom else f"*{mentor} closes your dossier ({score}/10{h_en}).* Good — you worked through your mistakes and proved you understand the material. Address me formally and as '{titel_txt}'. Tell me: what are you looking for here?"
                     else:
-                        intro = f"*{mentor} knikt goedkeurend ({score}/10).* Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{mentor} slaat je dossier dicht ({score}/10).* Goed. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
+                        h_nl = f" na herkansing {p_nr}" if p_nr > 0 else ""
+                        intro = f"*{mentor} knikt goedkeurend ({score}/10{h_nl}).* Je doorzettingsvermogen loont. Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{mentor} slaat je dossier dicht ({score}/10{h_nl}).* Goed — je hebt je fouten uitgewerkt en bewezen dat je de stof beheerst. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
                     st.session_state.chat_history.append(("assistant", intro))
+                elif p_nr > 0:
+                    st.session_state.chat_history.append(("assistant", f"*{mentor} nods approvingly.* You passed Module {nr} ({score}/10) after retake {p_nr}. Let us reflect on what made the difference for you." if is_en else f"*{mentor} knikt goedkeurend.* Je hebt Module {nr} behaald ({score}/10) na herkansing {p_nr}. Laten we bespreken wat voor jou het kwartje deed vallen."))
                 sla_op()
                 st.rerun()
             else:
@@ -473,7 +481,7 @@ elif st.session_state.fase == "Praktijkkamer":
                 st.rerun()
             zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
             taal_instr = "in English" if is_en else "in Dutch"
-            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]. Note: Only if the student specifically asks about safe beginner gear, kneeling comfort, aftercare items, or long-distance app-controlled play, you may subtly mention they can check the 'Recommended & Support' ('Aanbevolen & Steun') section in the sidebar menu."
+            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}, Previous exam struggle areas: {st.session_state.get('laatste_fouten', [])}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]. Note: Only if the student specifically asks about safe beginner gear, kneeling comfort, aftercare items, or long-distance app-controlled play, you may subtly mention they can check the 'Recommended & Support' ('Aanbevolen & Steun') section in the sidebar menu."
             gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
