@@ -110,12 +110,12 @@ def toon_steun_en_feedback(sleutel_prefix):
     st.subheader("📚 Recommended Gear, Books & Care" if is_en else "📚 Aanbevolen Uitrusting, Boeken & Verzorging")
     st.caption("ℹ️ *Disclosure: Some links on this page are affiliate links. If you purchase through them, The Sovereign Academy may earn a small commission at no extra cost to you, helping keep this platform free. This list is updated regularly.*" if is_en else "ℹ️ *Transparantie: Sommige links op deze pagina zijn affiliate-links. Als je via deze links iets bestelt, ontvangt The Sovereign Academy een kleine commissie (zonder extra kosten voor jou) om dit platform gratis te houden. Deze lijst wordt van tijd tot tijd aangevuld.*")
     with st.container(border=True):
-        st.markdown("**1. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**2. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
+        st.markdown("**1. Safe Beginner Gear & Blindfolds**\nDiscreetly shipped quality sets (silk blindfolds, soft cuffs, and safety shears) for Phase 3." if is_en else "**1. Veilige Beginners-attributen & Blinddoeken**\nDiscreet verzonden kwaliteitssets (zijden blinddoeken, zachte boeien en veiligheidsscharen) voor Fase 3.")
         st.link_button("🔗 View selection (EasyToys)" if is_en else "🔗 Bekijk selectie (EasyToys)", "https://easytoys.nl")
     with st.container(border=True):
-        st.markdown("**2. The Sovereign Academy Workbook & Reflection Journal (Coming Soon on Amazon)**\nOur own physical & digital workbook with printable Limits Checklists, Aftercare trackers, and D/s reflection exercises." if is_en else "**3. Het Officiële Sovereign Academy Werkboek & Reflectie-Journaal (Binnenkort op Amazon)**\nOns eigen fysieke & digitale werkboek met invulbare Grenzenlijsten, Aftercare-checklists en D/s-reflectieoefeningen.")
+        st.markdown("**2. The Sovereign Academy Workbook & Reflection Journal (Coming Soon on Amazon)**\nOur own physical & digital workbook with printable Limits Checklists, Aftercare trackers, and D/s reflection exercises." if is_en else "**2. Het Officiële Sovereign Academy Werkboek & Reflectie-Journaal (Binnenkort op Amazon)**\nOns eigen fysieke & digitale werkboek met invulbare Grenzenlijsten, Aftercare-checklists en D/s-reflectieoefeningen.")
     with st.container(border=True):
-        st.markdown("**3. App-Controlled Play & Long-Distance Control (Lovense — Official Store)**\nPersonal Academy favorites: high-quality, app-controlled toys for long-distance D/s dynamics and remote control. Discreetly shipped from within Europe with a 1-year warranty (PayPal, Klarna & Card)." if is_en else "**4. App-Gestuurde Interactie & Afstandsbediening (Lovense — Officiële Shop)**\nPersoonlijke favorieten van de Academie: hoogwaardige, app-gestuurde toys voor D/s-dynamieken op afstand. Discreet en snel verzonden vanuit Europa (geen douanekosten, 1 jaar garantie, betalen via o.a. Klarna, PayPal of creditcard).")
+        st.markdown("**3. App-Controlled Play & Long-Distance Control (Lovense — Official Store)**\nPersonal Academy favorites: high-quality, app-controlled toys for long-distance D/s dynamics and remote control. Discreetly shipped from within Europe with a 1-year warranty (PayPal, Klarna & Card)." if is_en else "**3. App-Gestuurde Interactie & Afstandsbediening (Lovense — Officiële Shop)**\nPersoonlijke favorieten van de Academie: hoogwaardige, app-gestuurde toys voor D/s-dynamieken op afstand. Discreet en snel verzonden vanuit Europa (geen douanekosten, 1 jaar garantie, betalen via o.a. Klarna, PayPal of creditcard).")
         st.link_button("🔗 Lovense Domi 2 (Mini Wand — Academy Favorite!)" if is_en else "🔗 Lovense Domi 2 (Mini Wand — Favoriet van de Academie!)", "https://lovense.com")
         c_l1, c_l2 = st.columns(2)
         c_l1.link_button("🔗 Lovense Lush 4 (Remote Egg)", "https://lovense.com")
@@ -154,7 +154,8 @@ def toon_steun_en_feedback(sleutel_prefix):
                             st.success(f"**🏛️ Academy Response:** {b.get('antwoord')}" if is_en else f"**🏛️ Reactie van de Academie-leiding:** {b.get('antwoord')}")
                         else:
                             st.caption("⏳ *Awaiting personal response from the Academy...*" if is_en else "⏳ *In afwachting van een persoonlijke reactie van de Academie-leiding...*")
-        st.markdown("---")
+
+    st.markdown("---")
     st.subheader("⭐ Leave a Public Review (Under Your Alias)" if is_en else "⭐ Plaats een Openbare Review (Onder je Schuilnaam)")
     st.write("Share your honest experience about The Sovereign Academy so newcomers know what to expect." if is_en else "Deel jouw eerlijke ervaring over The Sovereign Academy zodat nieuwe bezoekers weten wat ze kunnen verwachten.")
     rev_naam = st.text_input("Display alias:" if is_en else "Weergavenaam (schuilnaam):", value=st.session_state.schuilnaam or "Anoniem", key=f"{sleutel_prefix}_rev_naam")
@@ -179,6 +180,7 @@ def toon_steun_en_feedback(sleutel_prefix):
     s3 = st.select_slider("The design, colors, and calm layout appeal to me:" if is_en else "Het uiterlijk, de kleuren en rustige opmaak spreken mij aan:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s3")
     s4 = st.select_slider("The menu and buttons are easy to use (mobile & PC):" if is_en else "Het menu en de knoppen zijn makkelijk te gebruiken (mobiel & PC):", options=schaal, value=schaal, key=f"{sleutel_prefix}_s4")
     s5 = st.select_slider("It was immediately clear how everything works:" if is_en else "Het was meteen duidelijk hoe alles werkt:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s5")
+
     st.markdown("**2. Content, Exams & Mentors:**" if is_en else "**2. Inhoud, Toetsen & Mentoren:**")
     opt_th = ("Diepgaand en precies goed", "Goede basis, mag nóg uitgebreider", "Te veel tekst / te lang", "Anders, namelijk...") if not is_en else ("In-depth and just right", "Good basis, could be even deeper", "Too much text / too long", "Other, namely...")
     c_th = st.radio("Theory chapters:" if is_en else "Theorie-hoofdstukken:", opt_th, key=f"{sleutel_prefix}_cth")
@@ -222,71 +224,6 @@ def toon_steun_en_feedback(sleutel_prefix):
 
 is_vale = "Vale" in st.session_state.mentor_naam
 titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.session_state.verbond_actief else (("Ma'am or Miss" if is_en else "Mevrouw of Miss") if is_vale else ("Sir or Mr" if is_en else "Meneer of Mr"))
-
-    st.markdown("---")
-    st.subheader("⭐ Leave a Public Review (Under Your Alias)" if is_en else "⭐ Plaats een Openbare Review (Onder je Schuilnaam)")
-    st.write("Share your honest experience about The Sovereign Academy so newcomers know what to expect." if is_en else "Deel jouw eerlijke ervaring over The Sovereign Academy zodat nieuwe bezoekers weten wat ze kunnen verwachten.")
-    rev_naam = st.text_input("Display alias:" if is_en else "Weergavenaam (schuilnaam):", value=st.session_state.schuilnaam or "Anoniem", key=f"{sleutel_prefix}_rev_naam")
-    rev_sterren = st.slider("Rating (1 to 5 stars):" if is_en else "Waardering (1 t/m 5 sterren):", 1, 5, 5, key=f"{sleutel_prefix}_rev_str")
-    rev_tekst = st.text_area("Your review:" if is_en else "Jouw review / ervaring:", height=100, key=f"{sleutel_prefix}_rev_txt")
-    if st.button("🌟 Publish Public Review" if is_en else "🌟 Plaats Openbare Review", key=f"{sleutel_prefix}_rev_btn") and rev_tekst.strip():
-        if sb:
-            try:
-                sb.table("reviews").insert({"tijdstip": datetime.now().isoformat(), "schuilnaam": rev_naam.strip() or "Anoniem", "rol": st.session_state.rol, "sterren": rev_sterren, "bericht": rev_tekst.strip(), "goedgekeurd": True}).execute()
-                st.success("✅ Your review is now live on the home screen!" if is_en else "✅ Je review staat nu live op het startscherm!")
-            except Exception:
-                st.error("Could not save review." if is_en else "Review kon niet worden opgeslagen.")
-    st.markdown("---")
-    st.subheader("📋 Quick & In-Depth Evaluation (For the Maker)" if is_en else "📋 Snelle & Uitgebreide Evaluatie (Voor de Maker)")
-    st.write("Click through in 30 seconds (100% anonymous) — your ratings help improve every part of the Academy." if is_en else "Klik er in 30 seconden doorheen (100% anoniem) — jouw antwoorden helpen om elk onderdeel van de Academie te verbeteren.")
-
-    schaal = ("1 - Helemaal niet", "2 - Beetje", "3 - Neutraal", "4 - Ja, zeker", "5 - Absoluut ja") if not is_en else ("1 - Not at all", "2 - A little", "3 - Neutral", "4 - Yes, definitely", "5 - Absolutely yes")
-    st.markdown("**1. Rate your experience on the platform:**" if is_en else "**1. Beoordeel jouw ervaring op het platform:**")
-    s1 = st.select_slider("I felt safe and respected:" if is_en else "Ik voelde mij veilig en gerespecteerd:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s1")
-    s2 = st.select_slider("The platform feels warm and welcoming:" if is_en else "Het platform voelt warm en welkom aan:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s2")
-    s3 = st.select_slider("The design, colors, and calm layout appeal to me:" if is_en else "Het uiterlijk, de kleuren en rustige opmaak spreken mij aan:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s3")
-    s4 = st.select_slider("The menu and buttons are easy to use (mobile & PC):" if is_en else "Het menu en de knoppen zijn makkelijk te gebruiken (mobiel & PC):", options=schaal, value=schaal, key=f"{sleutel_prefix}_s4")
-    s5 = st.select_slider("It was immediately clear how everything works:" if is_en else "Het was meteen duidelijk hoe alles werkt:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s5")
-    st.markdown("**2. Content, Exams & Mentors:**" if is_en else "**2. Inhoud, Toetsen & Mentoren:**")
-    opt_th = ("Diepgaand en precies goed", "Goede basis, mag nóg uitgebreider", "Te veel tekst / te lang", "Anders, namelijk...") if not is_en else ("In-depth and just right", "Good basis, could be even deeper", "Too much text / too long", "Other, namely...")
-    c_th = st.radio("Theory chapters:" if is_en else "Theorie-hoofdstukken:", opt_th, key=f"{sleutel_prefix}_cth")
-    c_th_anders = st.text_input("Specify (theory):" if is_en else "Toelichting (theorie):", key=f"{sleutel_prefix}_ctha") if "Anders" in c_th or "Other" in c_th else ""
-
-    opt_tb = ("Leerzaam en scherp", "Nuttig, mag nog uitdagender", "Te streng om door te gaan", "Anders, namelijk...") if not is_en else ("Educational and sharp", "Useful, could be more challenging", "Too strict to pass", "Other, namely...")
-    c_tb = st.radio("Exams & 1-on-1 Tutoring:" if is_en else "Toetsen & 1-op-1 Bijles:", opt_tb, key=f"{sleutel_prefix}_ctb")
-    c_tb_anders = st.text_input("Specify (exams/tutoring):" if is_en else "Toelichting (toetsen/bijles):", key=f"{sleutel_prefix}_ctba") if "Anders" in c_tb or "Other" in c_tb else ""
-
-    opt_me = ("Fijne variatie en natuurlijke stijl", "Goed, maar ik mis nog bepaalde stijlen/types", "Schrijfstijl mag nog menselijker", "Anders, namelijk...") if not is_en else ("Great variety and natural style", "Good, though I miss certain styles/types", "Writing style could feel more human", "Other, namely...")
-    c_me = st.radio("Mentor selection & style:" if is_en else "Keuze & stijl van de Mentoren:", opt_me, key=f"{sleutel_prefix}_cme")
-    c_me_anders = st.text_input("Specify (mentors):" if is_en else "Toelichting (mentoren):", key=f"{sleutel_prefix}_cmea") if "Anders" in c_me or "Other" in c_me else ""
-
-    q_topics = st.text_input("3. Any D/s topics or kinks you miss or want expanded? (optional)" if is_en else "3. Mis je nog bepaalde D/s-onderwerpen of verdieping? (optioneel)", key=f"{sleutel_prefix}_qtop")
-    q_toekomst = st.multiselect("4. Future ideas you would love to see (multiple choices possible):" if is_en else "4. Toekomstige ideeën die je graag zou zien (meerdere keuzes mogelijk):", ("Vrijwillig anoniem Oefenpartner-Prikbord (na Module 1)", "Meer verschillende Mentoren / Meesters om uit te kiezen", "Verdiepingsmodules voor gevorderden (Rope, Protocol, Edgeplay)", "Interactieve opdrachten-generator voor koppels", "Niets veranderen, houd het precies zo") if not is_en else ("Voluntary anonymous Practice Partner Board (after Module 1)", "More Mentors / Masters to choose from", "Advanced modules (Rope, Protocol, Edgeplay)", "Interactive task generator for couples", "Change nothing, keep it as is"), key=f"{sleutel_prefix}_qtoek")
-    q_cijfer = st.slider("5. Overall Score (1 to 10):" if is_en else "5. Totaalcijfer (1 t/m 10):", 1, 10, 8, key=f"{sleutel_prefix}_qcij")
-    q_vrij = st.text_area("6. Your own creative ideas or tips for the maker (optional):" if is_en else "6. Jouw eigen ideeën of tips voor de maker (optioneel):", height=100, key=f"{sleutel_prefix}_qvrij")
-
-    if st.button("📊 Submit Evaluation" if is_en else "📊 Verstuur Evaluatie", key=f"{sleutel_prefix}_eq_btn"):
-        if sb:
-            try:
-                sb.table("enquete").insert({
-                    "tijdstip": datetime.now().isoformat(),
-                    "rol": st.session_state.rol,
-                    "sfeer_veilig": s1,
-                    "sfeer_welkom": s2,
-                    "site_uiterlijk": s3,
-                    "site_menu_gemak": s4,
-                    "site_begrijpelijk": s5,
-                    "theorie_oordeel": f"{c_th} ({c_th_anders})" if c_th_anders else c_th,
-                    "toets_bijles_oordeel": f"{c_tb} ({c_tb_anders})" if c_tb_anders else c_tb,
-                    "mentoren_oordeel": f"{c_me} ({c_me_anders})" if c_me_anders else c_me,
-                    "gemiste_topics": q_topics.strip(),
-                    "toekomst_ideeen": " | ".join(q_toekomst),
-                    "cijfer": q_cijfer,
-                    "vrije_input": q_vrij.strip()
-                }).execute()
-                st.success("✅ Thank you! Your ratings have been saved for the maker." if is_en else "✅ Dankjewel! Jouw beoordeling is opgeslagen voor de maker.")
-            except Exception:
-                st.error("Could not save evaluation." if is_en else "Evaluatie kon niet worden opgeslagen.")
 
 with st.sidebar:
     try:
@@ -379,6 +316,7 @@ if st.session_state.gids_open:
 if st.session_state.steun_open:
     toon_steun_en_feedback("menu")
     st.stop()
+
 if st.session_state.fase == "Intake":
     try:
         st.image("academy.jpg", use_container_width=True)
@@ -482,7 +420,7 @@ elif st.session_state.fase == "Les":
     alle_gelezen = True
     for idx, h in enumerate(hoofdstukken):
         regels_h = h.splitlines()
-        h_titel = regels_h[0].strip()
+        h_titel = regels_h.strip()
         h_inhoud = "\n".join(regels_h[1:]).strip()
         with st.expander(f"📖 {h_titel}", expanded=(idx == 0 and not st.session_state.get("bijles_actief", False))):
             st.markdown(h_inhoud)
@@ -517,6 +455,7 @@ elif st.session_state.fase == "Les":
                 st.session_state.bijles_chat = []
                 st.session_state.poging += 1
                 st.rerun()
+
     else:
         st.markdown("---")
         poging_nr = st.session_state.poging
@@ -675,10 +614,10 @@ elif st.session_state.fase == "Praktijkkamer":
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
             if "[SAFEWOORD:" in antwoord:
                 delen = antwoord.split("[SAFEWOORD:", 1)
-                nieuw_sw = delen[1].split("]", 1)[0].strip()
+                nieuw_sw = delen.split("]", 1).strip()
                 if nieuw_sw:
                     st.session_state.safewoord = nieuw_sw
-                antwoord = (delen[0] + delen[1].split("]", 1)[-1]).strip()
+                antwoord = (delen + delen.split("]", 1)[-1]).strip()
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
                 if trig in antwoord:
                     antwoord = antwoord.replace(trig, "").strip()
