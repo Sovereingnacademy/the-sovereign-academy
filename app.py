@@ -30,8 +30,15 @@ st.markdown(f"""
 
 taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
 is_en = "English" in taal
-st.title("🏛️ The Sovereign Academy")
-st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
+col_logo, col_titel = st.columns((1, 5))
+with col_logo:
+    try:
+        st.image("logo.jpg", width=85)
+    except Exception:
+        st.write("🏛️")
+with col_titel:
+    st.title("The Sovereign Academy")
+    st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
 
 api_key = st.secrets.get("GEMINI_API_KEY", "")
 sb_url, sb_key = st.secrets.get("SUPABASE_URL", ""), st.secrets.get("SUPABASE_KEY", "")
