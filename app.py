@@ -252,7 +252,6 @@ if st.session_state.gids_open:
 if st.session_state.steun_open:
     toon_steun_en_feedback("menu")
     st.stop()
-
 if st.session_state.fase == "Intake":
     try:
         st.image("academy.jpg", use_container_width=True)
@@ -260,7 +259,7 @@ if st.session_state.fase == "Intake":
         pass
     st.subheader("Welcome to The Sovereign Academy" if is_en else "Welkom bij The Sovereign Academy")
     with st.container(border=True):
-        st.markdown("**What is The Sovereign Academy?**\nA safe, non-judgmental learning environment for conscious submission (Submissive) and responsible leadership (Dominant). Train privately with an AI Mentor, or link your anonymous alias 1-on-1 with a real D/s partner inside the app to practice long-distance D/s safely — without ever sharing your phone number or email. 100% free and anonymous." if is_en else "**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). Oefen privé met een AI-Mentor, of koppel jouw anonieme schuilnaam 1-op-1 aan een echte D/s-partner binnen de app om veilig op afstand te oefenen — zonder ooit je telefoonnummer of e-mailadres te delen. 100% gratis en anoniem.")
+        st.markdown("**What is The Sovereign Academy?**\nA safe, non-judgmental learning environment for conscious submission (Submissive) and responsible leadership (Dominant). Train privately with an AI Mentor, and once you complete **Module 1 (Safety & Consent)**, you can link your anonymous alias 1-on-1 with a real D/s partner inside the app to practice long-distance D/s safely — without ever sharing your phone number or email. 100% free and anonymous." if is_en else "**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). Oefen privé met een AI-Mentor, en zodra je **Module 1 (Veiligheid & Consent)** hebt afgerond, kun je jouw anonieme schuilnaam 1-op-1 koppelen aan een echte D/s-partner binnen de app om veilig op afstand te oefenen — zonder ooit je telefoonnummer of e-mailadres te delen. 100% gratis en anoniem.")
         if sb:
             with st.expander("🔑 Already have an anonymous Dossier code? Log in here (or create one)" if is_en else "🔑 Heb je al een anonieme Dossiercode? Log hier in (of maak er een aan)"):
                 c1, c2 = st.columns(2)
@@ -287,6 +286,16 @@ if st.session_state.fase == "Intake":
                             st.success(f"✅ New anonymous dossier created for **{in_naam.strip()}**! Choose your track below." if is_en else f"✅ Nieuw anoniem dossier aangemaakt voor **{in_naam.strip()}**! Kies hieronder je traject.")
                     else:
                         st.warning("Enter an alias and a 4-digit PIN." if is_en else "Vul een schuilnaam en een 4-cijferige pincode in.")
+        with st.expander("📱 Tip: Save The Sovereign Academy as a discreet app on your phone or PC" if is_en else "📱 Tip: Zet The Sovereign Academy als discrete app op je telefoon of PC"):
+            st.markdown("""
+* **iPhone (Safari):** Open deze link in Safari → tik onderaan op het **Deel-icoon** (vierkantje met pijltje omhoog) → kies **Zet op beginscherm** → geef het eventueel een korte, discrete naam (bijv. *SA* of *Academy*).
+* **Android (Chrome):** Tik rechtsboven op de **drie puntjes (`⋮`)** → kies **Installeren en snelkoppeling maken** → **Snelle link maken** → geef het een discrete naam en tik op **Toevoegen**.
+* **Windows PC (Chrome / Edge):** Klik rechtsboven op de **drie puntjes (`⋮`)** → **Casten, opslaan en delen** → **Snelkoppeling maken...** → vink **Openen als venster** aan.
+            """ if not is_en else """
+* **iPhone (Safari):** Open this link in Safari → tap the **Share icon** at the bottom → select **Add to Home Screen** → give it a short, discreet name (e.g. *SA* or *Academy*).
+* **Android (Chrome):** Tap the **three dots (`⋮`)** at the top right → select **Install and create shortcut** → **Create quick link** → give it a discreet name and tap **Add**.
+* **Windows PC (Chrome / Edge):** Click the **three dots (`⋮`)** at the top right → **Cast, save, and share** → **Create shortcut...** → check **Open as window**.
+            """)
 
     st.subheader("👥 Meet the Academy Leadership" if is_en else "👥 Maak kennis met de Academie-leiding")
     col_b, col_v = st.columns(2)
@@ -317,17 +326,6 @@ if st.session_state.fase == "Intake":
         st.session_state.fase = "Les"
         sla_op()
         st.rerun()
-
-    with st.expander("📱 Tip: Save The Sovereign Academy as a discreet app on your phone or PC" if is_en else "📱 Tip: Zet The Sovereign Academy als discrete app op je telefoon of PC"):
-        st.markdown("""
-* **iPhone (Safari):** Open deze link in Safari → tik onderaan op het **Deel-icoon** (vierkantje met pijltje omhoog) → kies **Zet op beginscherm** → geef het eventueel een korte, discrete naam (bijv. *SA* of *Academy*).
-* **Android (Chrome):** Tik rechtsboven op de **drie puntjes (`⋮`)** → kies **Installeren en snelkoppeling maken** → **Snelle link maken** → geef het een discrete naam en tik op **Toevoegen**.
-* **Windows PC (Chrome / Edge):** Klik rechtsboven op de **drie puntjes (`⋮`)** → **Casten, opslaan en delen** → **Snelkoppeling maken...** → vink **Openen als venster** aan.
-        """ if not is_en else """
-* **iPhone (Safari):** Open this link in Safari → tap the **Share icon** at the bottom → select **Add to Home Screen** → give it a short, discreet name (e.g. *SA* or *Academy*).
-* **Android (Chrome):** Tap the **three dots (`⋮`)** at the top right → select **Install and create shortcut** → **Create quick link** → give it a discreet name and tap **Add**.
-* **Windows PC (Chrome / Edge):** Click the **three dots (`⋮`)** at the top right → **Cast, save, and share** → **Create shortcut...** → check **Open as window**.
-        """)
 
 elif st.session_state.fase == "Les":
     nr = max(1, st.session_state.module_nr)
