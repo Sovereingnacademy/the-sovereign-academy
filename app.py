@@ -67,11 +67,12 @@ if "grenzen" not in st.session_state:
 
 def sla_op():
     if sb and st.session_state.schuilnaam and st.session_state.pincode:
-        data = {k: st.session_state[k] for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam")}
+        data = {k: st.session_state[k] for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam", "safewoord")}
         try:
             sb.table("dossiers").upsert(data).execute()
         except Exception:
-            data.pop("partner_naam", None)
+            for extra_k in ("partner_naam", "safewoord"):
+                data.pop(extra_k, None)
             sb.table("dossiers").upsert(data).execute()
 
 def vraag_mentor(prompt_tekst):
@@ -271,7 +272,7 @@ if st.session_state.fase == "Intake":
                         if res.data:
                             d = res.data[0]
                             if d.get("pincode") == in_pin.strip():
-                                for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam"):
+                                for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam", "safewoord"):
                                     if d.get(k) is not None:
                                         st.session_state[k] = d[k]
                                 st.session_state.notitieboek_actief = bool(st.session_state.notities)
@@ -528,9 +529,15 @@ elif st.session_state.fase == "Praktijkkamer":
                 "4. ALWAYS finish every single sentence and thought completely; never cut off mid-sentence or skip words. "
                 "5. NEVER mention or promote the 'Aanbevolen & Steun' / shop section."
             )
-            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {stijl_regels} {zorg_txt} Current progress: Module {st.session_state.module_nr} completed. Profile: {st.session_state.sub_type}, Safeword: {st.session_state.get('safewoord', 'ROOD')}, Limits: {st.session_state.grenzen}, Previous exam struggle areas: {st.session_state.get('laatste_fouten', [])}. Triggers (use only when appropriate): [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin], [PROFIEL:Daddy / Little], [PROFIEL:Petplay], [PROFIEL:Switch]."
+            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {stijl_regels} {zorg_txt} Current progress: Module {st.session_state.module_nr} completed. Profile: {st.session_state.sub_type}, Safeword: {st.session_state.get('safewoord', 'ROOD')}, Limits: {st.session_state.grenzen}, Previous exam struggle areas: {st.session_state.get('laatste_fouten', [])}. Triggers (use only when appropriate): [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [SAFEWOORD:woord], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin], [PROFIEL:Daddy / Little], [PROFIEL:Petplay], [PROFIEL:Switch]."
             gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history[-16:])
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
+            if "[SAFEWOORD:" in antwoord:
+                delen = antwoord.split("[SAFEWOORD:", 1)
+                nieuw_sw = delen[1].split("]", 1)[0].strip()
+                if nieuw_sw:
+                    st.session_state.safewoord = nieuw_sw
+                antwoord = (delen[0] + delen[1].split("]", 1)[-1]).strip()
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
                 if trig in antwoord:
                     antwoord = antwoord.replace(trig, "").strip()
