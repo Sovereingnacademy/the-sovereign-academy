@@ -222,7 +222,7 @@ if st.session_state.zorgmodus:
     st.stop()
 
 if st.session_state.gids_open:
-    st.subheader("🏛️ Meet the Staff, Masters & Mistresses" if is_en else "🏛️ Kennismaking: Staf, Meesters & Meesteressen")
+    st.subheader(" Meet the Staff, Masters & Mistresses" if is_en else " Kennismaking: Staf, Meesters & Meesteressen")
     st.write("Discover the mentors and leadership styles within The Sovereign Academy." if is_en else "Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
     for (geslacht, profiel), m_info in MEESTERS.items():
         naam = m_info.get("naam")
