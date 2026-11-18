@@ -26,10 +26,17 @@ st.markdown(f"""
         apple.href = '{LOGO_URL}';
         doc.head.appendChild(apple);
     </script>
+    <style>
+        .top-btn {{ position: fixed; bottom: 85px; right: 18px; z-index: 999; background: #262730; color: white; border: 1px solid #555; border-radius: 50%; width: 42px; height: 42px; text-align: center; line-height: 40px; font-size: 18px; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }}
+    </style>
+    <div id="top-anchor"></div>
+    <a href="#top-anchor" class="top-btn" title="Naar boven">⬆️</a>
 """, unsafe_allow_html=True)
 
 taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 English"), horizontal=True)
 is_en = "English" in taal
+st.caption("☰ *Tip (mobiel): Tik linksboven op **>>** om het Academy Menu, je Dossier & 24/7 Zorgmodus te openen.*" if not is_en else "☰ *Tip (mobile): Tap **>>** at the top left to open the Academy Menu, Dossier & 24/7 Care Mode.*")
+
 col_logo, col_titel = st.columns((1, 5))
 with col_logo:
     st.image("logo.jpg", width=85)
@@ -49,7 +56,7 @@ if sb and "bezoek_geteld" not in st.session_state:
     except Exception:
         pass
 
-for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("steun_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False), ("poging", 0)]:
+for k, v in [("fase", "Intake"), ("rol", "Submissive"), ("mentor_naam", "Headmaster Bastian"), ("mentor_foto", "bastian.jpg"), ("module_nr", 0), ("sub_type", "Classic Submissive"), ("notitieboek_actief", False), ("grenzenlijst_actief", False), ("verbond_actief", False), ("meester_stijl", ""), ("dom_examen_actief", False), ("schuilnaam", ""), ("pincode", ""), ("laatste_les_tijd", ""), ("zorgmodus", False), ("gids_open", False), ("steun_open", False), ("user_avatar", "👤"), ("straf_start", ""), ("sub_examen_gedaan", False), ("poging", 0), ("safewoord", "ROOD"), ("partner_naam", "")]:
     if k not in st.session_state:
         st.session_state[k] = v
 for k in ("chat_history", "notities"):
@@ -60,14 +67,18 @@ if "grenzen" not in st.session_state:
 
 def sla_op():
     if sb and st.session_state.schuilnaam and st.session_state.pincode:
-        data = {k: st.session_state[k] for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd")}
-        sb.table("dossiers").upsert(data).execute()
+        data = {k: st.session_state[k] for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam")}
+        try:
+            sb.table("dossiers").upsert(data).execute()
+        except Exception:
+            data.pop("partner_naam", None)
+            sb.table("dossiers").upsert(data).execute()
 
 def vraag_mentor(prompt_tekst):
     try:
         client = genai.Client(api_key=api_key)
         modellen = (m.name for m in client.models.list() if "flash" in m.name.lower() and not any(x in m.name for x in ("1.5", "2.0", "2.5")))
-        return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=2000)).text
+        return client.models.generate_content(model=next(modellen, "gemini-3.8-flash"), contents=prompt_tekst, config=types.GenerateContentConfig(max_output_tokens=4000)).text
     except Exception:
         return "*(The connection to the Academy server paused briefly. Take a calm breath and resend your message in a few seconds.)*" if is_en else "*(De verbinding met de Academie-server hapert heel even. Adem rustig door en verstuur je bericht over een paar seconden opnieuw.)*"
 
@@ -142,7 +153,7 @@ def toon_steun_en_feedback(sleutel_prefix):
                     with st.container(border=True):
                         st.markdown(f"**{b.get('onderwerp')}:** {b.get('bericht')}")
                         if b.get("antwoord"):
-                            st.success(f"** Academy Response:** {b.get('antwoord')}" if is_en else f"** Reactie van de Academie-leiding:** {b.get('antwoord')}")
+                            st.success(f"**🏛️ Academy Response:** {b.get('antwoord')}" if is_en else f"**🏛️ Reactie van de Academie-leiding:** {b.get('antwoord')}")
                         else:
                             st.caption("⏳ *Awaiting personal response from the Academy...*" if is_en else "⏳ *In afwachting van een persoonlijke reactie van de Academie-leiding...*")
 
@@ -157,6 +168,8 @@ with st.sidebar:
     st.header("📊 Academy Dossier")
     if st.session_state.schuilnaam:
         st.success(f"🔑 **{st.session_state.schuilnaam}**")
+    if st.session_state.partner_naam:
+        st.info(f"💞 **Partner:** {st.session_state.partner_naam}")
     st.write(f"**Track / Rol:** {st.session_state.rol}")
     st.write(f"**{'Dominant' if st.session_state.verbond_actief else 'Mentor'}:** {st.session_state.mentor_naam}")
     if st.session_state.rol == "Submissive":
@@ -168,8 +181,8 @@ with st.sidebar:
         st.write(f"**Module:** {st.session_state.module_nr} / 6")
         st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
-    st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
-    if st.button((" Meet Staff & Masters" if is_en else " Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
+    st.session_state.safewoord = st.text_input("🚨 Safeword:" if is_en else "🚨 Afgesproken Safewoord:", value=st.session_state.safewoord, max_chars=20)
+    if st.button(("🏛️ Meet Staff & Masters" if is_en else "🏛️ Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
         st.session_state.gids_open = not st.session_state.gids_open
         st.session_state.steun_open = False
         st.session_state.zorgmodus = False
@@ -214,7 +227,7 @@ if st.session_state.zorgmodus:
             except Exception:
                 pass
         taal_instr = "in English" if is_en else "in Dutch"
-        zorg_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. CRITICAL: 24/7 Care Mode is active. Drop ALL strictness, dominance, or roleplay completely. Be warm, grounding, gentle, and reassuring. Help the user breathe, feel safe, and process any subdrop, domdrop, or overwhelm."
+        zorg_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. Always address the student with 'je'/'jij' (NEVER 'u' or 'kind') and write naturally in complete sentences. CRITICAL: 24/7 Care Mode is active. Drop ALL strictness, dominance, or roleplay completely. Be warm, grounding, gentle, and reassuring. Help the user breathe, feel safe, and process any subdrop, domdrop, or overwhelm."
         gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.zorg_chat)
         antwoord = vraag_mentor(f"{zorg_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
         st.session_state.zorg_chat.append(("assistant", antwoord))
@@ -222,7 +235,7 @@ if st.session_state.zorgmodus:
     st.stop()
 
 if st.session_state.gids_open:
-    st.subheader("Welcome to The Sovereign Academy" if is_en else "Welkom bij The Sovereign Academy")
+    st.subheader("Meet the Staff, Masters & Mistresses" if is_en else "Kennismaking: Staf, Meesters & Meesteressen")
     st.write("Discover the mentors and leadership styles within The Sovereign Academy." if is_en else "Ontdek welke begeleiders en stijlen van leidinggeven er binnen The Sovereign Academy bestaan.")
     for (geslacht, profiel), m_info in MEESTERS.items():
         naam = m_info.get("naam")
@@ -244,9 +257,9 @@ if st.session_state.fase == "Intake":
         st.image("academy.jpg", use_container_width=True)
     except Exception:
         pass
-    st.subheader(" Welcome to The Sovereign Academy" if is_en else " Welkom bij The Sovereign Academy")
+    st.subheader("Welcome to The Sovereign Academy" if is_en else "Welkom bij The Sovereign Academy")
     with st.container(border=True):
-        st.markdown("**What is The Sovereign Academy?**\nA safe, non-judgmental learning environment for conscious submission (Submissive) and responsible leadership (Dominant). 100% free and anonymous." if is_en else "**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
+        st.markdown("**What is The Sovereign Academy?**\nA safe, non-judgmental learning environment for conscious submission (Submissive) and responsible leadership (Dominant). Train privately with an AI Mentor, or link your anonymous alias 1-on-1 with a real D/s partner inside the app to practice long-distance D/s safely — without ever sharing your phone number or email. 100% free and anonymous." if is_en else "**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). Oefen privé met een AI-Mentor, of koppel jouw anonieme schuilnaam 1-op-1 aan een echte D/s-partner binnen de app om veilig op afstand te oefenen — zonder ooit je telefoonnummer of e-mailadres te delen. 100% gratis en anoniem.")
         if sb:
             with st.expander("🔑 Already have an anonymous Dossier code? Log in here (or create one)" if is_en else "🔑 Heb je al een anonieme Dossiercode? Log hier in (of maak er een aan)"):
                 c1, c2 = st.columns(2)
@@ -258,7 +271,7 @@ if st.session_state.fase == "Intake":
                         if res.data:
                             d = res.data[0]
                             if d.get("pincode") == in_pin.strip():
-                                for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd"):
+                                for k in ("schuilnaam", "pincode", "rol", "mentor_naam", "mentor_foto", "module_nr", "sub_type", "grenzen", "notities", "chat_history", "verbond_actief", "meester_stijl", "laatste_les_tijd", "partner_naam"):
                                     if d.get(k) is not None:
                                         st.session_state[k] = d[k]
                                 st.session_state.notitieboek_actief = bool(st.session_state.notities)
@@ -285,7 +298,7 @@ if st.session_state.fase == "Intake":
             st.image("vale.jpg", width=140)
             st.markdown("**Headmistress Vale**\n*Elegant, demanding, and intuitive.* Vale combines warm security with refined etiquette and sees instantly where you are still holding back." if is_en else "**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
 
-    with st.expander(" View all Masters & Mistresses of the Academy (Phase 3)" if is_en else " Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
+    with st.expander("View all Masters & Mistresses of the Academy (Phase 3)" if is_en else "Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
         for (geslacht, profiel), m_info in MEESTERS.items():
             st.markdown(f"**{m_info.get('naam')}** (*{profiel}*): {t(m_info.get('stijl'))}")
 
@@ -304,6 +317,17 @@ if st.session_state.fase == "Intake":
         sla_op()
         st.rerun()
 
+    with st.expander("📱 Tip: Save The Sovereign Academy as a discreet app on your phone or PC" if is_en else "📱 Tip: Zet The Sovereign Academy als discrete app op je telefoon of PC"):
+        st.markdown("""
+* **iPhone (Safari):** Open deze link in Safari → tik onderaan op het **Deel-icoon** (vierkantje met pijltje omhoog) → kies **Zet op beginscherm** → geef het eventueel een korte, discrete naam (bijv. *SA* of *Academy*).
+* **Android (Chrome):** Tik rechtsboven op de **drie puntjes (`⋮`)** → kies **Installeren en snelkoppeling maken** → **Snelle link maken** → geef het een discrete naam en tik op **Toevoegen**.
+* **Windows PC (Chrome / Edge):** Klik rechtsboven op de **drie puntjes (`⋮`)** → **Casten, opslaan en delen** → **Snelkoppeling maken...** → vink **Openen als venster** aan.
+        """ if not is_en else """
+* **iPhone (Safari):** Open this link in Safari → tap the **Share icon** at the bottom → select **Add to Home Screen** → give it a short, discreet name (e.g. *SA* or *Academy*).
+* **Android (Chrome):** Tap the **three dots (`⋮`)** at the top right → select **Install and create shortcut** → **Create quick link** → give it a discreet name and tap **Add**.
+* **Windows PC (Chrome / Edge):** Click the **three dots (`⋮`)** at the top right → **Cast, save, and share** → **Create shortcut...** → check **Open as window**.
+        """)
+
 elif st.session_state.fase == "Les":
     nr = max(1, st.session_state.module_nr)
     is_dom = st.session_state.rol == "Dominant"
@@ -318,7 +342,7 @@ elif st.session_state.fase == "Les":
         regels_h = h.splitlines()
         h_titel = regels_h[0].strip()
         h_inhoud = "\n".join(regels_h[1:]).strip()
-        with st.expander(f"📖 {h_titel}", expanded=(idx == 0)):
+        with st.expander(f"📖 {h_titel}", expanded=(idx == 0 and not st.session_state.get("bijles_actief", False))):
             st.markdown(h_inhoud)
             gelezen = st.checkbox("✅ Ik heb dit hoofdstuk aandachtig gelezen en begrepen." if not is_en else "✅ I have read and understood this chapter carefully.", key=f"chk_read_{nr}_{idx}_{st.session_state.rol}")
             if not gelezen:
@@ -336,7 +360,7 @@ elif st.session_state.fase == "Les":
             st.session_state.bijles_chat.append(("user", bijles_in))
             taal_instr = "in English" if is_en else "in Dutch"
             f_lijst = st.session_state.get("laatste_fouten", [])
-            bijles_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. You are giving 1-on-1 tutoring because the student failed Module {nr} on: {f_lijst}. Ask a focused follow-up question to check if they truly understand why their answer was wrong, or give deeper explanation if they ask. CRITICAL: Only when you are convinced they now understand the concepts AND they are ready to retake the exam, end your message with the exact tag [HERKANSING_VRIJ] and ask if they want to discuss anything else or start the retake."
+            bijles_prompt = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. Always address the student with 'je'/'jij' (NEVER 'u' or 'kind'), write naturally in complete sentences, and never repeat cliché props like a fountain pen. You are giving 1-on-1 tutoring because the student failed Module {nr} on: {f_lijst}. Ask a focused follow-up question to check if they truly understand why their answer was wrong, or give deeper explanation if they ask. CRITICAL: Only when you are convinced they now understand the concepts AND they are ready to retake the exam, end your message with the exact tag [HERKANSING_VRIJ] and ask if they want to discuss anything else or start the retake."
             gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.bijles_chat)
             antwoord = vraag_mentor(f"{bijles_prompt}\n\nHistory:\n{gesprek}\n\nResponse:")
             if "[HERKANSING_VRIJ]" in antwoord:
@@ -372,17 +396,17 @@ elif st.session_state.fase == "Les":
                 except Exception:
                     pass
             if geslaagd:
-                st.session_state.laatste_les_tijd = datetime.now().isoformat()
-                st.session_state.fase = "Praktijkkamer"
                 p_nr = st.session_state.poging
                 st.session_state.poging = 0
+                st.session_state.laatste_les_tijd = datetime.now().isoformat()
+                st.session_state.fase = "Praktijkkamer"
                 if not st.session_state.chat_history:
                     if is_en:
                         h_en = f" after retake {p_nr}" if p_nr > 0 else ""
-                        intro = f"*{mentor} nods approvingly ({score}/10{h_en}).* Your perseverance paid off. Discuss your insights from Module {nr} here." if is_dom else f"*{mentor} closes your dossier ({score}/10{h_en}).* Good — you worked through your mistakes and proved you understand the material. Address me formally and as '{titel_txt}'. Tell me: what are you looking for here?"
+                        intro = f"*{mentor} nods approvingly ({score}/10{h_en}).* Your perseverance paid off. Discuss your insights from Module {nr} here." if is_dom else f"*{mentor} closes your dossier ({score}/10{h_en}).* Good — you worked through your mistakes and proved you understand the material. Address me as '{titel_txt}'. Tell me: what are you looking for here?"
                     else:
                         h_nl = f" na herkansing {p_nr}" if p_nr > 0 else ""
-                        intro = f"*{mentor} knikt goedkeurend ({score}/10{h_nl}).* Je doorzettingsvermogen loont. Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{mentor} slaat je dossier dicht ({score}/10{h_nl}).* Goed — je hebt je fouten uitgewerkt en bewezen dat je de stof beheerst. Spreek mij aan met 'u' en '{titel_txt}'. Vertel mij: wat zoek je hier?"
+                        intro = f"*{mentor} knikt goedkeurend ({score}/10{h_nl}).* Je doorzettingsvermogen loont. Bespreek hier je inzichten uit Module {nr}." if is_dom else f"*{mentor} slaat je dossier dicht ({score}/10{h_nl}).* Goed — je hebt je fouten uitgewerkt en bewezen dat je de stof beheerst. Spreek mij aan als '{titel_txt}'. Vertel mij: wat zoek je hier?"
                     st.session_state.chat_history.append(("assistant", intro))
                 elif p_nr > 0:
                     st.session_state.chat_history.append(("assistant", f"*{mentor} nods approvingly.* You passed Module {nr} ({score}/10) after retake {p_nr}. Let us reflect on what made the difference for you." if is_en else f"*{mentor} knikt goedkeurend.* Je hebt Module {nr} behaald ({score}/10) na herkansing {p_nr}. Laten we bespreken wat voor jou het kwartje deed vallen."))
@@ -392,7 +416,7 @@ elif st.session_state.fase == "Les":
                 st.session_state.laatste_fouten = foute_vragen
                 st.session_state.bijles_actief = True
                 st.session_state.herkansing_klaar = False
-                start_bijles = vraag_mentor(f"You are {mentor} of The Sovereign Academy. The student just scored {score}/10 on Module {nr} and missed these questions: {foute_vragen}. Step in directly {'in English' if is_en else 'in Dutch'}, point out where they went wrong without immediately giving away all answers, and ask a sharp, constructive question to make sure they truly understand the theory.")
+                start_bijles = vraag_mentor(f"You are {mentor} of The Sovereign Academy. Always address the student with 'je'/'jij' (NEVER 'u' or 'kind') and write naturally in complete sentences. The student just scored {score}/10 on Module {nr} and missed these questions: {foute_vragen}. Step in directly {'in English' if is_en else 'in Dutch'}, point out where they went wrong without immediately giving away all answers, and ask a sharp, constructive question to make sure they truly understand the theory.")
                 st.session_state.bijles_chat = [("assistant", start_bijles)]
                 st.rerun()
 
@@ -465,13 +489,14 @@ elif st.session_state.fase == "Praktijkkamer":
                 sla_op()
                 st.rerun()
 
-    t_chat = "💬 Practice Room" if is_en else "💬 Praktijkkamer"
-    t_disc = "⏱️ Discipline & Lines" if is_en else "⏱️ Discipline & Strafregels"
-    t_shop = "🛍️ Recommended & Support" if is_en else "🛍️ Aanbevolen & Steun"
-    t_note = "📓 Notebook" if is_en else "📓 Notitieboekje"
-    t_lim = "🔒 Limits Checklist" if is_en else "🔒 Grenzenlijst"
+    t_chat = "💬 Mentor"
+    t_koppel = "💞 1-op-1 D/s-Chat"
+    t_disc = "⏱️ Discipline"
+    t_shop = "🛍️ Steun" if not is_en else "🛍️ Support"
+    t_note = "📓 Notitieboek" if not is_en else "📓 Notebook"
+    t_lim = "🔒 Grenzen" if not is_en else "🔒 Limits"
 
-    tab_namen = [t_chat, t_disc, t_shop]
+    tab_namen = [t_chat, t_koppel, t_disc, t_shop]
     if st.session_state.notitieboek_actief:
         tab_namen.insert(1, t_note)
     if st.session_state.grenzenlijst_actief:
@@ -484,21 +509,33 @@ elif st.session_state.fase == "Praktijkkamer":
             with st.chat_message(role, avatar=(mentor_img if role == "assistant" else u_av)):
                 st.write(text)
         if user_input := st.chat_input("Type your response..." if is_en else "Typ je reactie..."):
+            if st.session_state.chat_history and st.session_state.chat_history[-1] == ("user", user_input):
+                st.rerun()
             st.session_state.chat_history.append(("user", user_input))
-            if "ROOD" in user_input.upper() or "RED" in user_input.upper():
+            woorden = [w.strip(".,!?\"'") for w in user_input.upper().split()]
+            actief_sw = st.session_state.get("safewoord", "ROOD").upper().strip()
+            if any(sw in woorden for sw in ("ROOD", "RED", actief_sw) if sw):
                 st.session_state.chat_history.append(("assistant", f"*{mentor} stops immediately.* Easy now, breathe. You are completely safe." if is_en else f"*{mentor} stopt direct.* Rustig maar, haal adem. Je bent helemaal veilig."))
                 sla_op()
                 st.rerun()
             zorg_txt = "CRITICAL: Student activated 24/7 Care Mode. Drop all strictness, offer immediate warmth, grounding, and emotional safety." if st.session_state.zorgmodus else ""
             taal_instr = "in English" if is_en else "in Dutch"
-            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {zorg_txt} Profile: {st.session_state.sub_type}, Limits: {st.session_state.grenzen}, Previous exam struggle areas: {st.session_state.get('laatste_fouten', [])}. Triggers: [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin]. Note: Only if the student specifically asks about safe beginner gear, kneeling comfort, aftercare items, or long-distance app-controlled play, you may subtly mention they can check the 'Recommended & Support' ('Aanbevolen & Steun') section in the sidebar menu."
-            gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history)
+            stijl_regels = (
+                "CRITICAL STYLE & QUALITY RULES: "
+                "1. Always address the student informally with 'je' and 'jij' (NEVER use 'u' or 'uw'). "
+                "2. NEVER use the word 'kind' (child) to address the student. "
+                "3. Write organically, naturally, and varied — NEVER repeat cliché stage directions like picking up/putting down a fountain pen ('vulpen'), looking out the window ('uit het raam kijken'), walking to a bookcase ('boekenkast'), or pointing to the door. Keep physical descriptions minimal, fresh, and grounded. "
+                "4. ALWAYS finish every single sentence and thought completely; never cut off mid-sentence or skip words. "
+                "5. NEVER mention or promote the 'Aanbevolen & Steun' / shop section."
+            )
+            regels = f"Respond {taal_instr} as {mentor} of The Sovereign Academy. {stijl_regels} {zorg_txt} Current progress: Module {st.session_state.module_nr} completed. Profile: {st.session_state.sub_type}, Safeword: {st.session_state.get('safewoord', 'ROOD')}, Limits: {st.session_state.grenzen}, Previous exam struggle areas: {st.session_state.get('laatste_fouten', [])}. Triggers (use only when appropriate): [OPEN_NOTITIEBOEK], [OPEN_GRENZENLIJST], [PROFIEL:Brat], [PROFIEL:Classic Submissive], [PROFIEL:Slave / Slavin], [PROFIEL:Daddy / Little], [PROFIEL:Petplay], [PROFIEL:Switch]."
+            gesprek = "\n".join(f"{r}: {b}" for r, b in st.session_state.chat_history[-16:])
             antwoord = vraag_mentor(f"{regels}\n\nHistory:\n{gesprek}\n\nResponse:")
             for trig, state_k in (("[OPEN_NOTITIEBOEK]", "notitieboek_actief"), ("[OPEN_GRENZENLIJST]", "grenzenlijst_actief")):
                 if trig in antwoord:
                     antwoord = antwoord.replace(trig, "").strip()
                     st.session_state[state_k] = True
-            for p_naam in ("Brat", "Classic Submissive", "Slave / Slavin"):
+            for p_naam in ("Brat", "Classic Submissive", "Slave / Slavin", "Daddy / Little", "Petplay", "Switch"):
                 if f"[PROFIEL:{p_naam}]" in antwoord:
                     antwoord = antwoord.replace(f"[PROFIEL:{p_naam}]", "").strip()
                     st.session_state.sub_type = p_naam
@@ -506,11 +543,70 @@ elif st.session_state.fase == "Praktijkkamer":
             sla_op()
             st.rerun()
 
+    with tabs[tab_namen.index(t_koppel)]:
+        st.subheader("💞 Anonymous 1-on-1 D/s Partner Chat" if is_en else "💞 Anonieme 1-op-1 D/s-Koppelchat")
+        st.caption("Connect with a fellow Academy student (Dominant or Submissive) using only your alias — no phone number or email required." if is_en else "Koppel jouw dossier aan een andere Academie-student (Dominant of Submissive) op basis van alleen jullie schuilnaam — zonder telefoonnummer of e-mailadres.")
+        with st.expander("ℹ️ How does the anonymous 1-on-1 Partner Chat work?" if is_en else "ℹ️ Hoe werkt de anonieme 1-op-1 Koppelchat?"):
+            st.markdown("""
+1. **Create an anonymous Dossier:** Both you and your partner choose your own alias + 4-digit PIN on the home screen (no email or phone number needed).
+2. **Share only your Academy alias:** Give each other only your chosen Academy alias (for example via Reddit, FetLife, or wherever you met).
+3. **Link 1-on-1:** Enter your partner's alias below and click **Link Partner**. Once both of you have entered each other's alias, your private chat room opens here.
+4. **100% Safe & Voluntary:** You can unlink or type **RED** at any moment to stop immediately.
+            """ if is_en else """
+1. **Maak een anoniem Dossier aan:** Kies allebei op het startscherm een eigen schuilnaam + 4-cijferige pincode (zonder e-mailadres of telefoonnummer).
+2. **Deel alleen je schuilnaam:** Geef elkaar alleen jullie gekozen schuilnaam in de Academie (bijvoorbeeld via Reddit, FetLife of waar jullie elkaar hebben leren kennen).
+3. **Koppel 1-op-1:** Vul hieronder de schuilnaam van je partner in en klik op **Koppel Partner**. Zodra jullie allebei elkaars schuilnaam hebben ingevuld, opent hier jullie afgeschermde privékamer.
+4. **100% Veilig & Vrijwillig:** Je kunt op elk moment weer ontkoppelen of **ROOD** typen om direct te stoppen.
+            """)
+        if not st.session_state.schuilnaam:
+            st.info("🔑 Create or open an anonymous Dossier on the home screen first to use the 1-on-1 Partner Chat." if is_en else "🔑 Maak op het startscherm eerst een anonieme Dossiercode (schuilnaam + pincode) aan om de 1-op-1 Koppelchat te gebruiken.")
+        elif not sb:
+            st.warning("Database connection required for 1-on-1 Partner Chat." if is_en else "Databaseverbinding nodig voor de 1-op-1 Koppelchat.")
+        else:
+            p_in = st.text_input("Partner's Academy Alias:" if is_en else "Schuilnaam van jouw D/s-partner in de Academie:", value=st.session_state.partner_naam)
+            c_k1, c_k2 = st.columns(2)
+            if c_k1.button("🔗 Link Partner" if is_en else "🔗 Koppel Partner") and p_in.strip():
+                if p_in.strip().lower() == st.session_state.schuilnaam.strip().lower():
+                    st.error("You cannot link to your own alias." if is_en else "Je kunt niet aan je eigen schuilnaam koppelen.")
+                else:
+                    st.session_state.partner_naam = p_in.strip()
+                    sla_op()
+                    st.rerun()
+            if st.session_state.partner_naam and c_k2.button("🔓 Unlink" if is_en else "🔓 Ontkoppel"):
+                st.session_state.partner_naam = ""
+                sla_op()
+                st.rerun()
+
+            if st.session_state.partner_naam:
+                mijn_naam = st.session_state.schuilnaam.strip()
+                partner_naam = st.session_state.partner_naam.strip()
+                st.success(f"🔒 **Private room active:** **{mijn_naam}** ↔ **{partner_naam}**" if is_en else f"🔒 **Privékamer actief:** **{mijn_naam}** ↔ **{partner_naam}**")
+                if st.button("🔄 Refresh messages" if is_en else "🔄 Ververs berichten"):
+                    st.rerun()
+                kamer = "_".join(sorted([mijn_naam.lower(), partner_naam.lower()]))
+                try:
+                    k_berichten = sb.table("koppel_chat").select("*").eq("kamer_code", kamer).order("id").execute().data
+                except Exception:
+                    k_berichten = []
+                if not k_berichten:
+                    st.info("No messages yet. Say hello to your partner below!" if is_en else "Nog geen berichten. Stuur hieronder je eerste bericht naar je partner!")
+                for kb in k_berichten[-30:]:
+                    is_ik = kb.get("afzender", "").lower() == mijn_naam.lower()
+                    with st.chat_message("user" if is_ik else "assistant", avatar="👤" if is_ik else "👑"):
+                        st.markdown(f"**{kb.get('afzender')}:** {kb.get('bericht')}")
+                k_nieuw = st.text_input("Message to your partner (type ROOD / RED to stop):" if is_en else "Bericht aan je partner (typ ROOD om direct te stoppen):", key="koppel_msg_in")
+                if st.button("📩 Send to partner" if is_en else "📩 Verstuur naar partner") and k_nieuw.strip():
+                    try:
+                        sb.table("koppel_chat").insert({"tijdstip": datetime.now().isoformat(), "kamer_code": kamer, "afzender": mijn_naam, "bericht": k_nieuw.strip()}).execute()
+                    except Exception:
+                        st.error("Could not send message. Check if the 'koppel_chat' table exists in Supabase." if is_en else "Bericht kon niet worden verzonden. Controleer of de tabel 'koppel_chat' in Supabase is aangemaakt.")
+                    st.rerun()
+
     if st.session_state.notitieboek_actief:
         with tabs[tab_namen.index(t_note)]:
             notitie_tekst = st.text_area("Note / Check-in:" if is_en else "Notitie / Check-in:", height=120)
             if st.button("Submit" if is_en else "Indienen") and notitie_tekst.strip():
-                reactie = vraag_mentor(f"You are {mentor}. Respond calmly {'in English' if is_en else 'in Dutch'} to: \"{notitie_tekst}\"")
+                reactie = vraag_mentor(f"You are {mentor}. Address the student with 'je'/'jij' (NEVER 'u' or 'kind') and respond naturally without repeating props like a fountain pen {'in English' if is_en else 'in Dutch'} to: \"{notitie_tekst}\"")
                 st.session_state.notities.append({"tekst": notitie_tekst, "reactie": reactie})
                 sla_op()
                 st.rerun()
