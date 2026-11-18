@@ -142,7 +142,7 @@ def toon_steun_en_feedback(sleutel_prefix):
                     with st.container(border=True):
                         st.markdown(f"**{b.get('onderwerp')}:** {b.get('bericht')}")
                         if b.get("antwoord"):
-                            st.success(f"**🏛️ Academy Response:** {b.get('antwoord')}" if is_en else f"**🏛️ Reactie van de Academie-leiding:** {b.get('antwoord')}")
+                            st.success(f"** Academy Response:** {b.get('antwoord')}" if is_en else f"** Reactie van de Academie-leiding:** {b.get('antwoord')}")
                         else:
                             st.caption("⏳ *Awaiting personal response from the Academy...*" if is_en else "⏳ *In afwachting van een persoonlijke reactie van de Academie-leiding...*")
 
@@ -153,7 +153,7 @@ with st.sidebar:
     try:
         st.image(st.session_state.mentor_foto, width=120)
     except Exception:
-        st.write("👑" if st.session_state.verbond_actief else "🏛️")
+        st.write("👑" if st.session_state.verbond_actief else "✨")
     st.header("📊 Academy Dossier")
     if st.session_state.schuilnaam:
         st.success(f"🔑 **{st.session_state.schuilnaam}**")
@@ -169,7 +169,7 @@ with st.sidebar:
         st.progress(min(st.session_state.module_nr / 6, 1.0))
     st.markdown("---")
     st.info("🚨 **Safeword:** **RED**" if is_en else "🚨 **Safewoord:** **ROOD**")
-    if st.button(("🏛️ Meet Staff & Masters" if is_en else "🏛️ Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
+    if st.button((" Meet Staff & Masters" if is_en else " Kennismaking Staf & Meesters") if not st.session_state.gids_open else ("🔙 Back to Academy" if is_en else "🔙 Terug naar de Academie")):
         st.session_state.gids_open = not st.session_state.gids_open
         st.session_state.steun_open = False
         st.session_state.zorgmodus = False
@@ -244,7 +244,7 @@ if st.session_state.fase == "Intake":
         st.image("academy.jpg", use_container_width=True)
     except Exception:
         pass
-    st.subheader("🏛️ Welcome to The Sovereign Academy" if is_en else "🏛️ Welkom bij The Sovereign Academy")
+    st.subheader(" Welcome to The Sovereign Academy" if is_en else " Welkom bij The Sovereign Academy")
     with st.container(border=True):
         st.markdown("**What is The Sovereign Academy?**\nA safe, non-judgmental learning environment for conscious submission (Submissive) and responsible leadership (Dominant). 100% free and anonymous." if is_en else "**Wat is The Sovereign Academy?**\nEen veilige, oordeelvrije leeromgeving voor bewuste overgave (Submissive) én verantwoord leiderschap (Dominant). 100% gratis en anoniem.")
         if sb:
@@ -285,7 +285,7 @@ if st.session_state.fase == "Intake":
             st.image("vale.jpg", width=140)
             st.markdown("**Headmistress Vale**\n*Elegant, demanding, and intuitive.* Vale combines warm security with refined etiquette and sees instantly where you are still holding back." if is_en else "**Headmistress Vale**\n*Elegant, veeleisend en intuïtief.* Vale combineert warme geborgenheid met verfijnde etiquette en ziet direct waar jij nog vasthoudt.")
 
-    with st.expander("🏛️ View all Masters & Mistresses of the Academy (Phase 3)" if is_en else "🏛️ Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
+    with st.expander(" View all Masters & Mistresses of the Academy (Phase 3)" if is_en else " Bekijk alle Meesters & Meesteressen van de Academie (Fase 3)"):
         for (geslacht, profiel), m_info in MEESTERS.items():
             st.markdown(f"**{m_info.get('naam')}** (*{profiel}*): {t(m_info.get('stijl'))}")
 
