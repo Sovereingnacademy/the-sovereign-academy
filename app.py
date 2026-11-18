@@ -175,11 +175,11 @@ def toon_steun_en_feedback(sleutel_prefix):
 
     schaal = ("1 - Helemaal niet", "2 - Beetje", "3 - Neutraal", "4 - Ja, zeker", "5 - Absoluut ja") if not is_en else ("1 - Not at all", "2 - A little", "3 - Neutral", "4 - Yes, definitely", "5 - Absolutely yes")
     st.markdown("**1. Rate your experience on the platform:**" if is_en else "**1. Beoordeel jouw ervaring op het platform:**")
-    s1 = st.select_slider("I felt safe and respected:" if is_en else "Ik voelde mij veilig en gerespecteerd:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s1")
-    s2 = st.select_slider("The platform feels warm and welcoming:" if is_en else "Het platform voelt warm en welkom aan:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s2")
-    s3 = st.select_slider("The design, colors, and calm layout appeal to me:" if is_en else "Het uiterlijk, de kleuren en rustige opmaak spreken mij aan:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s3")
-    s4 = st.select_slider("The menu and buttons are easy to use (mobile & PC):" if is_en else "Het menu en de knoppen zijn makkelijk te gebruiken (mobiel & PC):", options=schaal, value=schaal, key=f"{sleutel_prefix}_s4")
-    s5 = st.select_slider("It was immediately clear how everything works:" if is_en else "Het was meteen duidelijk hoe alles werkt:", options=schaal, value=schaal, key=f"{sleutel_prefix}_s5")
+    s1 = st.select_slider("I felt safe and respected:" if is_en else "Ik voelde mij veilig en gerespecteerd:", options=schaal, value=schaal[2], key=f"{sleutel_prefix}_s1")
+    s2 = st.select_slider("The platform feels warm and welcoming:" if is_en else "Het platform voelt warm en welkom aan:", options=schaal, value=schaal[2], key=f"{sleutel_prefix}_s2")
+    s3 = st.select_slider("The design, colors, and calm layout appeal to me:" if is_en else "Het uiterlijk, de kleuren en rustige opmaak spreken mij aan:", options=schaal, value=schaal[2], key=f"{sleutel_prefix}_s3")
+    s4 = st.select_slider("The menu and buttons are easy to use (mobile & PC):" if is_en else "Het menu en de knoppen zijn makkelijk te gebruiken (mobiel & PC):", options=schaal, value=schaal[2], key=f"{sleutel_prefix}_s4")
+    s5 = st.select_slider("It was immediately clear how everything works:" if is_en else "Het was meteen duidelijk hoe alles werkt:", options=schaal, value=schaal[2], key=f"{sleutel_prefix}_s5")
 
     st.markdown("**2. Content, Exams & Mentors:**" if is_en else "**2. Inhoud, Toetsen & Mentoren:**")
     opt_th = ("Diepgaand en precies goed", "Goede basis, mag nóg uitgebreider", "Te veel tekst / te lang", "Anders, namelijk...") if not is_en else ("In-depth and just right", "Good basis, could be even deeper", "Too much text / too long", "Other, namely...")
