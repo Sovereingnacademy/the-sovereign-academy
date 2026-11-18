@@ -174,7 +174,7 @@ titel_txt = ("Master / Mistress" if is_en else "Meester / Meesteres") if st.sess
                 st.success("✅ Your review is now live on the home screen!" if is_en else "✅ Je review staat nu live op het startscherm!")
             except Exception:
                 st.error("Could not save review." if is_en else "Review kon niet worden opgeslagen.")
-st.markdown("---")
+    st.markdown("---")
     st.subheader("📋 Quick & In-Depth Evaluation (For the Maker)" if is_en else "📋 Snelle & Uitgebreide Evaluatie (Voor de Maker)")
     st.write("Click through in 30 seconds (100% anonymous) — your ratings help improve every part of the Academy." if is_en else "Klik er in 30 seconden doorheen (100% anoniem) — jouw antwoorden helpen om elk onderdeel van de Academie te verbeteren.")
 
