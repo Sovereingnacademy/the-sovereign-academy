@@ -32,7 +32,7 @@ taal = st.radio("🌍 Language / Taal:", ("🇳🇱 Nederlands", "🇬🇧 Engli
 is_en = "English" in taal
 col_logo, col_titel = st.columns((1, 5))
 with col_logo:
-    st.image(LOGO_URL, width=85)
+    st.image("logo.jpg", width=85)
 with col_titel:
     st.title("The Sovereign Academy")
     st.caption("Guidance, Discipline, Safety & Conscious Submission" if is_en else "Begeleiding, Discipline, Veiligheid & Bewuste Overgave")
